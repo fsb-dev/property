@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * ── Theme tokens ──────────────────────────────────────────────────
+ *
+ *  Two independent systems live here:
+ *
+ *  1. PORTAL VARS (RGB)  — for layout shell (sidebar, topbar, page bg, cards).
+ *     Format: R G B  (space-separated for Tailwind opacity modifier support)
+ *     Used as: bg-admin-surface-card, text-admin-accent, bg-admin-accent/15 …
+ *
+ *  2. SHADCN VARS (HSL)  — consumed by shadcn-vue UI components (buttons,
+ *     inputs, dialogs, tables …).
+ *     Format: H S% L%  (without hsl() wrapper)
+ *     Used as: bg-primary, text-muted-foreground, border-input …
+ *
+ *  Both are defined per portal and flip automatically when .dark is on <html>.
+ *  To retheme: change the numbers here — no component file needs touching.
+ *
+ *  RGB accent quick-ref:
+ *    blue-600  37 99 235  |  indigo-600  79 70 229  |  teal-600   13 148 136
+ *    violet-600 124 58 237 |  rose-600  225 29 72   |  emerald-600  5 150 105
+ * ─────────────────────────────────────────────────────────────────
+ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   LIGHT MODE
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+    /* ── Admin portal RGB vars ────────────────────────────── */
+    --admin-accent:           37 99 235;      /* blue-600  */
+
+    --admin-surface-page:    241 245 249;     /* slate-100 */
+    --admin-surface-sidebar: 255 255 255;     /* white     */
+    --admin-surface-topbar:  255 255 255;     /* white     */
+    --admin-surface-card:    255 255 255;     /* white     */
+
+    /* ── Client portal RGB vars ───────────────────────────── */
+    --client-accent:          91 63 232;      /* purple    */
+
+    --client-surface-page:   245 245 250;     /* #f5f5fa   */
+    --client-surface-sidebar:255 255 255;     /* white     */
+    --client-surface-topbar: 255 255 255;     /* white     */
+    --client-surface-card:   255 255 255;     /* white     */
+
+    /* ── shadcn-vue HSL vars (admin theme by default) ─────── */
+    --background:   210 40% 96%;              /* matches admin-surface-page  */
+    --foreground:   222 84% 5%;
+
+    --card:         0 0% 100%;
+    --card-foreground: 222 84% 5%;
+
+    --popover:      0 0% 100%;
+    --popover-foreground: 222 84% 5%;
+
+    --primary:      221 83% 53%;              /* matches admin-accent blue-600 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary:    210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted:        210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent:       210 40% 94%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive:  0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border:       214 32% 91%;
+    --input:        214 32% 91%;
+    --ring:         221 83% 53%;              /* matches admin-accent */
+
+    --radius:       0.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DARK MODE
+   ═══════════════════════════════════════════════════════════════════ */
+.dark {
+    /* ── Admin portal RGB vars ────────────────────────────── */
+    --admin-accent:          96 165 250;      /* blue-400  */
+
+    --admin-surface-page:    10  12  16;      /* #0a0c10 dark charcoal */
+    --admin-surface-sidebar: 15  18  24;      /* #0f1218               */
+    --admin-surface-topbar:  12  15  20;      /* #0c0f14               */
+    --admin-surface-card:    19  22  30;      /* #13161e               */
+
+    /* ── Client portal RGB vars ───────────────────────────── */
+    --client-accent:         139 111 248;     /* purple-400 */
+
+    --client-surface-page:    14  10  32;
+    --client-surface-sidebar: 24  18  50;
+    --client-surface-topbar:  20  14  44;
+    --client-surface-card:    28  22  58;
+
+    /* ── shadcn-vue HSL vars (admin dark theme) ───────────── */
+    --background:   220 23% 5%;               /* matches admin-surface-page dark */
+    --foreground:   210 40% 98%;
+
+    --card:         220 20% 9%;               /* matches admin-surface-card dark */
+    --card-foreground: 210 40% 98%;
+
+    --popover:      220 20% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary:      213 97% 68%;              /* matches admin-accent blue-400   */
+    --primary-foreground: 222 47% 11%;
+
+    --secondary:    217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted:        217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent:       217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive:  0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border:       217 33% 17%;
+    --input:        217 33% 17%;
+    --ring:         213 97% 68%;              /* matches admin-accent dark */
+}
+

@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+    volumes:
+      - .:/var/www/html
+    command: >
+      sh -c "composer install --no-interaction --prefer-dist &&
+             npm install &&
+             php artisan migrate --force &&
+             npm run dev &
+             php artisan serve --host=0.0.0.0 --port=8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-property}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_USER: ${DB_USERNAME:-property}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  dbdata:
