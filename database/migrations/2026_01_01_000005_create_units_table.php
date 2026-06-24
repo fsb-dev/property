@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('tenant_id')->nullable(); // FK enforced when SaaS tenancy is implemented
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->string('unit_number');           // A-1205
             $table->string('block')->nullable();     // Block A

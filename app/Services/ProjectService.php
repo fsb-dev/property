@@ -8,6 +8,7 @@ use App\Enums\ProjectType;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class ProjectService
@@ -37,7 +38,7 @@ class ProjectService
                 'units_count'      => $p->units_count,
                 'overall_progress' => $p->overall_progress,
                 'handover_date'    => $p->handover_date?->format('d M Y'),
-                'cover'            => $p->getFirstMediaUrl('cover', 'thumb'),
+                'cover'            => $p->getFirstMediaUrl('cover'),
             ]);
     }
 
@@ -68,13 +69,20 @@ class ProjectService
             'category'      => $project->category?->value,
             'status'        => $project->status->value,
             'handover_date' => $project->handover_date?->format('Y-m-d'),
-            'cover'         => $project->getFirstMediaUrl('cover', 'thumb'),
+            'cover'         => $project->getFirstMediaUrl('cover'),
             'images'        => $project->getMedia('images')->map(fn($m) => [
                 'id'    => $m->id,
                 'url'   => $m->getUrl(),
-                'thumb' => $m->getUrl('thumb'),
+                'thumb' => $m->getUrl(),
                 'name'  => $m->file_name,
-            ]),
+            ])->toArray(),
+            'documents'     => $project->getMedia('documents')->map(fn($m) => [
+                'id'   => $m->id,
+                'url'  => $m->getUrl(),
+                'name' => $m->file_name,
+                'size' => $m->size,
+                'mime' => $m->mime_type,
+            ])->toArray(),
         ];
     }
 
@@ -82,15 +90,52 @@ class ProjectService
     {
         $data['slug'] = Str::slug($data['name']);
 
-        return Project::create($data);
+        $mediaKeys  = ['cover', 'new_images', 'remove_images', 'remove_cover', 'new_documents', 'remove_documents'];
+        $media      = Arr::only($data, $mediaKeys);
+        $attributes = Arr::except($data, $mediaKeys);
+
+        $project = Project::create($attributes);
+        $this->attachMedia($project, $media);
+
+        return $project;
     }
 
     public function update(Project $project, array $data): Project
     {
         $data['slug'] = Str::slug($data['name']);
-        $project->update($data);
+
+        $mediaKeys  = ['cover', 'new_images', 'remove_images', 'remove_cover', 'new_documents', 'remove_documents'];
+        $media      = Arr::only($data, $mediaKeys);
+        $attributes = Arr::except($data, $mediaKeys);
+
+        $project->update($attributes);
+        $this->attachMedia($project, $media);
 
         return $project->fresh();
+    }
+
+    private function attachMedia(Project $project, array $data): void
+    {
+        if (!empty($data['cover'])) {
+            $project->clearMediaCollection('cover');
+            $project->addMedia($data['cover'])->toMediaCollection('cover');
+        } elseif ($data['remove_cover'] ?? false) {
+            $project->clearMediaCollection('cover');
+        }
+
+        foreach ($data['new_images'] ?? [] as $image) {
+            $project->addMedia($image)->toMediaCollection('images');
+        }
+        foreach ($data['remove_images'] ?? [] as $mediaId) {
+            $project->deleteMedia((int) $mediaId);
+        }
+
+        foreach ($data['new_documents'] ?? [] as $doc) {
+            $project->addMedia($doc)->toMediaCollection('documents');
+        }
+        foreach ($data['remove_documents'] ?? [] as $mediaId) {
+            $project->deleteMedia((int) $mediaId);
+        }
     }
 
     public function delete(Project $project): string

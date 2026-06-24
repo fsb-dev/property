@@ -21,10 +21,17 @@ const form = useForm({
     handover_date: props.project.handover_date,
     latitude:      props.project.latitude,
     longitude:     props.project.longitude,
+    cover:            null,
+    remove_cover:     false,
+    new_images:       [],
+    remove_images:    [],
+    new_documents:    [],
+    remove_documents: [],
 });
 
 function submit() {
-    form.put(route('admin.projects.update', props.project.id));
+    form.transform(data => ({ ...data, _method: 'put' }))
+        .post(route('admin.projects.update', props.project.id));
 }
 </script>
 
@@ -43,6 +50,14 @@ function submit() {
             <p class="mt-0.5 text-sm text-muted-foreground">Update the project information below.</p>
         </div>
 
-        <ProjectForm :form="form" :enums="enums" mode="edit" @submit="submit" />
+        <ProjectForm
+            :form="form"
+            :enums="enums"
+            mode="edit"
+            :current-cover="project.cover || null"
+            :current-images="project.images ?? []"
+            :current-documents="project.documents ?? []"
+            @submit="submit"
+        />
     </AdminLayout>
 </template>

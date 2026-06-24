@@ -1,20 +1,25 @@
 <script setup>
-import { Link }       from '@inertiajs/vue3';
-import { Input }      from '@/Components/ui/input';
-import { Label }      from '@/Components/ui/label';
-import { Textarea }   from '@/Components/ui/textarea';
+import { Link }         from '@inertiajs/vue3';
+import { Input }        from '@/Components/ui/input';
+import { Label }        from '@/Components/ui/label';
+import { Textarea }     from '@/Components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
-import DatePicker     from '@/Components/ui/date-picker/DatePicker.vue';
+import DatePicker       from '@/Components/ui/date-picker/DatePicker.vue';
+import ImageUpload      from '@/Components/ui/media/ImageUpload.vue';
+import ImageGallery     from '@/Components/ui/media/ImageGallery.vue';
+import DocumentList     from '@/Components/ui/media/DocumentList.vue';
 
 const props = defineProps({
-    form:  { type: Object, required: true },
-    enums: { type: Object, required: true },
-    mode:  { type: String, default: 'create' },
+    form:             { type: Object, required: true },
+    enums:            { type: Object, required: true },
+    mode:             { type: String, default: 'create' },
+    currentCover:     { type: String, default: null },
+    currentImages:    { type: Array,  default: () => [] },
+    currentDocuments: { type: Array,  default: () => [] },
 });
 
 const emit = defineEmits(['submit']);
 
-// Shared field class — lighter bg + softer border for all inputs/selects/textareas
 const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:border-white/[0.09] focus-visible:ring-1';
 </script>
 
@@ -199,33 +204,113 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
             </div>
         </div>
 
-        <!-- ── Footer ─────────────────────────────────────────── -->
-        <div class="flex items-center justify-between rounded-xl border border-border bg-admin-surface-card px-5 py-4">
-            <p class="text-xs text-muted-foreground">
-            </p>
-            <div class="flex items-center gap-3">
-                <Link
-                    :href="route('admin.projects.index')"
-                    class="inline-flex h-9 items-center rounded-lg border border-border bg-transparent px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                >
-                    Cancel
-                </Link>
-                <button
-                    type="submit"
-                    :disabled="form.processing"
-                    class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
-                >
-                    <svg v-if="form.processing" class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        <!-- ── Media (last card — footer lives here) ──────────── -->
+        <div class="overflow-hidden rounded-xl border border-border bg-admin-surface-card">
+            <div class="flex items-center gap-3 border-b border-border px-5 py-4">
+                <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-admin-accent/10">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-admin-accent">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
                     </svg>
-                    <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                        <polyline points="17 21 17 13 7 13 7 21"/>
-                        <polyline points="7 3 7 8 15 8"/>
-                    </svg>
-                    {{ mode === 'edit' ? 'Save Changes' : 'Create Project' }}
-                </button>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-foreground">Media</p>
+                    <p class="text-xs text-muted-foreground">Cover image and project gallery</p>
+                </div>
             </div>
+
+            <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2">
+
+                <!-- Cover Image -->
+                <div class="space-y-2">
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Cover Image</Label>
+                    <ImageUpload
+                        :file="form.cover"
+                        @update:file="form.cover = $event"
+                        :removed="form.remove_cover ?? false"
+                        @update:removed="form.remove_cover = $event"
+                        :preview="currentCover"
+                        hint="JPG, PNG, WEBP · Max 5 MB"
+                    />
+                    <p v-if="form.errors?.cover" class="text-xs text-destructive">{{ form.errors.cover }}</p>
+                </div>
+
+                <!-- Gallery -->
+                <div class="space-y-2">
+                    <ImageGallery
+                        :existing="currentImages"
+                        :new-files="form.new_images ?? []"
+                        @update:new-files="form.new_images = $event"
+                        :remove-ids="form.remove_images ?? []"
+                        @update:remove-ids="form.remove_images = $event"
+                    >
+                        <template #label>
+                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Gallery</Label>
+                        </template>
+                    </ImageGallery>
+                    <p v-if="form.errors?.new_images" class="text-xs text-destructive">{{ form.errors.new_images }}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ── Documents (last card — footer lives here) ──────── -->
+        <div class="overflow-hidden rounded-xl border border-border bg-admin-surface-card">
+            <div class="flex items-center gap-3 border-b border-border px-5 py-4">
+                <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-admin-accent/10">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-admin-accent">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-foreground">Documents</p>
+                    <p class="text-xs text-muted-foreground">Brochures, specs, legal docs (PDF, Word, Excel)</p>
+                </div>
+            </div>
+
+            <div class="p-5">
+                <DocumentList
+                    :existing="currentDocuments"
+                    :new-files="form.new_documents ?? []"
+                    @update:new-files="form.new_documents = $event"
+                    :remove-ids="form.remove_documents ?? []"
+                    @update:remove-ids="form.remove_documents = $event"
+                />
+                <p v-if="form.errors?.new_documents" class="mt-2 text-xs text-destructive">{{ form.errors.new_documents }}</p>
+            </div>
+
+            <!-- ── Footer ──────────────────────────────────────── -->
+            <div class="flex items-center justify-between border-t border-border px-5 py-4">
+                <p class="text-xs text-muted-foreground">
+                    <span class="text-destructive">*</span> Required fields
+                </p>
+                <div class="flex items-center gap-3">
+                    <Link
+                        :href="route('admin.projects.index')"
+                        class="inline-flex h-9 items-center rounded-lg border border-border bg-transparent px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                    >
+                        Cancel
+                    </Link>
+                    <button
+                        type="submit"
+                        :disabled="form.processing"
+                        class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
+                    >
+                        <svg v-if="form.processing" class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                        <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        {{ mode === 'edit' ? 'Save Changes' : 'Create Project' }}
+                    </button>
+                </div>
+            </div>
+
         </div>
 
     </form>

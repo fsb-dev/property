@@ -13,6 +13,7 @@ services:
       sh -c "composer install --no-interaction --prefer-dist &&
              npm install &&
              php artisan migrate --force &&
+             php artisan storage:link --force &&
              (npm run dev &) &&
              php artisan serve --host=0.0.0.0 --port=8000"
     depends_on:

@@ -30,6 +30,16 @@ class UpdateProjectRequest extends FormRequest
             'handover_date' => ['nullable', 'date'],
             'latitude'      => ['nullable', 'numeric', 'between:-90,90'],
             'longitude'     => ['nullable', 'numeric', 'between:-180,180'],
+            'cover'         => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:5120'],
+            'remove_cover'  => ['nullable', 'boolean'],
+            'new_images'    => ['nullable', 'array', 'max:20'],
+            'new_images.*'  => ['image', 'mimes:jpeg,png,webp', 'max:5120'],
+            'remove_images'     => ['nullable', 'array'],
+            'remove_images.*'   => ['integer'],
+            'new_documents'     => ['nullable', 'array', 'max:20'],
+            'new_documents.*'   => ['file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
+            'remove_documents'  => ['nullable', 'array'],
+            'remove_documents.*'=> ['integer'],
         ];
     }
 }

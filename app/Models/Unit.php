@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\UnitStatus;
+use App\Enums\UnitType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Unit extends Model implements HasMedia
 {
@@ -21,6 +22,8 @@ class Unit extends Model implements HasMedia
     protected $casts = [
         'handover_date' => 'date',
         'price'         => 'decimal:2',
+        'type'          => UnitType::class,
+        'status'        => UnitStatus::class,
     ];
 
     // ── Media collections ──────────────────────────────────────────
@@ -37,17 +40,6 @@ class Unit extends Model implements HasMedia
         $this->addMediaCollection('documents')
             ->acceptsMimeTypes(['application/pdf', 'application/msword',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
-    }
-
-    public function registerMediaConversions(?Media $media = null): void
-    {
-        $this->addMediaConversion('thumb')
-            ->width(400)->height(300)
-            ->performOnCollections('images', 'floor_plan');
-
-        $this->addMediaConversion('medium')
-            ->width(800)->height(600)
-            ->performOnCollections('images');
     }
 
     // ── Relationships ──────────────────────────────────────────────

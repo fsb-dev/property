@@ -20,6 +20,11 @@ const form = useForm({
     handover_date: null,
     latitude:      null,
     longitude:     null,
+    cover:            null,
+    new_images:       [],
+    remove_images:    [],
+    new_documents:    [],
+    remove_documents: [],
 });
 
 function submit() {

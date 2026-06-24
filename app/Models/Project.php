@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Project extends Model implements HasMedia
 {
@@ -60,17 +59,6 @@ class Project extends Model implements HasMedia
                 'application/vnd.ms-excel',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             ]);
-    }
-
-    public function registerMediaConversions(?Media $media = null): void
-    {
-        $this->addMediaConversion('thumb')
-            ->width(400)->height(300)
-            ->performOnCollections('images', 'cover');
-
-        $this->addMediaConversion('medium')
-            ->width(800)->height(600)
-            ->performOnCollections('images', 'cover');
     }
 
     // ── Relationships ──────────────────────────────────────────────

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\UnitController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -28,9 +29,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     // Units
     Route::middleware('permission:view units')->group(function () {
-        Route::get('/units', fn () => inertia('Admin/Units/Index'))->name('units.index');
-        Route::middleware('permission:create units')->get('/units/create', fn () => inertia('Admin/Units/Create'))->name('units.create');
-        Route::middleware('permission:edit units')->get('/units/{unit}/edit', fn () => inertia('Admin/Units/Edit'))->name('units.edit');
+        Route::get('/units',                     [UnitController::class, 'index'])->name('units.index');
+        Route::middleware('permission:create units')->group(function () {
+            Route::get('/units/create',          [UnitController::class, 'create'])->name('units.create');
+            Route::post('/units',                [UnitController::class, 'store'])->name('units.store');
+        });
+        Route::middleware('permission:edit units')->group(function () {
+            Route::get('/units/{unit}/edit',     [UnitController::class, 'edit'])->name('units.edit');
+            Route::put('/units/{unit}',          [UnitController::class, 'update'])->name('units.update');
+        });
+        Route::middleware('permission:delete units')->group(function () {
+            Route::delete('/units/{unit}',       [UnitController::class, 'destroy'])->name('units.destroy');
+        });
     });
 
     // Clients
