@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import AdminSidebar from '@/Components/Admin/Sidebar.vue';
 import AdminTopBar  from '@/Components/Admin/TopBar.vue';
+import Toast        from '@/Components/Admin/Toast.vue';
 import { useTheme } from '@/composables/useTheme';
 
 defineProps({
@@ -61,4 +62,6 @@ onMounted(() => {
             </main>
         </div>
     </div>
+
+    <Toast />
 </template>

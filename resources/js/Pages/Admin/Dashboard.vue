@@ -1,10 +1,7 @@
 <script setup>
+import { Head } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import StatCard    from '@/Components/Admin/StatCard.vue';
-
-defineOptions({
-    layout: (h, page) => h(AdminLayout, { title: 'Dashboard', breadcrumbs: [{ label: 'Dashboard' }] }, () => page),
-});
 
 defineProps({
     stats: {
@@ -59,6 +56,8 @@ const iconWell = {
 </script>
 
 <template>
+    <Head title="Dashboard" />
+    <AdminLayout>
     <!-- Stat cards -->
     <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
         <StatCard label="Total Clients"     :value="stats.total_clients.toString()"     sub="Active buyers"       color="accent" sub-variant="muted" >
@@ -212,4 +211,5 @@ const iconWell = {
             · © 2026
         </div>
     </footer>
+    </AdminLayout>
 </template>

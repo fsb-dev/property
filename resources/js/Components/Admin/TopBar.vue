@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
 import { useTheme } from '@/composables/useTheme';
 
 defineProps({
@@ -37,11 +38,11 @@ const { isDark, toggle } = useTheme();
         <div class="flex flex-1 items-center gap-2 min-w-0">
             <template v-if="breadcrumbs.length">
                 <template v-for="(crumb, i) in breadcrumbs" :key="i">
-                    <a
+                    <Link
                         v-if="crumb.href"
                         :href="crumb.href"
                         class="text-sm font-medium truncate text-slate-500 dark:text-slate-400 hover:text-admin-accent transition-colors"
-                    >{{ crumb.label }}</a>
+                    >{{ crumb.label }}</Link>
                     <span
                         v-else
                         class="text-sm font-semibold truncate text-slate-900 dark:text-slate-100"

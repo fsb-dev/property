@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\ProjectCategory;
+use App\Enums\ProjectStatus;
+use App\Enums\ProjectType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
@@ -13,14 +16,29 @@ class Project extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $fillable = [
-        'tenant_id', 'name', 'slug', 'location', 'address',
-        'description', 'status', 'total_floors', 'total_units',
-        'overall_progress', 'handover_date', 'latitude', 'longitude',
+        'tenant_id',
+        'name',
+        'slug',
+        'type',
+        'category',
+        'location',
+        'address',
+        'description',
+        'status',
+        'total_floors',
+        'total_units',
+        'overall_progress',
+        'handover_date',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [
         'handover_date'    => 'date',
         'overall_progress' => 'decimal:2',
+        'type'             => ProjectType::class,
+        'category'         => ProjectCategory::class,
+        'status'           => ProjectStatus::class,
     ];
 
     // ── Media collections ──────────────────────────────────────────
@@ -35,10 +53,13 @@ class Project extends Model implements HasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
 
         $this->addMediaCollection('documents')
-            ->acceptsMimeTypes(['application/pdf', 'application/msword',
+            ->acceptsMimeTypes([
+                'application/pdf',
+                'application/msword',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'application/vnd.ms-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ]);
     }
 
     public function registerMediaConversions(?Media $media = null): void

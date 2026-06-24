@@ -127,3 +127,15 @@
     --ring:         213 97% 68%;              /* matches admin-accent dark */
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   BASE — must come after variables so @apply can resolve the tokens
+   ═══════════════════════════════════════════════════════════════════ */
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+

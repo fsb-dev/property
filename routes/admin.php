@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -11,9 +12,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     // Projects
     Route::middleware('permission:view projects')->group(function () {
-        Route::get('/projects', fn () => inertia('Admin/Projects/Index'))->name('projects.index');
-        Route::middleware('permission:create projects')->get('/projects/create', fn () => inertia('Admin/Projects/Create'))->name('projects.create');
-        Route::middleware('permission:edit projects')->get('/projects/{project}/edit', fn () => inertia('Admin/Projects/Edit'))->name('projects.edit');
+        Route::get('/projects',                        [ProjectController::class, 'index'])->name('projects.index');
+        Route::middleware('permission:create projects')->group(function () {
+            Route::get('/projects/create',             [ProjectController::class, 'create'])->name('projects.create');
+            Route::post('/projects',                   [ProjectController::class, 'store'])->name('projects.store');
+        });
+        Route::middleware('permission:edit projects')->group(function () {
+            Route::get('/projects/{project}/edit',     [ProjectController::class, 'edit'])->name('projects.edit');
+            Route::put('/projects/{project}',          [ProjectController::class, 'update'])->name('projects.update');
+        });
+        Route::middleware('permission:delete projects')->group(function () {
+            Route::delete('/projects/{project}',       [ProjectController::class, 'destroy'])->name('projects.destroy');
+        });
     });
 
     // Units
