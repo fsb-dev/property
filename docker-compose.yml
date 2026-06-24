@@ -1,24 +1,29 @@
 services:
   app:
+    container_name: property_app
     build: .
     ports:
       - "8000:8000"
       - "5173:5173"
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html                              # source code only
+      - vendor:/var/www/html/vendor                  # PHP deps — stays in Docker Linux fs
+      - node_modules:/var/www/html/node_modules      # JS deps  — stays in Docker Linux fs
     command: >
       sh -c "composer install --no-interaction --prefer-dist &&
              npm install &&
              php artisan migrate --force &&
-             npm run dev &
+             (npm run dev &) &&
              php artisan serve --host=0.0.0.0 --port=8000"
     depends_on:
       db:
         condition: service_healthy
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
 
   db:
+    container_name: property_db
     image: mysql:8.0
     ports:
       - "3306:3306"
@@ -36,3 +41,5 @@ services:
 
 volumes:
   dbdata:
+  vendor:       # lives inside Docker — no Windows bridge
+  node_modules: # lives inside Docker — no Windows bridge
