@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev \
     libxml2-dev libzip-dev libonig-dev libicu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql mbstring xml zip bcmath gd intl opcache \
+    && docker-php-ext-install pdo pdo_mysql mbstring xml zip bcmath gd intl opcache exif \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN { \

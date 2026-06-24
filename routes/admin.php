@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MediaController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -61,5 +62,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Settings — super_admin / company_admin only
     Route::middleware('permission:manage settings')->group(function () {
         Route::get('/settings', fn () => inertia('Admin/Settings/Index'))->name('settings.index');
+    });
+
+    // Media — admin manages all project/unit/client media
+    // Clients READ media via model URLs directly (no route needed for viewing)
+    // Client KYC upload handled in routes/client.php when client profile is built
+    Route::middleware('permission:upload documents')->group(function () {
+        Route::post('/media/{modelType}/{modelId}', [MediaController::class, 'upload'])->name('media.upload');
+        Route::post('/media/reorder',               [MediaController::class, 'reorder'])->name('media.reorder');
+    });
+    Route::middleware('permission:delete documents')->group(function () {
+        Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
     });
 });
