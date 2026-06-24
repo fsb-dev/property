@@ -1,10 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { Link, usePage, router } from '@inertiajs/vue3';
+import { onClickOutside } from '@vueuse/core';
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const profileOpen = ref(false);
+const profileRef  = ref(null);
+onClickOutside(profileRef, () => { profileOpen.value = false; });
 
 const navLinks = [
     { label: 'Dashboard',    routeName: 'admin.dashboard',    href: () => route('admin.dashboard'),    icon: `<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>` },
@@ -19,7 +22,7 @@ const navLinks = [
 
 const profileMenuItems = [
     { label: 'View Profile',     href: '#', icon: `<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>` },
-    { label: 'Account Settings', href: '#', icon: `<circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>` },
+    { label: 'Account Settings', href: '#', icon: `<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>` },
 ];
 
 function isActive(routeName) {
@@ -99,7 +102,7 @@ function initials(name) {
         <div class="my-3 h-px bg-slate-200 dark:bg-white/[0.06]" />
 
         <!-- Profile block -->
-        <div class="relative">
+        <div class="relative" ref="profileRef">
             <!-- Dropdown (opens upward) -->
             <Transition
                 enter-active-class="transition duration-150 ease-out"
@@ -173,8 +176,4 @@ function initials(name) {
         </div>
     </aside>
 
-    <!-- Close dropdown on outside click -->
-    <Teleport to="body">
-        <div v-if="profileOpen" class="fixed inset-0 z-40" @click="profileOpen = false" />
-    </Teleport>
 </template>
