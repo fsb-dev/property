@@ -1,12 +1,13 @@
 <script setup>
-import { Link }         from '@inertiajs/vue3';
-import { Input }        from '@/Components/ui/input';
-import { Label }        from '@/Components/ui/label';
+import { computed } from 'vue';
+import { Link }     from '@inertiajs/vue3';
+import { Input }    from '@/Components/ui/input';
+import { Label }    from '@/Components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
-import DatePicker       from '@/Components/ui/date-picker/DatePicker.vue';
-import ImageUpload      from '@/Components/ui/media/ImageUpload.vue';
-import ImageGallery     from '@/Components/ui/media/ImageGallery.vue';
-import DocumentList     from '@/Components/ui/media/DocumentList.vue';
+import DatePicker  from '@/Components/ui/date-picker/DatePicker.vue';
+import ImageUpload from '@/Components/ui/media/ImageUpload.vue';
+import ImageGallery from '@/Components/ui/media/ImageGallery.vue';
+import DocumentList from '@/Components/ui/media/DocumentList.vue';
 
 const props = defineProps({
     form:             { type: Object, required: true },
@@ -21,6 +22,18 @@ const props = defineProps({
 const emit = defineEmits(['submit']);
 
 const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:border-white/[0.09] focus-visible:ring-1';
+
+// ── Type-aware form config ────────────────────────────────────────────────────
+const DEFAULT_CONFIG = {
+    showBlock: true, blockLabel: 'Block',
+    showFloor: true, floorLabel: 'Floor',
+    showBedrooms: true,
+};
+
+const typeConfig = computed(() => {
+    const t = props.enums.types?.find(t => t.value === props.form.type);
+    return t?.formConfig ?? DEFAULT_CONFIG;
+});
 </script>
 
 <template>
@@ -36,7 +49,7 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-foreground">Unit Identity</p>
-                    <p class="text-xs text-muted-foreground">Project assignment and unit locator</p>
+                    <p class="text-xs text-muted-foreground">Project, type and locator information</p>
                 </div>
             </div>
 
@@ -63,41 +76,58 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
                     <p v-if="form.errors.project_id" class="text-xs text-destructive">{{ form.errors.project_id }}</p>
                 </div>
 
+                <!-- Unit Type — drives form layout below -->
+                <div class="space-y-1.5">
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Unit Type</Label>
+                    <Select :model-value="form.type || undefined" @update:model-value="form.type = $event ?? null">
+                        <SelectTrigger :class="[f, form.errors.type && 'border-destructive']">
+                            <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="t in enums.types" :key="t.value" :value="t.value">
+                                {{ t.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <p v-if="form.errors.type" class="text-xs text-destructive">{{ form.errors.type }}</p>
+                </div>
+
                 <!-- Unit Number -->
                 <div class="space-y-1.5">
-                    <Label for="unit_number" class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
                         Unit Number <span class="text-destructive">*</span>
                     </Label>
                     <Input
-                        id="unit_number"
                         v-model="form.unit_number"
-                        placeholder="e.g. A-1205"
+                        :placeholder="form.type === 'villa' ? 'e.g. Villa-01' : form.type === 'townhouse' ? 'e.g. TH-01' : form.type === 'shop' ? 'e.g. S-GF-01' : 'e.g. A-1205'"
                         :class="[f, form.errors.unit_number && 'border-destructive']"
                     />
                     <p v-if="form.errors.unit_number" class="text-xs text-destructive">{{ form.errors.unit_number }}</p>
                 </div>
 
-                <!-- Block -->
-                <div class="space-y-1.5">
-                    <Label for="block" class="text-xs font-medium text-slate-500 dark:text-slate-400">Block</Label>
+                <!-- Block (conditional) -->
+                <div v-if="typeConfig.showBlock" class="space-y-1.5">
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        {{ typeConfig.blockLabel }}
+                    </Label>
                     <Input
-                        id="block"
                         v-model="form.block"
-                        placeholder="e.g. Block A"
+                        :placeholder="typeConfig.blockLabel === 'Phase' ? 'e.g. Phase 1' : typeConfig.blockLabel === 'Phase / Row' ? 'e.g. Row A' : 'e.g. Block A'"
                         :class="[f, form.errors.block && 'border-destructive']"
                     />
                     <p v-if="form.errors.block" class="text-xs text-destructive">{{ form.errors.block }}</p>
                 </div>
 
-                <!-- Floor -->
-                <div class="space-y-1.5">
-                    <Label for="floor" class="text-xs font-medium text-slate-500 dark:text-slate-400">Floor</Label>
+                <!-- Floor (conditional) -->
+                <div v-if="typeConfig.showFloor" class="space-y-1.5">
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        {{ typeConfig.floorLabel }}
+                    </Label>
                     <Input
-                        id="floor"
                         type="number"
                         min="0"
                         v-model="form.floor"
-                        placeholder="e.g. 12"
+                        :placeholder="typeConfig.floorLabel === 'Level' ? 'e.g. 1 (Ground = 0)' : typeConfig.floorLabel === 'Starting Floor' ? 'e.g. 10' : 'e.g. 12'"
                         :class="[f, form.errors.floor && 'border-destructive']"
                     />
                     <p v-if="form.errors.floor" class="text-xs text-destructive">{{ form.errors.floor }}</p>
@@ -116,34 +146,17 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-foreground">Specifications</p>
-                    <p class="text-xs text-muted-foreground">Type, size, bedrooms and view details</p>
+                    <p class="text-xs text-muted-foreground">Size, pricing and availability details</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2">
 
-                <!-- Type -->
-                <div class="space-y-1.5">
-                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Unit Type</Label>
-                    <Select :model-value="form.type || undefined" @update:model-value="form.type = $event ?? null">
-                        <SelectTrigger :class="f">
-                            <SelectValue placeholder="— None —" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem v-for="t in enums.types" :key="t.value" :value="t.value">{{ t.label }}</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <p v-if="form.errors.type" class="text-xs text-destructive">{{ form.errors.type }}</p>
-                </div>
-
-                <!-- Bedrooms -->
-                <div class="space-y-1.5">
-                    <Label for="bedrooms" class="text-xs font-medium text-slate-500 dark:text-slate-400">Bedrooms</Label>
+                <!-- Bedrooms (conditional — hidden for commercial) -->
+                <div v-if="typeConfig.showBedrooms" class="space-y-1.5">
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Bedrooms</Label>
                     <Input
-                        id="bedrooms"
-                        type="number"
-                        min="0"
-                        max="10"
+                        type="number" min="0" max="10"
                         v-model="form.bedrooms"
                         placeholder="e.g. 3"
                         :class="[f, form.errors.bedrooms && 'border-destructive']"
@@ -153,13 +166,13 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
 
                 <!-- Size -->
                 <div class="space-y-1.5">
-                    <Label for="size_sqft" class="text-xs font-medium text-slate-500 dark:text-slate-400">Size (sqft)</Label>
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        Size <span class="text-muted-foreground font-normal">(sqft)</span>
+                    </Label>
                     <Input
-                        id="size_sqft"
-                        type="number"
-                        min="1"
+                        type="number" min="1"
                         v-model="form.size_sqft"
-                        placeholder="e.g. 1450"
+                        :placeholder="form.type === 'duplex' ? 'e.g. 2800 (both levels)' : 'e.g. 1450'"
                         :class="[f, form.errors.size_sqft && 'border-destructive']"
                     />
                     <p v-if="form.errors.size_sqft" class="text-xs text-destructive">{{ form.errors.size_sqft }}</p>
@@ -167,11 +180,10 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
 
                 <!-- View -->
                 <div class="space-y-1.5">
-                    <Label for="view" class="text-xs font-medium text-slate-500 dark:text-slate-400">View</Label>
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">View</Label>
                     <Input
-                        id="view"
                         v-model="form.view"
-                        placeholder="e.g. Lake View, City View"
+                        placeholder="e.g. Lake View, City View, Garden View"
                         :class="[f, form.errors.view && 'border-destructive']"
                     />
                     <p v-if="form.errors.view" class="text-xs text-destructive">{{ form.errors.view }}</p>
@@ -179,14 +191,12 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
 
                 <!-- Price -->
                 <div class="space-y-1.5">
-                    <Label for="price" class="text-xs font-medium text-slate-500 dark:text-slate-400">
-                        Price (BDT) <span class="text-destructive">*</span>
+                    <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        Price <span class="text-muted-foreground font-normal">(BDT)</span>
+                        <span class="text-destructive"> *</span>
                     </Label>
                     <Input
-                        id="price"
-                        type="number"
-                        min="0"
-                        step="1"
+                        type="number" min="0" step="1"
                         v-model="form.price"
                         placeholder="e.g. 12000000"
                         :class="[f, form.errors.price && 'border-destructive']"
@@ -204,7 +214,9 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
                             <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem v-for="s in enums.statuses" :key="s.value" :value="s.value">{{ s.label }}</SelectItem>
+                            <SelectItem v-for="s in enums.statuses" :key="s.value" :value="s.value">
+                                {{ s.label }}
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                     <p v-if="form.errors.status" class="text-xs text-destructive">{{ form.errors.status }}</p>
@@ -241,7 +253,6 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
 
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2">
 
-                <!-- Floor Plan -->
                 <div class="space-y-2">
                     <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Floor Plan</Label>
                     <ImageUpload
@@ -257,7 +268,6 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
                     <p v-if="form.errors?.floor_plan" class="text-xs text-destructive">{{ form.errors.floor_plan }}</p>
                 </div>
 
-                <!-- Room Gallery -->
                 <div class="space-y-2">
                     <ImageGallery
                         :existing="currentImages"
@@ -276,7 +286,7 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
             </div>
         </div>
 
-        <!-- ── Documents (last card — footer lives here) ──────── -->
+        <!-- ── Documents ──────────────────────────────────────── -->
         <div class="overflow-hidden rounded-xl border border-border bg-admin-surface-card">
             <div class="flex items-center gap-3 border-b border-border px-5 py-4">
                 <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-admin-accent/10">
@@ -303,7 +313,7 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
                 <p v-if="form.errors?.new_documents" class="mt-2 text-xs text-destructive">{{ form.errors.new_documents }}</p>
             </div>
 
-            <!-- ── Footer ──────────────────────────────────────── -->
+            <!-- Footer -->
             <div class="flex items-center justify-between border-t border-border px-5 py-4">
                 <p class="text-xs text-muted-foreground">
                     <span class="text-destructive">*</span> Required fields

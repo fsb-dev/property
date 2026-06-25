@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $admin->assignRole('super_admin');
+
+        $this->call(ProjectSeeder::class);
     }
 }

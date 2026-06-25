@@ -58,7 +58,11 @@ class UnitService
     public function enums(): array
     {
         return [
-            'types'    => collect(UnitType::cases())->map(fn($e) => ['value' => $e->value, 'label' => $e->label()]),
+            'types' => collect(UnitType::cases())->map(fn($e) => [
+                'value'      => $e->value,
+                'label'      => $e->label(),
+                'formConfig' => $e->formConfig(),
+            ]),
             'statuses' => collect(UnitStatus::cases())->map(fn($e) => ['value' => $e->value, 'label' => $e->label()]),
         ];
     }

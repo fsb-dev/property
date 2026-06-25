@@ -11,21 +11,27 @@ return new class extends Migration {
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('phone')->nullable();
-            $table->string('nid')->nullable();       // national ID (KYC)
-            $table->string('address')->nullable();
-            $table->string('avatar_path')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('nationality')->nullable()->default('Bangladeshi');
+            $table->string('nid')->nullable();
+            $table->string('passport_no')->nullable();
+            $table->string('occupation')->nullable();
+            $table->text('address')->nullable();
+            $table->string('source')->nullable();   // walk_in, referral, website, etc.
+            $table->text('notes')->nullable();
             $table->string('status')->default('active');
             $table->rememberToken();
             $table->timestamps();
 
-            $table->unique(['tenant_id', 'email']);  // email unique per tenant
-            $table->index(['tenant_id', 'status']);
+            $table->index('status');
+            $table->index('source');
         });
     }
 
