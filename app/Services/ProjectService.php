@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\ProjectCategory;
 use App\Enums\ProjectStatus;
 use App\Enums\ProjectType;
 use App\Models\Project;
@@ -55,9 +54,18 @@ class ProjectService
     public function enums(): array
     {
         return [
-            'types'      => collect(ProjectType::cases())->map(fn($e) => ['value' => $e->value, 'label' => $e->label()]),
-            'categories' => collect(ProjectCategory::cases())->map(fn($e) => ['value' => $e->value, 'label' => $e->label()]),
-            'statuses'   => collect(ProjectStatus::cases())->map(fn($e) => ['value' => $e->value, 'label' => $e->label()]),
+            'types' => collect(ProjectType::cases())->map(fn($t) => [
+                'value'      => $t->value,
+                'label'      => $t->label(),
+                'categories' => collect($t->categories())->map(fn($c) => [
+                    'value'      => $c->value,
+                    'label'      => $c->label(),
+                    'hasUnits'   => $c->hasUnits(),
+                    'specFields' => $c->specFields(),
+                    'facilities' => $c->facilities(),
+                ])->values()->all(),
+            ])->values()->all(),
+            'statuses' => collect(ProjectStatus::cases())->map(fn($e) => ['value' => $e->value, 'label' => $e->label()]),
         ];
     }
 
@@ -65,10 +73,12 @@ class ProjectService
     {
         return [
             ...$project->toArray(),
-            'type'          => $project->type->value,
-            'category'      => $project->category?->value,
-            'status'        => $project->status->value,
-            'handover_date' => $project->handover_date?->format('Y-m-d'),
+            'type'           => $project->type->value,
+            'category'       => $project->category?->value,
+            'status'         => $project->status->value,
+            'handover_date'  => $project->handover_date?->format('Y-m-d'),
+            'specifications' => $project->specifications ?? [],
+            'facilities'    => $project->facilities ?? [],
             'cover'         => $project->getFirstMediaUrl('cover'),
             'images'        => $project->getMedia('images')->map(fn($m) => [
                 'id'    => $m->id,

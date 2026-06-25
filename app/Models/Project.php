@@ -30,11 +30,15 @@ class Project extends Model implements HasMedia
         'handover_date',
         'latitude',
         'longitude',
+        'specifications',
+        'facilities',
     ];
 
     protected $casts = [
         'handover_date'    => 'date',
         'overall_progress' => 'decimal:2',
+        'specifications'   => 'array',
+        'facilities'       => 'array',
         'type'             => ProjectType::class,
         'category'         => ProjectCategory::class,
         'status'           => ProjectStatus::class,

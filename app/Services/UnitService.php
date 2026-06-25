@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ProjectCategory;
 use App\Enums\UnitStatus;
 use App\Enums\UnitType;
 use App\Models\Project;
@@ -65,8 +66,16 @@ class UnitService
     public function projectsList(): array
     {
         return Project::orderBy('name')
-            ->get(['id', 'name'])
+            ->get(['id', 'name', 'category'])
+            ->filter(function (Project $p) {
+                // Exclude projects whose category explicitly has no unit support.
+                // Projects with no category yet are included (still being set up).
+                // Use getRawOriginal to get the plain string, bypassing the enum cast.
+                $cat = ProjectCategory::tryFrom($p->getRawOriginal('category') ?? '');
+                return $cat === null || $cat->hasUnits();
+            })
             ->map(fn($p) => ['id' => $p->id, 'name' => $p->name])
+            ->values()
             ->toArray();
     }
 

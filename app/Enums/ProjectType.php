@@ -7,8 +7,8 @@ enum ProjectType: string
     case Residential = 'residential';
     case Commercial  = 'commercial';
     case MixedUse    = 'mixed_use';
-    case Villa       = 'villa';
-    case Plot        = 'plot';
+    case Land        = 'land';
+    case Industrial  = 'industrial';
 
     public function label(): string
     {
@@ -16,8 +16,17 @@ enum ProjectType: string
             self::Residential => 'Residential',
             self::Commercial  => 'Commercial',
             self::MixedUse    => 'Mixed Use',
-            self::Villa       => 'Villa / Townhouse',
-            self::Plot        => 'Plot / Land',
+            self::Land        => 'Land / Plot',
+            self::Industrial  => 'Industrial',
         };
+    }
+
+    /** @return ProjectCategory[] */
+    public function categories(): array
+    {
+        return array_values(array_filter(
+            ProjectCategory::cases(),
+            fn(ProjectCategory $c) => $c->type() === $this
+        ));
     }
 }

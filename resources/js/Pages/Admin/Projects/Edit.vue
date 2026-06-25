@@ -21,6 +21,8 @@ const form = useForm({
     handover_date: props.project.handover_date,
     latitude:      props.project.latitude,
     longitude:     props.project.longitude,
+    specifications:   props.project.specifications ?? {},
+    facilities:       props.project.facilities ?? [],
     cover:            null,
     remove_cover:     false,
     new_images:       [],

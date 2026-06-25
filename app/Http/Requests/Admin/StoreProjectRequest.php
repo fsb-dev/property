@@ -37,8 +37,11 @@ class StoreProjectRequest extends FormRequest
             'remove_images.*'   => ['integer'],
             'new_documents'     => ['nullable', 'array', 'max:20'],
             'new_documents.*'   => ['file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
-            'remove_documents'  => ['nullable', 'array'],
-            'remove_documents.*'=> ['integer'],
+            'remove_documents'   => ['nullable', 'array'],
+            'remove_documents.*' => ['integer'],
+            'specifications'     => ['nullable', 'array'],
+            'facilities'         => ['nullable', 'array'],
+            'facilities.*'       => ['string', 'max:100'],
         ];
     }
 }

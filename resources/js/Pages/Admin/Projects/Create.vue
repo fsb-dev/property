@@ -20,6 +20,8 @@ const form = useForm({
     handover_date: null,
     latitude:      null,
     longitude:     null,
+    specifications:   {},
+    facilities:       [],
     cover:            null,
     new_images:       [],
     remove_images:    [],
