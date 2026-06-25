@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import AdminSidebar from '@/Components/Admin/Sidebar.vue';
 import AdminTopBar  from '@/Components/Admin/TopBar.vue';
 import Toast        from '@/Components/Admin/Toast.vue';
@@ -16,6 +16,18 @@ const { init } = useTheme();
 onMounted(() => {
     // Sync Vue's reactive isDark with whatever the no-FOUC script already applied.
     init();
+
+    // App-shell layout: the shell is locked to 100vh and <main> is the only
+    // scroll area. Lock the document itself so a tall form can never spawn a
+    // second, page-level scrollbar (the empty gap below the form footer).
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+});
+
+onBeforeUnmount(() => {
+    // Restore default scrolling for non-admin pages (Welcome/auth use min-h-screen).
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
 });
 </script>
 
@@ -57,7 +69,7 @@ onMounted(() => {
             />
 
             <!-- Only this scrolls -->
-            <main class="flex-1 overflow-y-auto p-6 lg:p-7">
+            <main class="min-h-0 flex-1 overflow-y-auto p-6 lg:p-7">
                 <slot />
             </main>
         </div>
