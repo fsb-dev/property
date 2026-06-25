@@ -26,7 +26,8 @@ const navLinks = [
         icon: `<rect x="3" y="8" width="8" height="13" rx="1.5"/><rect x="13" y="3" width="8" height="18" rx="1.5"/>`,
     },
     {
-        label: 'Clients', routeName: null,
+        label: 'Clients', routeName: 'admin.clients.index', activePattern: 'admin.clients.*',
+        href: () => route('admin.clients.index'),
         icon: `<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M19 8v6M22 11h-6"/>`,
     },
     {

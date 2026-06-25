@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ProjectController;
@@ -43,11 +44,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         });
     });
 
-    // Clients
+    // Clients — static segments (/create) must come before wildcard ({client})
     Route::middleware('permission:view clients')->group(function () {
-        Route::get('/clients', fn () => inertia('Admin/Clients/Index'))->name('clients.index');
-        Route::middleware('permission:create clients')->get('/clients/create', fn () => inertia('Admin/Clients/Create'))->name('clients.create');
-        Route::middleware('permission:edit clients')->get('/clients/{client}/edit', fn () => inertia('Admin/Clients/Edit'))->name('clients.edit');
+        Route::get('/clients',                        [ClientController::class, 'index'])->name('clients.index');
+        Route::middleware('permission:create clients')->group(function () {
+            Route::get('/clients/create',             [ClientController::class, 'create'])->name('clients.create');
+            Route::post('/clients',                   [ClientController::class, 'store'])->name('clients.store');
+        });
+        Route::get('/clients/{client}',               [ClientController::class, 'show'])->name('clients.show');
+        Route::middleware('permission:edit clients')->group(function () {
+            Route::get('/clients/{client}/edit',      [ClientController::class, 'edit'])->name('clients.edit');
+            Route::put('/clients/{client}',           [ClientController::class, 'update'])->name('clients.update');
+        });
+        Route::middleware('permission:delete clients')->group(function () {
+            Route::delete('/clients/{client}',        [ClientController::class, 'destroy'])->name('clients.destroy');
+        });
     });
 
     // Bookings
