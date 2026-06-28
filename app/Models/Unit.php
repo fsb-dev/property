@@ -14,9 +14,9 @@ class Unit extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $fillable = [
-        'tenant_id', 'project_id', 'unit_number', 'block', 'floor',
-        'type', 'bedrooms', 'size_sqft', 'view', 'price',
-        'status', 'handover_date',
+        'tenant_id', 'project_id', 'block_id', 'unit_number', 'block',
+        'floor', 'sort_order', 'type', 'bedrooms', 'size_sqft',
+        'view', 'price', 'status', 'handover_date',
     ];
 
     protected $casts = [
@@ -47,5 +47,10 @@ class Unit extends Model implements HasMedia
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function block(): BelongsTo
+    {
+        return $this->belongsTo(ProjectBlock::class, 'block_id');
     }
 }

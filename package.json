@@ -20,10 +20,12 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@googlemaps/js-api-loader": "^2.1.1",
         "@lucide/vue": "^1.21.0",
         "@vueuse/core": "^14.3.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "leaflet": "^1.9.4",
         "lucide-vue-next": "^1.0.0",
         "radix-vue": "^1.9.17",
         "reka-ui": "^2.10.0",

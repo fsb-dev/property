@@ -1,6 +1,6 @@
 <script setup>
-import AdminLayout  from '@/Layouts/AdminLayout.vue';
-import ProjectForm  from './partials/ProjectForm.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+import ProjectForm from './partials/ProjectForm.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -9,20 +9,46 @@ const props = defineProps({
 });
 
 const form = useForm({
-    name:          props.project.name,
-    type:          props.project.type,
-    category:      props.project.category,
-    status:        props.project.status,
-    location:      props.project.location ?? '',
-    address:       props.project.address ?? '',
-    description:   props.project.description ?? '',
-    total_floors:  props.project.total_floors,
-    total_units:   props.project.total_units,
-    handover_date: props.project.handover_date,
-    latitude:      props.project.latitude,
-    longitude:     props.project.longitude,
-    specifications:   props.project.specifications ?? {},
-    facilities:       props.project.facilities ?? [],
+    // Step 1 — Identity
+    name:          props.project.name          ?? '',
+    project_code:  props.project.project_code  ?? '',
+    type:          props.project.type          ?? 'residential',
+    status:        props.project.status        ?? 'draft',
+    theme_color:   props.project.theme_color   ?? '#5B3DF5',
+    start_date:    props.project.start_date    ?? null,
+    handover_date: props.project.handover_date ?? null,
+    description:   props.project.description   ?? '',
+
+    // Step 2 — Location
+    location:  props.project.location  ?? '',
+    address:   props.project.address   ?? '',
+    latitude:  props.project.latitude  ?? null,
+    longitude: props.project.longitude ?? null,
+
+    // Step 3 — Buildings & Sections
+    buildings: props.project.buildings ?? [],
+
+    // Step 4 — Financials
+    developer_id:        props.project.developer_id        ?? null,
+    developer_name:      props.project.developer_name      ?? '',
+    land_area:           props.project.land_area           ?? null,
+    land_area_unit:      props.project.land_area_unit      ?? 'katha',
+    built_up_area:       props.project.built_up_area       ?? null,
+    estimated_value:     props.project.estimated_value     ?? null,
+    booking_amount:      props.project.booking_amount      ?? null,
+    booking_amount_type: props.project.booking_amount_type ?? 'fixed',
+    commission_pct:      props.project.commission_pct      ?? null,
+    payment_plan_months: props.project.payment_plan_months ?? null,
+    service_charge_sqft: props.project.service_charge_sqft ?? null,
+    maintenance_years:   props.project.maintenance_years   ?? null,
+
+    // Step 5 — Facilities
+    facility_ids: props.project.facility_ids ?? [],
+
+    // Step 6 — Compliance
+    compliances: props.project.compliances ?? [],
+
+    // Step 7 — Media
     cover:            null,
     remove_cover:     false,
     new_images:       [],
@@ -41,7 +67,6 @@ function submit() {
     <Head :title="`Edit — ${project.name}`" />
 
     <AdminLayout>
-        <!-- Page header -->
         <div class="mb-6">
             <nav class="mb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Link :href="route('admin.projects.index')" class="hover:text-admin-accent transition-colors">Projects</Link>

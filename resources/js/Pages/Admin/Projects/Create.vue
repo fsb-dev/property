@@ -1,6 +1,6 @@
 <script setup>
-import AdminLayout  from '@/Layouts/AdminLayout.vue';
-import ProjectForm  from './partials/ProjectForm.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+import ProjectForm from './partials/ProjectForm.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -8,20 +8,46 @@ const props = defineProps({
 });
 
 const form = useForm({
+    // Step 1 — Identity
     name:          '',
+    project_code:  '',
     type:          'residential',
-    category:      null,
-    status:        'planning',
-    location:      '',
-    address:       '',
-    description:   '',
-    total_floors:  null,
-    total_units:   null,
+    status:        'draft',
+    theme_color:   '#5B3DF5',
+    start_date:    null,
     handover_date: null,
-    latitude:      null,
-    longitude:     null,
-    specifications:   {},
-    facilities:       [],
+    description:   '',
+
+    // Step 2 — Location
+    location:  '',
+    address:   '',
+    latitude:  null,
+    longitude: null,
+
+    // Step 3 — Buildings & Sections
+    buildings: [],
+
+    // Step 4 — Financials
+    developer_id:         null,
+    developer_name:       '',
+    land_area:            null,
+    land_area_unit:       'katha',
+    built_up_area:        null,
+    estimated_value:      null,
+    booking_amount:       null,
+    booking_amount_type:  'fixed',
+    commission_pct:       null,
+    payment_plan_months:  null,
+    service_charge_sqft:  null,
+    maintenance_years:    null,
+
+    // Step 5 — Facilities
+    facility_ids: [],
+
+    // Step 6 — Compliance
+    compliances: [],
+
+    // Step 7 — Media
     cover:            null,
     new_images:       [],
     remove_images:    [],
@@ -38,7 +64,6 @@ function submit() {
     <Head title="New Project" />
 
     <AdminLayout>
-        <!-- Page header -->
         <div class="mb-6">
             <nav class="mb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Link :href="route('admin.projects.index')" class="hover:text-admin-accent transition-colors">Projects</Link>

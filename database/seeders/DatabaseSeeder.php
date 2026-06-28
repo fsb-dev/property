@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $admin->assignRole('super_admin');
 
+        $this->call(FacilitySeeder::class);
         $this->call(ProjectSeeder::class);
         $this->call(ClientSeeder::class);
     }
