@@ -20,7 +20,7 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ['Plus Jakarta Sans', 'Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
 
             colors: {

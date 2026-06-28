@@ -30,12 +30,12 @@
    ═══════════════════════════════════════════════════════════════════ */
 :root {
     /* ── Admin portal RGB vars ────────────────────────────── */
-    --admin-accent:           37 99 235;      /* blue-600  */
+    --admin-accent:           91 61 245;      /* #5B3DF5 indigo-purple */
 
-    --admin-surface-page:    241 245 249;     /* slate-100 */
-    --admin-surface-sidebar: 255 255 255;     /* white     */
-    --admin-surface-topbar:  255 255 255;     /* white     */
-    --admin-surface-card:    255 255 255;     /* white     */
+    --admin-surface-page:    248 249 252;     /* #F8F9FC near-white    */
+    --admin-surface-sidebar: 10  27  54;      /* #0A1B36 dark navy     */
+    --admin-surface-topbar:  255 255 255;     /* white                 */
+    --admin-surface-card:    255 255 255;     /* white                 */
 
     /* ── Client portal RGB vars ───────────────────────────── */
     --client-accent:          91 63 232;      /* purple    */
@@ -46,33 +46,33 @@
     --client-surface-card:   255 255 255;     /* white     */
 
     /* ── shadcn-vue HSL vars (admin theme by default) ─────── */
-    --background:   210 40% 96%;              /* matches admin-surface-page  */
-    --foreground:   222 84% 5%;
+    --background:   220 38% 98%;              /* #F8F9FC   */
+    --foreground:   230 37% 13%;              /* #151B2E   */
 
     --card:         0 0% 100%;
-    --card-foreground: 222 84% 5%;
+    --card-foreground: 230 37% 13%;
 
     --popover:      0 0% 100%;
-    --popover-foreground: 222 84% 5%;
+    --popover-foreground: 230 37% 13%;
 
-    --primary:      221 83% 53%;              /* matches admin-accent blue-600 */
-    --primary-foreground: 210 40% 98%;
+    --primary:      250 90% 60%;              /* #5B3DF5 indigo-purple */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary:    210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary:    220 30% 96%;
+    --secondary-foreground: 230 37% 13%;
 
-    --muted:        210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted:        220 30% 96%;
+    --muted-foreground: 218 12% 47%;          /* #697386   */
 
-    --accent:       210 40% 94%;
-    --accent-foreground: 222 47% 11%;
+    --accent:       250 100% 97%;             /* #F1ECFF accent-soft  */
+    --accent-foreground: 250 90% 60%;
 
     --destructive:  0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border:       214 32% 91%;
-    --input:        214 32% 91%;
-    --ring:         221 83% 53%;              /* matches admin-accent */
+    --border:       218 38% 95%;              /* #EEF2F8   */
+    --input:        218 38% 95%;
+    --ring:         250 90% 60%;              /* #5B3DF5   */
 
     --radius:       0.5rem;
 }
@@ -136,6 +136,20 @@
     }
     body {
         @apply bg-background text-foreground;
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+/* ── Prototype card shadow utility ───────────────────────────────────
+   Matches the prototype's "0 8px 24px rgba(0,0,0,0.04)" card shadow.
+   Cards in the admin use .shadow-card via @apply or class="shadow-card"
+─────────────────────────────────────────────────────────────────── */
+@layer utilities {
+    .shadow-card {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    }
+    .shadow-card-hover {
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
     }
 }
 

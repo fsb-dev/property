@@ -69,74 +69,63 @@ function initials(name) {
 </script>
 
 <template>
-    <aside class="
-        flex flex-col h-full
-        bg-admin-surface-sidebar
-        border-r border-slate-200 dark:border-white/[0.06]
-        transition-colors duration-200
-    " style="width:260px; padding:20px 14px;">
-
+    <aside
+        class="flex flex-col h-full"
+        style="width:260px; padding:22px 16px 18px; background:linear-gradient(178deg,#0A1B36 0%,#07162D 60%,#061224 100%); color:#fff;"
+    >
         <!-- Logo -->
-        <div class="flex items-center gap-3 px-2 mb-7">
-            <div class="flex items-end gap-1" style="height:30px;">
-                <div class="rounded-sm bg-admin-accent" style="width:5px;height:16px;border-radius:3px;"></div>
-                <div style="width:5px;height:30px;border-radius:3px;background:linear-gradient(180deg,rgb(var(--admin-accent)/0.7),rgb(var(--admin-accent)));"></div>
-                <div class="bg-admin-accent/70" style="width:5px;height:22px;border-radius:3px;"></div>
+        <div class="flex items-center gap-3 px-2 mb-6">
+            <div
+                class="flex h-11 w-11 flex-none items-center justify-center rounded-xl"
+                style="background:linear-gradient(145deg,#5B3DF5,#7C5CFF); box-shadow:0 6px 18px rgba(91,61,245,0.45);"
+            >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 11l9-7 9 7"/><path d="M5 10v9h5v-5h4v5h5v-9"/>
+                </svg>
             </div>
-            <div>
-                <div class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">Property</div>
-                <div class="text-xs font-bold tracking-widest text-slate-400 dark:text-slate-600" style="letter-spacing:0.3em;">ADMIN</div>
+            <div style="line-height:1.1;">
+                <div style="font-size:19px; font-weight:800; letter-spacing:-0.3px;">Property</div>
+                <div style="font-size:10px; font-weight:600; letter-spacing:2px; color:#6E7C95;">ADMIN PANEL</div>
             </div>
-        </div>
-
-        <!-- Section label -->
-        <div class="px-3 mb-2 text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-600">
-            Main Menu
         </div>
 
         <!-- Nav -->
-        <nav class="flex flex-col gap-0.5 flex-1 overflow-y-auto min-h-0" style="scrollbar-width:none;">
+        <nav class="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0" style="scrollbar-width:none;">
             <template v-for="link in navLinks" :key="link.label">
 
-                <!-- Has a real route → Inertia Link -->
+                <!-- Active / routable link -->
                 <Link
                     v-if="link.routeName"
                     :href="link.href()"
-                    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150"
-                    :class="isActive(link)
-                        ? 'bg-admin-accent/10 text-admin-accent font-semibold'
-                        : 'text-slate-500 dark:text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:hover:bg-white/[0.05] dark:hover:text-slate-300'"
+                    class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-150"
+                    :style="isActive(link)
+                        ? 'background:linear-gradient(135deg,#5B3DF5,#7C5CFF); color:#fff; font-weight:600; box-shadow:0 8px 20px rgba(91,61,245,0.4);'
+                        : 'color:#9AA5BC;'"
+                    :class="!isActive(link) && 'hover:bg-white/[0.06] hover:text-white'"
                 >
-                    <span
-                        class="flex h-7 w-7 flex-none items-center justify-center rounded-lg transition-colors"
-                        :class="isActive(link) ? 'bg-admin-accent/15' : 'bg-slate-100 dark:bg-white/[0.04]'"
-                    >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="link.icon" />
-                    </span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="link.icon" />
                     {{ link.label }}
-                    <span v-if="isActive(link)" class="ml-auto h-1.5 w-1.5 rounded-full bg-admin-accent" />
                 </Link>
 
-                <!-- No route yet → plain div, no navigation -->
+                <!-- Coming-soon placeholder -->
                 <div
                     v-else
-                    class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium select-none opacity-40 cursor-default"
+                    class="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm select-none cursor-default"
+                    style="color:#6E7C95;"
                 >
-                    <span class="flex h-7 w-7 flex-none items-center justify-center rounded-lg bg-slate-100 dark:bg-white/[0.04]">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="link.icon" />
-                    </span>
-                    <span class="text-slate-400 dark:text-slate-600">{{ link.label }}</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="link.icon" />
+                    {{ link.label }}
                 </div>
 
             </template>
         </nav>
 
         <!-- Divider -->
-        <div class="my-3 h-px bg-slate-200 dark:bg-white/[0.06]" />
+        <div class="my-3 h-px" style="background:rgba(255,255,255,0.07);" />
 
         <!-- Profile block -->
         <div class="relative" ref="profileRef">
-            <!-- Dropdown (opens upward) -->
+            <!-- Dropdown (always white card, renders above sidebar) -->
             <Transition
                 enter-active-class="transition duration-150 ease-out"
                 enter-from-class="opacity-0 translate-y-2"
@@ -145,25 +134,25 @@ function initials(name) {
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
             >
-                <div v-if="profileOpen" class="absolute bottom-full mb-2 left-0 right-0 rounded-xl border py-1.5 z-50 bg-admin-surface-card border-slate-200 dark:border-white/[0.08] shadow-xl dark:shadow-black/40">
-                    <div class="px-3 py-2 border-b border-slate-100 dark:border-white/[0.06] mb-1">
-                        <div class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ user?.name ?? 'Admin' }}</div>
-                        <div class="text-xs text-slate-500 dark:text-slate-500 truncate">{{ user?.email ?? '' }}</div>
+                <div v-if="profileOpen" class="absolute bottom-full mb-2 left-0 right-0 rounded-xl border border-slate-200 py-1.5 z-50 bg-white shadow-xl">
+                    <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                        <div class="text-sm font-bold text-slate-900 truncate">{{ user?.name ?? 'Admin' }}</div>
+                        <div class="text-xs text-slate-500 truncate">{{ user?.email ?? '' }}</div>
                     </div>
 
                     <button
                         v-for="item in profileMenuItems"
                         :key="item.label"
-                        class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.05]"
+                        class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50"
                     >
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="item.icon" />
                         {{ item.label }}
                     </button>
 
-                    <div class="mx-3 my-1 h-px bg-slate-100 dark:bg-white/[0.06]" />
+                    <div class="mx-3 my-1 h-px bg-slate-100" />
 
                     <button
-                        class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
+                        class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-red-500 transition-colors hover:bg-red-50"
                         @click="logout"
                     >
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -178,21 +167,23 @@ function initials(name) {
 
             <!-- Profile trigger -->
             <button
-                class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-slate-100 dark:hover:bg-white/[0.05]"
+                class="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left transition-colors hover:bg-white/[0.05]"
                 @click="profileOpen = !profileOpen"
             >
-                <div class="flex h-8 w-8 flex-none items-center justify-center rounded-lg text-xs font-bold text-white"
-                    style="background:linear-gradient(135deg,rgb(var(--admin-accent)/0.8),rgb(var(--admin-accent)));">
+                <div
+                    class="flex h-10 w-10 flex-none items-center justify-center rounded-full text-sm font-bold text-white"
+                    style="background:linear-gradient(135deg,#3B4C6B,#1F2C45);"
+                >
                     {{ initials(user?.name) }}
                 </div>
                 <div class="min-w-0 flex-1">
-                    <div class="text-sm font-semibold text-slate-900 dark:text-white truncate">{{ user?.name ?? 'Admin' }}</div>
-                    <div class="text-xs text-slate-400 dark:text-slate-600 truncate">{{ user?.role ?? 'company_admin' }}</div>
+                    <div class="text-sm font-bold text-white truncate">{{ user?.name ?? 'Admin' }}</div>
+                    <div class="text-xs truncate" style="color:#6E7C95;">{{ user?.role ?? 'super_admin' }}</div>
                 </div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="flex-none text-slate-400 dark:text-slate-600 transition-transform duration-200"
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6E7C95" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="flex-none transition-transform duration-200"
                     :class="profileOpen ? 'rotate-180' : ''">
-                    <path d="M18 15l-6-6-6 6"/>
+                    <path d="M6 9l6 6 6-6"/>
                 </svg>
             </button>
         </div>

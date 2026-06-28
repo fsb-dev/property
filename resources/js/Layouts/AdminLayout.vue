@@ -33,8 +33,8 @@ onBeforeUnmount(() => {
 
 <template>
     <div
-        class="flex bg-admin-surface-page transition-colors duration-200"
-        style="height:100vh; overflow:hidden; font-family:'Plus Jakarta Sans',system-ui,sans-serif;"
+        class="flex bg-admin-surface-page"
+        style="height:100vh; overflow:hidden;"
     >
         <!-- Sidebar: sticky on desktop, drawer on mobile -->
         <div

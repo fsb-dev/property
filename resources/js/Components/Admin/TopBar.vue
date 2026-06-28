@@ -14,10 +14,10 @@ const { isDark, toggle } = useTheme();
 <template>
     <header class="
         flex flex-none items-center gap-4 px-6
-        bg-admin-surface-topbar
-        border-b border-slate-200 dark:border-white/[0.06]
+        bg-white dark:bg-admin-surface-topbar
+        border-b border-border
         transition-colors duration-200
-    " style="height:60px; z-index:10;">
+    " style="height:64px; z-index:10; box-shadow:0 1px 0 #EEF2F8;">
 
         <!-- Mobile hamburger -->
         <button
@@ -68,15 +68,15 @@ const { isDark, toggle } = useTheme();
                 </svg>
                 <input
                     type="text"
-                    placeholder="Search..."
-                    class="h-9 w-52 rounded-lg border pl-9 pr-3 text-sm outline-none transition-colors
-                           bg-slate-50 dark:bg-white/[0.04]
-                           border-slate-200 dark:border-white/[0.08]
-                           text-slate-900 dark:text-slate-100
-                           placeholder-slate-400 dark:placeholder-slate-600
+                    placeholder="Search by project, unit, client..."
+                    class="h-9 w-64 rounded-xl border pl-9 pr-3 text-sm outline-none transition-colors
+                           bg-white dark:bg-white/[0.04]
+                           border-border dark:border-white/[0.08]
+                           text-foreground dark:text-slate-100
+                           placeholder:text-muted-foreground
                            focus:border-admin-accent
-                           focus:bg-white dark:focus:bg-white/[0.07]
                            focus:ring-2 focus:ring-admin-accent/20"
+                    style="box-shadow:0 2px 8px rgba(0,0,0,0.03);"
                 >
             </div>
 
