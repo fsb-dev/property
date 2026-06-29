@@ -31,7 +31,7 @@ const form = useForm({
     developer_id:         null,
     developer_name:       '',
     land_area:            null,
-    land_area_unit:       'katha',
+    land_area_unit:       'sqft',
     built_up_area:        null,
     estimated_value:      null,
     booking_amount:       null,

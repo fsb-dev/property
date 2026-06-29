@@ -69,7 +69,7 @@ function remove() {
             </div>
 
             <!-- Image preview -->
-            <img v-else-if="displayUrl" :src="displayUrl" class="h-full w-full object-cover" alt="" />
+            <img v-else-if="displayUrl" :src="displayUrl" class="h-full w-full object-contain" alt="" />
 
             <!-- Empty state -->
             <div v-else class="flex flex-col items-center gap-2 text-muted-foreground">

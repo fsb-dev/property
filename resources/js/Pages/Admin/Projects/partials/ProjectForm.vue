@@ -805,29 +805,20 @@ function removeCompliance(idx) {
 
                     <div class="grid grid-cols-2 gap-5">
 
-                        <!-- Land area + unit -->
+                        <!-- Land area -->
                         <div class="space-y-1.5">
-                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Land Area</Label>
-                            <div class="flex gap-2">
-                                <Input type="number" step="any" min="0" v-model="form.land_area" placeholder="18"
-                                    :class="[f, 'flex-1']" />
-                                <Select :model-value="form.land_area_unit"
-                                    @update:model-value="form.land_area_unit = $event">
-                                    <SelectTrigger :class="[f, 'w-28 shrink-0']">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem v-for="u in enums.land_area_units" :key="u" :value="u">{{ u }}
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Land Area (sqft)</Label>
+                            <Input type="number" step="any" min="0" v-model="form.land_area"
+                                placeholder="e.g. 5400" :class="f" />
                         </div>
 
+                        <!-- Built-up area -->
                         <div class="space-y-1.5">
-                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Built-up Area
-                                (sqft)</Label>
-                            <Input type="number" min="0" v-model="form.built_up_area" placeholder="52000" :class="f" />
+                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Built-up Area (sqft)</Label>
+                            <Input type="number" min="0" v-model="form.built_up_area" placeholder="e.g. 48000" :class="f" />
+                            <p class="text-[10px] text-muted-foreground leading-tight">
+                                Total floor area across all levels — typically larger than land area for multi-storey buildings.
+                            </p>
                         </div>
 
                         <div class="space-y-1.5">

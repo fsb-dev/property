@@ -32,7 +32,7 @@ const form = useForm({
     developer_id:        props.project.developer_id        ?? null,
     developer_name:      props.project.developer_name      ?? '',
     land_area:           props.project.land_area           ?? null,
-    land_area_unit:      props.project.land_area_unit      ?? 'katha',
+    land_area_unit:      'sqft',
     built_up_area:       props.project.built_up_area       ?? null,
     estimated_value:     props.project.estimated_value     ?? null,
     booking_amount:      props.project.booking_amount      ?? null,
