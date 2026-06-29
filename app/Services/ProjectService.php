@@ -159,7 +159,7 @@ class ProjectService
                 'id'             => $b->id,
                 'name'           => $b->name,
                 'total_floors'   => $b->total_floors,
-                'specifications' => $b->specifications ?? [],
+                'specifications' => $b->specifications ?: new \stdClass(),
                 'sections'       => $b->sections->map(fn($s) => [
                     'id'             => $s->id,
                     'name'           => $s->name,
@@ -167,7 +167,7 @@ class ProjectService
                     'floor_start'    => $s->floor_start,
                     'floor_end'      => $s->floor_end,
                     'planned_units'  => $s->planned_units,
-                    'specifications' => $s->specifications ?? [],
+                    'specifications' => $s->specifications ?: new \stdClass(),
                 ])->toArray(),
             ])->toArray(),
 

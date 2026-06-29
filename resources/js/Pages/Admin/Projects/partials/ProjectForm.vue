@@ -58,7 +58,7 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
 // Fully dynamic — works for any type value without a hardcoded map.
 // e.g. "Green Valley Villas" + residential  → GV-RE-4821
 //      "Skyline Heights"     + mixed_use    → SH-MU-3907
-const SKIP_WORDS = new Set(['the','a','an','of','at','in','and','by','for','with']);
+const SKIP_WORDS = new Set(['the', 'a', 'an', 'of', 'at', 'in', 'and', 'by', 'for', 'with']);
 
 function buildCode() {
     const name = props.form.name?.trim() ?? '';
@@ -66,12 +66,12 @@ function buildCode() {
     if (!name || !type) return;
 
     const nameWords = name.split(/\s+/).filter(w => !SKIP_WORDS.has(w.toLowerCase()));
-    const namePart  = nameWords.slice(0, 2).map(w => w[0].toUpperCase()).join('');
+    const namePart = nameWords.slice(0, 2).map(w => w[0].toUpperCase()).join('');
 
     // Split on underscore or space so mixed_use → MU, residential → RE
-    const typePart  = type.split(/[_\s]+/).map(w => w[0].toUpperCase()).join('').slice(0, 2);
+    const typePart = type.split(/[_\s]+/).map(w => w[0].toUpperCase()).join('').slice(0, 2);
 
-    const tsPart    = String(Date.now()).slice(-4);
+    const tsPart = String(Date.now()).slice(-4);
 
     props.form.project_code = `${namePart}-${typePart}-${tsPart}`;
 }
@@ -82,7 +82,6 @@ watch([() => props.form.name, () => props.form.type], () => {
 });
 
 // ── Step 3: Buildings & Sections ─────────────────────────────────────
-// form.buildings = [{ id, name, total_floors, specifications:{}, sections:[{id,name,type,floor_start,floor_end,planned_units,specifications:{}}] }]
 
 function addBuilding() {
     props.form.buildings.push({
@@ -101,17 +100,55 @@ function removeBuilding(bIdx) {
 }
 
 function addSection(bIdx) {
-    props.form.buildings[bIdx].sections.push({
+    const building  = props.form.buildings[bIdx];
+    const sections  = building.sections;
+    const prevEnd   = sections.length > 0 ? (sections[sections.length - 1].floor_end ?? 0) : 0;
+    const nextStart = sections.length === 0 ? 1 : prevEnd + 1;
+
+    sections.push({
         id: null, name: '', type: 'residential',
-        floor_start: null, floor_end: null, planned_units: null, specifications: {},
+        floor_start: nextStart, floor_end: null, planned_units: null, specifications: {},
     });
 }
 
 function removeSection(bIdx, sIdx) {
-    props.form.buildings[bIdx].sections.splice(sIdx, 1);
+    const sections = props.form.buildings[bIdx].sections;
+    sections.splice(sIdx, 1);
+
     if (expandedSection.value?.b === bIdx && expandedSection.value?.s === sIdx) {
         expandedSection.value = null;
     }
+
+    // After removal, recascade floor_starts for remaining sections.
+    // e.g. sections were [1-4, 5-10, 11-18], delete middle (5-10):
+    //   → sections become [1-4, 11-18] → recascade → [1-4, 5-18]
+    // The deleted section's floor range is absorbed by the section that follows it.
+    recascade(bIdx);
+}
+
+// Re-lock all floor_starts and clamp floor_ends for a building.
+// Called explicitly (not via deep watcher) to avoid re-entrancy loops.
+function recascade(bIdx) {
+    const b       = props.form.buildings[bIdx];
+    const max     = b.total_floors ? Number(b.total_floors) : null;
+    b.sections.forEach((s, idx) => {
+        s.floor_start = idx === 0 ? 1 : (b.sections[idx - 1].floor_end ?? 0) + 1;
+        if (max && s.floor_end > max) s.floor_end = max;
+    });
+}
+
+// Called from floor_end @change and total_floors @change in the template
+function onFloorEndChange(bIdx) { recascade(bIdx); }
+function onTotalFloorsChange(bIdx) { recascade(bIdx); }
+
+// Whether another section can still be added (not all floors covered)
+function canAddSection(bIdx) {
+    const b = props.form.buildings[bIdx];
+    if (!b.total_floors) return true;
+    const sections = b.sections;
+    if (!sections.length) return true;
+    const lastEnd = sections[sections.length - 1].floor_end ?? 0;
+    return lastEnd < Number(b.total_floors);
 }
 
 // Track which section has its spec panel open: { b: buildingIdx, s: sectionIdx }
@@ -128,6 +165,18 @@ function isSectionExpanded(bIdx, sIdx) {
 const expandedBuildingSpecs = ref(null);
 function toggleBuildingSpecs(bIdx) {
     expandedBuildingSpecs.value = expandedBuildingSpecs.value === bIdx ? null : bIdx;
+}
+
+// Spec helpers — use object spread so Vue always sees a new object reference,
+// which guarantees reactivity even when adding keys to a previously empty {}.
+function updateBuildingSpec(bIdx, key, val) {
+    const b = props.form.buildings[bIdx];
+    b.specifications = { ...b.specifications, [key]: val };
+}
+
+function updateSectionSpec(bIdx, sIdx, key, val) {
+    const s = props.form.buildings[bIdx].sections[sIdx];
+    s.specifications = { ...s.specifications, [key]: val };
 }
 
 // ── Step 4: Developer toggle ──────────────────────────────────────────
@@ -264,7 +313,8 @@ function removeCompliance(idx) {
                                 <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem v-for="t in enums.types" :key="t.value" :value="t.value">{{ t.label }}</SelectItem>
+                                <SelectItem v-for="t in enums.types" :key="t.value" :value="t.value">{{ t.label }}
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <p v-if="form.errors.type" class="text-xs text-destructive">{{ form.errors.type }}</p>
@@ -274,7 +324,8 @@ function removeCompliance(idx) {
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Project Code</Label>
                         <Input v-model="form.project_code" placeholder="Auto-generated" maxlength="20"
                             :class="[f, form.errors.project_code && 'border-destructive']" />
-                        <p v-if="form.errors.project_code" class="text-xs text-destructive">{{ form.errors.project_code }}</p>
+                        <p v-if="form.errors.project_code" class="text-xs text-destructive">{{ form.errors.project_code
+                        }}</p>
                         <p v-else class="text-xs text-muted-foreground">Auto-generated · editable</p>
                     </div>
 
@@ -283,14 +334,16 @@ function removeCompliance(idx) {
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Start Date</Label>
                         <DatePicker :model-value="form.start_date" @update:model-value="form.start_date = $event"
                             placeholder="Pick a date" :class="f" />
-                        <p v-if="form.errors.start_date" class="text-xs text-destructive">{{ form.errors.start_date }}</p>
+                        <p v-if="form.errors.start_date" class="text-xs text-destructive">{{ form.errors.start_date }}
+                        </p>
                     </div>
 
                     <div class="space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Handover Date</Label>
                         <DatePicker :model-value="form.handover_date" @update:model-value="form.handover_date = $event"
                             placeholder="Pick a date" :class="f" />
-                        <p v-if="form.errors.handover_date" class="text-xs text-destructive">{{ form.errors.handover_date }}</p>
+                        <p v-if="form.errors.handover_date" class="text-xs text-destructive">{{
+                            form.errors.handover_date }}</p>
                     </div>
 
                     <!-- Row 4: Status (left) | Theme Color (right) -->
@@ -303,7 +356,8 @@ function removeCompliance(idx) {
                                 <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem v-for="s in enums.statuses" :key="s.value" :value="s.value">{{ s.label }}</SelectItem>
+                                <SelectItem v-for="s in enums.statuses" :key="s.value" :value="s.value">{{ s.label }}
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <p v-if="form.errors.status" class="text-xs text-destructive">{{ form.errors.status }}</p>
@@ -370,12 +424,9 @@ function removeCompliance(idx) {
 
                     <!-- Interactive Google Map -->
                     <div class="col-span-2">
-                        <MapPicker
-                            :lat="form.latitude ? Number(form.latitude) : null"
-                            :lng="form.longitude ? Number(form.longitude) : null"
-                            @update:lat="form.latitude = $event"
-                            @update:lng="form.longitude = $event"
-                        />
+                        <MapPicker :lat="form.latitude ? Number(form.latitude) : null"
+                            :lng="form.longitude ? Number(form.longitude) : null" @update:lat="form.latitude = $event"
+                            @update:lng="form.longitude = $event" />
                     </div>
 
                 </div>
@@ -425,16 +476,11 @@ function removeCompliance(idx) {
                                 <Input v-model="building.name" placeholder="Building name (e.g. Tower A)"
                                     :class="[f, 'h-8 flex-1 text-sm font-semibold']" />
 
-                                <div
-                                    class="flex shrink-0 items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-xs text-muted-foreground">
-                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <rect x="2" y="3" width="20" height="14" rx="2" />
-                                        <line x1="8" y1="21" x2="16" y2="21" />
-                                        <line x1="12" y1="17" x2="12" y2="21" />
-                                    </svg>
-                                    <input type="number" v-model="building.total_floors" min="1" placeholder="Floors"
-                                        class="w-17 bg-transparent text-xs focus:outline-none" />
+                                <div class="flex shrink-0 items-center gap-1.5">
+                                    <span class="text-xs text-muted-foreground whitespace-nowrap">Total Floors</span>
+                                    <Input type="number" min="1" v-model="building.total_floors"
+                                        @change="onTotalFloorsChange(bIdx)"
+                                        :class="[f, 'h-8 w-20 text-center text-sm']" />
                                 </div>
 
                                 <!-- Building Infrastructure (shared specs) toggle -->
@@ -456,7 +502,11 @@ function removeCompliance(idx) {
                                 </button>
 
                                 <button type="button" @click="addSection(bIdx)"
-                                    class="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-admin-accent hover:text-admin-accent">
+                                    :disabled="!canAddSection(bIdx)"
+                                    :class="['flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors',
+                                        canAddSection(bIdx)
+                                            ? 'border-border text-muted-foreground hover:border-admin-accent hover:text-admin-accent'
+                                            : 'border-border/40 text-muted-foreground/40 cursor-not-allowed']">
                                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <line x1="12" y1="5" x2="12" y2="19" />
@@ -488,32 +538,40 @@ function removeCompliance(idx) {
                                     <div class="space-y-1.5">
                                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Passenger
                                             Lifts</Label>
-                                        <Input type="number" min="0" v-model="building.specifications.passenger_lifts"
+                                        <Input type="number" min="0"
+                                            :model-value="building.specifications.passenger_lifts"
+                                            @update:model-value="updateBuildingSpec(bIdx, 'passenger_lifts', $event)"
                                             placeholder="e.g. 3" :class="[f, 'text-sm']" />
                                     </div>
                                     <div class="space-y-1.5">
                                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Service
                                             Lifts</Label>
-                                        <Input type="number" min="0" v-model="building.specifications.service_lifts"
+                                        <Input type="number" min="0"
+                                            :model-value="building.specifications.service_lifts"
+                                            @update:model-value="updateBuildingSpec(bIdx, 'service_lifts', $event)"
                                             placeholder="e.g. 1" :class="[f, 'text-sm']" />
                                     </div>
                                     <div class="space-y-1.5">
                                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Parking
                                             Levels (B)</Label>
-                                        <Input type="number" min="0" v-model="building.specifications.parking_levels"
+                                        <Input type="number" min="0"
+                                            :model-value="building.specifications.parking_levels"
+                                            @update:model-value="updateBuildingSpec(bIdx, 'parking_levels', $event)"
                                             placeholder="e.g. 2" :class="[f, 'text-sm']" />
                                     </div>
                                     <div class="space-y-1.5">
                                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Parking
                                             Capacity</Label>
-                                        <Input type="number" min="0" v-model="building.specifications.parking_capacity"
+                                        <Input type="number" min="0"
+                                            :model-value="building.specifications.parking_capacity"
+                                            @update:model-value="updateBuildingSpec(bIdx, 'parking_capacity', $event)"
                                             placeholder="e.g. 80" :class="[f, 'text-sm']" />
                                     </div>
                                     <div class="space-y-1.5">
                                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Lobby
                                             Type</Label>
                                         <Select :model-value="building.specifications.lobby_type || undefined"
-                                            @update:model-value="building.specifications.lobby_type = $event">
+                                            @update:model-value="updateBuildingSpec(bIdx, 'lobby_type', $event)">
                                             <SelectTrigger :class="[f, 'text-sm']">
                                                 <SelectValue placeholder="Select" />
                                             </SelectTrigger>
@@ -527,7 +585,7 @@ function removeCompliance(idx) {
                                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Security
                                             System</Label>
                                         <Select :model-value="building.specifications.security || undefined"
-                                            @update:model-value="building.specifications.security = $event">
+                                            @update:model-value="updateBuildingSpec(bIdx, 'security', $event)">
                                             <SelectTrigger :class="[f, 'text-sm']">
                                                 <SelectValue placeholder="Select" />
                                             </SelectTrigger>
@@ -541,7 +599,7 @@ function removeCompliance(idx) {
                                         <Label
                                             class="text-xs font-medium text-slate-500 dark:text-slate-400">Generator</Label>
                                         <Select :model-value="building.specifications.generator || undefined"
-                                            @update:model-value="building.specifications.generator = $event">
+                                            @update:model-value="updateBuildingSpec(bIdx, 'generator', $event)">
                                             <SelectTrigger :class="[f, 'text-sm']">
                                                 <SelectValue placeholder="Select" />
                                             </SelectTrigger>
@@ -613,27 +671,33 @@ function removeCompliance(idx) {
                                         </button>
                                     </div>
 
-                                    <!-- Floor range + planned units (always visible) -->
-                                    <div class="grid grid-cols-3 gap-4 bg-slate-50/60 dark:bg-white/[0.015] px-4 pb-3">
-                                        <div class="space-y-1.5">
-                                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Floor
-                                                Start</Label>
-                                            <Input type="number" min="0" v-model="section.floor_start"
-                                                placeholder="e.g. 1" :class="[f, 'text-sm']" />
+                                    <!-- Floor range + planned units -->
+                                    <div class="flex items-center gap-3 border-t border-border/60 bg-slate-50/60 dark:bg-white/[0.015] px-4 py-2.5">
+                                        <span class="text-[11px] font-medium text-slate-400 shrink-0">Floor</span>
+
+                                        <!-- floor_start: always auto-calculated, readonly -->
+                                        <div class="relative">
+                                            <Input type="number" :model-value="section.floor_start" readonly
+                                                :class="[f, 'h-8 w-20 text-center text-sm cursor-not-allowed opacity-60 select-none']" />
+                                            <svg class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                            </svg>
                                         </div>
-                                        <div class="space-y-1.5">
-                                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Floor
-                                                End</Label>
-                                            <Input type="number" min="0" v-model="section.floor_end"
-                                                placeholder="e.g. 4" :class="[f, 'text-sm']" />
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <Label
-                                                class="text-xs font-medium text-slate-500 dark:text-slate-400">Planned
-                                                Units</Label>
-                                            <Input type="number" min="0" v-model="section.planned_units"
-                                                placeholder="e.g. 16" :class="[f, 'text-sm']" />
-                                        </div>
+
+                                        <span class="text-sm text-slate-300">—</span>
+
+                                        <!-- floor_end: user sets this, cascades to next section's start -->
+                                        <Input type="number" min="0"
+                                            :max="building.total_floors || undefined"
+                                            v-model="section.floor_end"
+                                            @change="onFloorEndChange(bIdx)"
+                                            placeholder="End"
+                                            :class="[f, 'h-8 w-20 text-center text-sm']" />
+
+                                        <div class="mx-1 h-4 w-px bg-border shrink-0" />
+                                        <span class="text-[11px] font-medium text-slate-400 shrink-0">Units</span>
+                                        <Input type="number" min="0" v-model="section.planned_units" placeholder="0"
+                                            :class="[f, 'h-8 w-24 text-center text-sm']" />
                                     </div>
 
                                     <!-- Section-specific specs (HVAC, cargo access, internet — can differ per floor range) -->
@@ -648,7 +712,7 @@ function removeCompliance(idx) {
                                                     class="text-xs font-medium text-slate-500 dark:text-slate-400">HVAC
                                                     System</Label>
                                                 <Select :model-value="section.specifications.hvac || undefined"
-                                                    @update:model-value="section.specifications.hvac = $event">
+                                                    @update:model-value="updateSectionSpec(bIdx, sIdx, 'hvac', $event)">
                                                     <SelectTrigger :class="[f, 'text-sm']">
                                                         <SelectValue placeholder="Select" />
                                                     </SelectTrigger>
@@ -663,7 +727,7 @@ function removeCompliance(idx) {
                                                     class="text-xs font-medium text-slate-500 dark:text-slate-400">Cargo
                                                     Access</Label>
                                                 <Select :model-value="section.specifications.cargo_access || undefined"
-                                                    @update:model-value="section.specifications.cargo_access = $event">
+                                                    @update:model-value="updateSectionSpec(bIdx, sIdx, 'cargo_access', $event)">
                                                     <SelectTrigger :class="[f, 'text-sm']">
                                                         <SelectValue placeholder="Select" />
                                                     </SelectTrigger>
@@ -678,7 +742,7 @@ function removeCompliance(idx) {
                                                 <Label
                                                     class="text-xs font-medium text-slate-500 dark:text-slate-400">Internet</Label>
                                                 <Select :model-value="section.specifications.internet || undefined"
-                                                    @update:model-value="section.specifications.internet = $event">
+                                                    @update:model-value="updateSectionSpec(bIdx, sIdx, 'internet', $event)">
                                                     <SelectTrigger :class="[f, 'text-sm']">
                                                         <SelectValue placeholder="Select" />
                                                     </SelectTrigger>
@@ -692,7 +756,9 @@ function removeCompliance(idx) {
                                                 <Label
                                                     class="text-xs font-medium text-slate-500 dark:text-slate-400">Electrical
                                                     Capacity</Label>
-                                                <Input v-model="section.specifications.electrical_capacity"
+                                                <Input
+                                                    :model-value="section.specifications.electrical_capacity"
+                                                    @update:model-value="updateSectionSpec(bIdx, sIdx, 'electrical_capacity', $event)"
                                                     placeholder="e.g. 2.5 MVA" :class="[f, 'text-sm']" />
                                             </div>
                                         </div>
@@ -808,7 +874,8 @@ function removeCompliance(idx) {
                     <!-- ── Sale terms (non-lease) ─────────────────────────────── -->
                     <div class="rounded-xl border border-border">
                         <div class="border-b border-border px-4 py-3">
-                            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Sale Terms</p>
+                            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                                Sale Terms</p>
                         </div>
                         <div class="grid grid-cols-2 gap-5 p-4">
 
@@ -820,22 +887,27 @@ function removeCompliance(idx) {
                                 <div class="relative">
                                     <Input type="number" step="0.01" min="0" v-model="form.service_charge_sqft"
                                         placeholder="e.g. 5" :class="[f, 'pr-20']" />
-                                    <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">BDT/sqft</span>
+                                    <span
+                                        class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">BDT/sqft</span>
                                 </div>
-                                <p class="text-[11px] text-slate-400">Monthly fee paid by owner for common areas — lifts, cleaning, security, generator.</p>
+                                <p class="text-[11px] text-slate-400">Monthly fee paid by owner for common areas —
+                                    lifts, cleaning, security, generator.</p>
                             </div>
 
                             <!-- Maintenance contract -->
                             <div class="space-y-1.5">
                                 <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
-                                    Maintenance Contract <span class="font-normal text-slate-400">(years included)</span>
+                                    Maintenance Contract <span class="font-normal text-slate-400">(years
+                                        included)</span>
                                 </Label>
                                 <div class="relative">
                                     <Input type="number" min="0" max="50" v-model="form.maintenance_years"
                                         placeholder="e.g. 2" :class="[f, 'pr-14']" />
-                                    <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">yrs</span>
+                                    <span
+                                        class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">yrs</span>
                                 </div>
-                                <p class="text-[11px] text-slate-400">Free maintenance period included with purchase. After this, owner pays separately.</p>
+                                <p class="text-[11px] text-slate-400">Free maintenance period included with purchase.
+                                    After this, owner pays separately.</p>
                             </div>
 
                         </div>
