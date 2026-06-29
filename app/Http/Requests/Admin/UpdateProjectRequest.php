@@ -20,7 +20,7 @@ class UpdateProjectRequest extends FormRequest
 
         return [
             // Step 1 — Identity
-            'name'          => ['required', 'string', 'max:255'],
+            'name'             => ['required', 'string', 'max:255', 'unique:projects,name'],
             'project_code'  => ['nullable', 'string', 'max:20', Rule::unique('projects', 'project_code')->ignore($projectId)],
             'type'          => ['required', Rule::enum(ProjectType::class)],
             'status'        => ['required', Rule::enum(ProjectStatus::class)],
