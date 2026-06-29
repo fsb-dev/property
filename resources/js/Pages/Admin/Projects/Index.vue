@@ -405,6 +405,18 @@ const recentActivities = [
                                     <td style="padding:14px 16px; border-top:1px solid #F5F7FB; text-align:right;">
                                         <div
                                             style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
+
+                                            <!-- Blueprint -->
+                                            <Link :href="route('admin.blueprint.show', project.id)"
+                                                style="height:28px; border-radius:8px; display:inline-flex; align-items:center; gap:5px; padding:0 10px; font-size:11px; font-weight:600; color:#5B3DF5; background:#EEF2FF; text-decoration:none; transition:all .15s; white-space:nowrap;"
+                                                class="hover:bg-[#5B3DF5] hover:!text-white" title="Unit Blueprint">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                                                    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                                                </svg>
+                                                Blueprint
+                                            </Link>
+
                                             <Link :href="route('admin.projects.edit', project.id)"
                                                 style="width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#9AA3B4; text-decoration:none; transition:all .15s;"
                                                 class="hover:bg-[#F1F4F9] hover:text-[#5B3DF5]" title="Edit">

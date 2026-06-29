@@ -19,10 +19,11 @@ class UnitController extends Controller
     {
         return inertia('Admin/Units/Index', [
             'units'    => $this->service->paginate($request),
-            'filters'  => $request->only(['search', 'project_id', 'type', 'status']),
+            'filters'  => $request->only(['search', 'project_id', 'block_id', 'type', 'status']),
             'stats'    => $this->service->stats(),
             'enums'    => $this->service->enums(),
             'projects' => $this->service->projectsList(),
+            'sections' => $this->service->sectionsList(),
         ]);
     }
 
@@ -45,15 +46,32 @@ class UnitController extends Controller
     public function edit(Unit $unit): Response
     {
         return inertia('Admin/Units/Edit', [
-            'unit'     => $this->service->forEdit($unit),
+            'unit'     => $this->service->forConfigure($unit),
             'enums'    => $this->service->enums(),
             'projects' => $this->service->projectsList(),
+        ]);
+    }
+
+    /** Full 8-tab configuration page — entry point from blueprint circle click */
+    public function configure(Unit $unit): Response
+    {
+        return inertia('Admin/Units/Configure', [
+            'unit'  => $this->service->forConfigure($unit),
+            'enums' => $this->service->enums(),
         ]);
     }
 
     public function update(UpdateUnitRequest $request, Unit $unit): RedirectResponse
     {
         $unit = $this->service->update($unit, $request->validated());
+
+        // Return to blueprint if that's where the user came from
+        $from = $request->input('_from');
+        if ($from === 'blueprint' && $unit->block_id) {
+            $projectId = $unit->project_id;
+            return redirect()->route('admin.blueprint.show', $projectId)
+                ->with('toast', ['type' => 'success', 'message' => "Unit \"{$unit->unit_number}\" saved."]);
+        }
 
         return redirect()->route('admin.units.index')
             ->with('toast', ['type' => 'success', 'message' => "Unit \"{$unit->unit_number}\" updated."]);

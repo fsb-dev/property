@@ -19,7 +19,7 @@ class ProjectSeeder extends Seeder
         UnitStatus::Available,
         UnitStatus::Available,
         UnitStatus::Available,
-        UnitStatus::Reserved,
+        UnitStatus::Booked,
         UnitStatus::Sold,
     ];
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BlueprintController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
@@ -28,7 +29,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         });
     });
 
-    // Units
+    // Units — CRUD
     Route::middleware('permission:view units')->group(function () {
         Route::get('/units',                     [UnitController::class, 'index'])->name('units.index');
         Route::middleware('permission:create units')->group(function () {
@@ -36,12 +37,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
             Route::post('/units',                [UnitController::class, 'store'])->name('units.store');
         });
         Route::middleware('permission:edit units')->group(function () {
-            Route::get('/units/{unit}/edit',     [UnitController::class, 'edit'])->name('units.edit');
-            Route::put('/units/{unit}',          [UnitController::class, 'update'])->name('units.update');
+            Route::get('/units/{unit}/edit',      [UnitController::class, 'edit'])->name('units.edit');
+            Route::get('/units/{unit}/configure', [UnitController::class, 'configure'])->name('units.configure');
+            Route::put('/units/{unit}',           [UnitController::class, 'update'])->name('units.update');
         });
         Route::middleware('permission:delete units')->group(function () {
             Route::delete('/units/{unit}',       [UnitController::class, 'destroy'])->name('units.destroy');
         });
+    });
+
+    // Blueprint — visual unit builder (JSON API + Inertia pages)
+    Route::middleware('permission:edit units')->group(function () {
+        Route::get( '/units/blueprint',                           [BlueprintController::class, 'select'])->name('units.blueprint-select');
+        Route::get( '/projects/{project}/blueprint',              [BlueprintController::class, 'show'])->name('blueprint.show');
+        Route::post('/sections/{section}/generate',               [BlueprintController::class, 'generate'])->name('blueprint.generate');
+        Route::post('/sections/{section}/generate-all',           [BlueprintController::class, 'generateAll'])->name('blueprint.generate-all');
+        Route::post('/sections/{section}/quick-config',           [BlueprintController::class, 'quickConfig'])->name('blueprint.quick-config');
+        Route::patch('/units/{unit}/blueprint',                   [BlueprintController::class, 'updateUnit'])->name('blueprint.unit.update');
+        Route::post( '/units/{unit}/apply-config',                [BlueprintController::class, 'applyConfig'])->name('blueprint.unit.apply');
+        Route::delete('/sections/{section}/floor',                [BlueprintController::class, 'deleteFloor'])->name('blueprint.floor.delete');
+        Route::post( '/units/bulk-status',                        [BlueprintController::class, 'bulkStatus'])->name('blueprint.bulk-status');
     });
 
     // Clients — static segments (/create) must come before wildcard ({client})

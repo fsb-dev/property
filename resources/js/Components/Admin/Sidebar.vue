@@ -21,8 +21,8 @@ const navLinks = [
         icon: `<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-5h6v5"/>`,
     },
     {
-        label: 'Units', routeName: 'admin.units.index', activePattern: 'admin.units.*',
-        href: () => route('admin.units.index'),
+        label: 'Units', routeName: 'admin.units.blueprint-select', activePattern: 'admin.{units.*,blueprint.*}',
+        href: () => route('admin.units.blueprint-select'),
         icon: `<rect x="3" y="8" width="8" height="13" rx="1.5"/><rect x="13" y="3" width="8" height="18" rx="1.5"/>`,
     },
     {
