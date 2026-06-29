@@ -165,26 +165,26 @@ const displayValue = computed(() => {
                 class="overflow-hidden rounded-xl border border-border bg-admin-surface-card shadow-xl shadow-black/10 dark:shadow-black/50"
             >
                 <!-- Month navigation -->
-                <div class="flex items-center justify-between border-b border-border px-4 py-3">
-                    <button type="button" @click="prevMonth" class="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                <div class="flex items-center justify-between border-b border-border px-3 py-2">
+                    <button type="button" @click="prevMonth" class="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
                     </button>
-                    <span class="text-sm font-semibold text-foreground">{{ MONTHS[viewMonth] }} {{ viewYear }}</span>
-                    <button type="button" @click="nextMonth" class="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    <span class="text-xs font-semibold text-foreground">{{ MONTHS[viewMonth] }} {{ viewYear }}</span>
+                    <button type="button" @click="nextMonth" class="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                     </button>
                 </div>
 
-                <div class="p-3">
+                <div class="p-2">
                     <!-- Day-of-week headers -->
-                    <div class="mb-1 grid grid-cols-7">
-                        <div v-for="d in DAYS" :key="d" class="flex h-8 items-center justify-center text-[11px] font-medium text-muted-foreground">
+                    <div class="mb-0.5 grid grid-cols-7">
+                        <div v-for="d in DAYS" :key="d" class="flex h-6 items-center justify-center text-[10px] font-medium text-muted-foreground">
                             {{ d }}
                         </div>
                     </div>
 
                     <!-- Day cells -->
-                    <div class="grid grid-cols-7 gap-0.5">
+                    <div class="grid grid-cols-7 gap-px">
                         <button
                             v-for="(cell, i) in calendarDays"
                             :key="i"
@@ -192,7 +192,7 @@ const displayValue = computed(() => {
                             @click="select(cell)"
                             :disabled="!cell.current"
                             :class="[
-                                'flex h-8 w-full items-center justify-center rounded-lg text-sm transition-colors',
+                                'flex h-7 w-full items-center justify-center rounded-md text-xs transition-colors',
                                 !cell.current && 'pointer-events-none opacity-25 text-muted-foreground',
                                 cell.current && isSelected(cell) && 'bg-admin-accent text-white font-semibold',
                                 cell.current && !isSelected(cell) && isToday(cell) && 'text-admin-accent font-semibold ring-1 ring-admin-accent/30',
@@ -205,7 +205,7 @@ const displayValue = computed(() => {
                 </div>
 
                 <!-- Today shortcut -->
-                <div class="border-t border-border px-3 py-2.5">
+                <div class="border-t border-border px-3 py-1.5">
                     <button
                         type="button"
                         @click="select({ current: true, date: today.toISOString().split('T')[0] })"

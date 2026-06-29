@@ -53,13 +53,32 @@ function stepState(idx) {
 // ── Field style ────────────────────────────────────────────────────────
 const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:border-white/[0.09] focus-visible:ring-1';
 
-// ── Step 1: auto project_code from name ───────────────────────────────
-watch(() => props.form.name, (name) => {
-    if (!name || (props.mode === 'edit' && props.form.project_code)) return;
-    if (!props.form.project_code) {
-        const initials = name.trim().split(/\s+/).map(w => w[0]?.toUpperCase() ?? '').join('');
-        props.form.project_code = `${initials}-${new Date().getFullYear()}`;
-    }
+// ── Step 1: auto project_code ─────────────────────────────────────────
+// Format: {2 name initials}-{2 type initials}-{last 4 of ms timestamp}
+// Fully dynamic — works for any type value without a hardcoded map.
+// e.g. "Green Valley Villas" + residential  → GV-RE-4821
+//      "Skyline Heights"     + mixed_use    → SH-MU-3907
+const SKIP_WORDS = new Set(['the','a','an','of','at','in','and','by','for','with']);
+
+function buildCode() {
+    const name = props.form.name?.trim() ?? '';
+    const type = props.form.type ?? '';
+    if (!name || !type) return;
+
+    const nameWords = name.split(/\s+/).filter(w => !SKIP_WORDS.has(w.toLowerCase()));
+    const namePart  = nameWords.slice(0, 2).map(w => w[0].toUpperCase()).join('');
+
+    // Split on underscore or space so mixed_use → MU, residential → RE
+    const typePart  = type.split(/[_\s]+/).map(w => w[0].toUpperCase()).join('').slice(0, 2);
+
+    const tsPart    = String(Date.now()).slice(-4);
+
+    props.form.project_code = `${namePart}-${typePart}-${tsPart}`;
+}
+
+watch([() => props.form.name, () => props.form.type], () => {
+    if (props.mode === 'edit') return;
+    buildCode();
 });
 
 // ── Step 3: Buildings & Sections ─────────────────────────────────────
@@ -225,6 +244,7 @@ function removeCompliance(idx) {
                 <!-- ── Step 1: Identity ─────────────────────────────────────── -->
                 <div v-show="activeStep === 0" class="grid grid-cols-2 gap-5 p-6">
 
+                    <!-- Row 1: Project Name (full width) -->
                     <div class="col-span-2 space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
                             Project Name <span class="text-destructive">*</span>
@@ -234,33 +254,7 @@ function removeCompliance(idx) {
                         <p v-if="form.errors.name" class="text-xs text-destructive">{{ form.errors.name }}</p>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Project Code</Label>
-                        <Input v-model="form.project_code" placeholder="e.g. LKS-2024" maxlength="20"
-                            :class="[f, form.errors.project_code && 'border-destructive']" />
-                        <p v-if="form.errors.project_code" class="text-xs text-destructive">{{ form.errors.project_code
-                            }}</p>
-                        <p v-else class="text-xs text-muted-foreground">Auto-generated from project name</p>
-                    </div>
-
-                    <!-- Theme color swatches -->
-                    <div class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Theme Color</Label>
-                        <div class="flex items-center gap-2">
-                            <button v-for="hex in enums.themes" :key="hex" type="button" @click="form.theme_color = hex"
-                                :title="hex" :style="{ backgroundColor: hex }" :class="[
-                                    'h-7 w-7 rounded-full border-2 transition-all',
-                                    form.theme_color === hex
-                                        ? 'border-foreground scale-110 shadow-md'
-                                        : 'border-transparent hover:scale-105',
-                                ]" />
-                            <input type="color" :value="form.theme_color"
-                                @input="form.theme_color = $event.target.value"
-                                class="h-7 w-7 cursor-pointer rounded-full border border-border bg-transparent p-0.5"
-                                title="Custom color" />
-                        </div>
-                    </div>
-
+                    <!-- Row 2: Type (left) | Project Code (right) — code auto-generates from name+type -->
                     <div class="space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
                             Type <span class="text-destructive">*</span>
@@ -270,13 +264,36 @@ function removeCompliance(idx) {
                                 <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem v-for="t in enums.types" :key="t.value" :value="t.value">{{ t.label }}
-                                </SelectItem>
+                                <SelectItem v-for="t in enums.types" :key="t.value" :value="t.value">{{ t.label }}</SelectItem>
                             </SelectContent>
                         </Select>
                         <p v-if="form.errors.type" class="text-xs text-destructive">{{ form.errors.type }}</p>
                     </div>
 
+                    <div class="space-y-1.5">
+                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Project Code</Label>
+                        <Input v-model="form.project_code" placeholder="Auto-generated" maxlength="20"
+                            :class="[f, form.errors.project_code && 'border-destructive']" />
+                        <p v-if="form.errors.project_code" class="text-xs text-destructive">{{ form.errors.project_code }}</p>
+                        <p v-else class="text-xs text-muted-foreground">Auto-generated · editable</p>
+                    </div>
+
+                    <!-- Row 3: Start Date | Handover Date -->
+                    <div class="space-y-1.5">
+                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Start Date</Label>
+                        <DatePicker :model-value="form.start_date" @update:model-value="form.start_date = $event"
+                            placeholder="Pick a date" :class="f" />
+                        <p v-if="form.errors.start_date" class="text-xs text-destructive">{{ form.errors.start_date }}</p>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Handover Date</Label>
+                        <DatePicker :model-value="form.handover_date" @update:model-value="form.handover_date = $event"
+                            placeholder="Pick a date" :class="f" />
+                        <p v-if="form.errors.handover_date" class="text-xs text-destructive">{{ form.errors.handover_date }}</p>
+                    </div>
+
+                    <!-- Row 4: Status (left) | Theme Color (right) -->
                     <div class="space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">
                             Status <span class="text-destructive">*</span>
@@ -286,29 +303,28 @@ function removeCompliance(idx) {
                                 <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem v-for="s in enums.statuses" :key="s.value" :value="s.value">{{ s.label }}
-                                </SelectItem>
+                                <SelectItem v-for="s in enums.statuses" :key="s.value" :value="s.value">{{ s.label }}</SelectItem>
                             </SelectContent>
                         </Select>
                         <p v-if="form.errors.status" class="text-xs text-destructive">{{ form.errors.status }}</p>
                     </div>
 
                     <div class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Start Date</Label>
-                        <DatePicker :model-value="form.start_date" @update:model-value="form.start_date = $event"
-                            placeholder="Pick a date" :class="f" />
-                        <p v-if="form.errors.start_date" class="text-xs text-destructive">{{ form.errors.start_date }}
-                        </p>
+                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Theme Color</Label>
+                        <div class="flex items-center gap-2 pt-1">
+                            <button v-for="hex in enums.themes" :key="hex" type="button" @click="form.theme_color = hex"
+                                :title="hex" :style="{ backgroundColor: hex }" :class="[
+                                    'h-7 w-7 rounded-full border-2 transition-all',
+                                    form.theme_color === hex ? 'border-foreground scale-110 shadow-md' : 'border-transparent hover:scale-105',
+                                ]" />
+                            <input type="color" :value="form.theme_color"
+                                @input="form.theme_color = $event.target.value"
+                                class="h-7 w-7 cursor-pointer rounded-full border border-border bg-transparent p-0.5"
+                                title="Custom color" />
+                        </div>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Handover Date</Label>
-                        <DatePicker :model-value="form.handover_date" @update:model-value="form.handover_date = $event"
-                            placeholder="Pick a date" :class="f" />
-                        <p v-if="form.errors.handover_date" class="text-xs text-destructive">{{
-                            form.errors.handover_date }}</p>
-                    </div>
-
+                    <!-- Row 5: Description (full width) -->
                     <div class="col-span-2 space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Description</Label>
                         <Textarea v-model="form.description" placeholder="Brief overview of the project..." rows="4"
