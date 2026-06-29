@@ -12,8 +12,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('tenant_id')->nullable();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('block_id')->nullable();     // FK → project_blocks
-            $table->unsignedSmallInteger('floor')->nullable();
-            $table->unsignedSmallInteger('sort_order')->default(0); // left-to-right order in blueprint
+            $table->unsignedSmallInteger('floor')->nullable();       // start floor
+            $table->unsignedSmallInteger('floor_end')->nullable();    // end floor — set when unit spans multiple floors (block unit)
+            $table->unsignedSmallInteger('sort_order')->default(0);   // left-to-right order in blueprint
 
             // ── Identity ──────────────────────────────────────────────────
             $table->string('unit_number');                          // A-1205  (auto-generated)

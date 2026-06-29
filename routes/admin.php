@@ -52,6 +52,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get( '/projects/{project}/blueprint',              [BlueprintController::class, 'show'])->name('blueprint.show');
         Route::post('/sections/{section}/generate',               [BlueprintController::class, 'generate'])->name('blueprint.generate');
         Route::post('/sections/{section}/generate-all',           [BlueprintController::class, 'generateAll'])->name('blueprint.generate-all');
+        Route::post('/sections/{section}/generate-block',         [BlueprintController::class, 'generateBlock'])->name('blueprint.generate-block');
         Route::post('/sections/{section}/quick-config',           [BlueprintController::class, 'quickConfig'])->name('blueprint.quick-config');
         Route::patch('/units/{unit}/blueprint',                   [BlueprintController::class, 'updateUnit'])->name('blueprint.unit.update');
         Route::post( '/units/{unit}/apply-config',                [BlueprintController::class, 'applyConfig'])->name('blueprint.unit.apply');

@@ -79,6 +79,19 @@ class BlueprintController extends Controller
         return response()->json(['floors' => $results], 201);
     }
 
+    // ── Generate the single block unit for an entire section ──────────────
+
+    public function generateBlock(ProjectBlock $section): JsonResponse
+    {
+        if (!$section->is_block_unit) {
+            return response()->json(['error' => 'Section is not configured as a block unit.'], 422);
+        }
+
+        $result = $this->service->generateBlockUnit($section);
+
+        return response()->json($result, $result['skipped'] ? 200 : 201);
+    }
+
     // ── Quick-apply a config to all same-type units on a floor ────────────
 
     public function quickConfig(Request $request, ProjectBlock $section): JsonResponse

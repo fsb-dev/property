@@ -106,6 +106,7 @@ class UnitService
             'section_name'   => $unit->section?->name,
             'building_name'  => $unit->section?->building?->name,
             'floor'          => $unit->floor,
+            'floor_end'      => $unit->floor_end,
             'section_type'   => $unit->section?->type,
 
             // Identity

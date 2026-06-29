@@ -34,6 +34,7 @@ const form = useForm({
     description:  props.unit.description  ?? '',
     project_id:   props.unit.project_id,
     block_id:     props.unit.block_id,
+    floor_end:    props.unit.floor_end    ?? '',
 
     // Specifications
     bedrooms:          props.unit.bedrooms       ?? '',
@@ -274,6 +275,18 @@ function removeImageItem(collection, idx) {
                         <label class="mb-1.5 block text-xs font-medium text-muted-foreground">Wing</label>
                         <input v-model="form.wing" type="text" placeholder="e.g. North, A, East"
                             class="h-9 w-full rounded-lg border border-border px-3 text-sm" />
+                    </div>
+
+                    <!-- Floor Range End — only relevant for block units spanning multiple floors -->
+                    <div v-if="unit.floor_end || unit.floor_end === 0">
+                        <label class="mb-1.5 block text-xs font-medium text-muted-foreground">
+                            Floor Range End
+                            <span class="ml-1.5 inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 text-[9px] font-semibold text-amber-700 dark:text-amber-400">Block Unit</span>
+                        </label>
+                        <input v-model="form.floor_end" type="number" min="1" max="300"
+                            :placeholder="unit.floor ?? '—'"
+                            class="h-9 w-full rounded-lg border border-border px-3 text-sm" />
+                        <p class="mt-1 text-[10px] text-muted-foreground">Start floor: {{ unit.floor }}. This unit spans {{ unit.floor }} – {{ form.floor_end || '?' }}.</p>
                     </div>
 
                     <div class="sm:col-span-2">

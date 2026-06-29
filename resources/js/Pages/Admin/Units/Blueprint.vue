@@ -33,6 +33,10 @@ const currentFloor = computed(() =>
 // Reset floor selection when section changes
 watch([activeBldg, activeSection], () => { activeFloor.value = null; });
 
+const isBlockSection = computed(() => currentSection.value?.is_block_unit ?? false);
+const blockUnit      = computed(() => currentSection.value?.block_unit ?? null);
+const generatingBlock = ref(false);
+
 // ── Quick config form ──────────────────────────────────────────────────────
 const qc = ref({
     type:             '',
@@ -100,6 +104,22 @@ async function generateFloor() {
         showToast('Generation failed. Try again.', 'error');
     } finally {
         generating.value = false;
+    }
+}
+
+// ── Generate block unit ────────────────────────────────────────────────────
+async function generateBlock() {
+    if (!currentSection.value || generatingBlock.value) return;
+    generatingBlock.value = true;
+    try {
+        const res = await axios.post(route('admin.blueprint.generate-block', currentSection.value.id));
+        const sIdx = activeSection.value;
+        buildings.value[activeBldg.value].sections[sIdx].block_unit = res.data.unit;
+        showToast(res.data.skipped ? 'Block unit already exists.' : 'Block unit created.', res.data.skipped ? 'info' : 'success');
+    } catch {
+        showToast('Failed to create block unit.', 'error');
+    } finally {
+        generatingBlock.value = false;
     }
 }
 
@@ -260,48 +280,116 @@ function floorStatusSummary(floor) {
                     <span class="text-xs font-semibold text-foreground">{{ sections[0].name }}</span>
                 </div>
 
-                <!-- Floor list -->
+                <!-- Floor list / block unit indicator -->
                 <div class="flex-1 overflow-y-auto py-1">
-                    <div
-                        v-for="floor in floors"
-                        :key="floor.floor"
-                        @click="activeFloor = floor.floor"
-                        :class="[
-                            'flex cursor-pointer items-center justify-between px-3 py-2.5 border-b border-border/50 transition-colors',
-                            activeFloor === floor.floor
-                                ? 'bg-admin-accent/10 border-l-2 border-l-admin-accent'
-                                : 'hover:bg-slate-50 dark:hover:bg-slate-800/60'
-                        ]"
-                    >
-                        <div class="flex items-center gap-2">
-                            <span :class="[
-                                'text-xs font-bold',
-                                activeFloor === floor.floor ? 'text-admin-accent' : 'text-foreground'
-                            ]">
-                                Floor {{ floor.floor }}
-                            </span>
+
+                    <!-- Block unit section — show single row instead of floor tabs -->
+                    <div v-if="isBlockSection" class="px-3 py-3">
+                        <div class="rounded-lg border border-amber-300 dark:border-amber-700/50 bg-amber-50 dark:bg-amber-900/20 px-3 py-2.5 text-center">
+                            <svg class="mx-auto mb-1 text-amber-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/>
+                            </svg>
+                            <p class="text-[11px] font-semibold text-amber-700 dark:text-amber-400">Block Unit</p>
+                            <p class="text-[10px] text-amber-600/70 dark:text-amber-500/70 mt-0.5">
+                                Floors {{ currentSection?.floor_start }}–{{ currentSection?.floor_end }}
+                            </p>
+                            <p class="text-[10px] text-amber-600/70 dark:text-amber-500/70">= 1 unit (whole section)</p>
                         </div>
-                        <span :class="[
-                            'text-[10px] font-semibold rounded-full px-1.5 py-0.5',
-                            floorUnitCount(floor) > 0
-                                ? 'bg-admin-accent/15 text-admin-accent'
-                                : 'bg-slate-100 dark:bg-slate-700 text-muted-foreground'
-                        ]">
-                            {{ floorUnitCount(floor) || '—' }}
-                        </span>
                     </div>
 
-                    <div v-if="!floors.length" class="px-3 py-8 text-center">
-                        <p class="text-xs text-muted-foreground">No floors in this section.</p>
-                    </div>
+                    <!-- Normal per-floor list -->
+                    <template v-else>
+                        <div
+                            v-for="floor in floors"
+                            :key="floor.floor"
+                            @click="activeFloor = floor.floor"
+                            :class="[
+                                'flex cursor-pointer items-center justify-between px-3 py-2.5 border-b border-border/50 transition-colors',
+                                activeFloor === floor.floor
+                                    ? 'bg-admin-accent/10 border-l-2 border-l-admin-accent'
+                                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                            ]"
+                        >
+                            <span :class="['text-xs font-bold', activeFloor === floor.floor ? 'text-admin-accent' : 'text-foreground']">
+                                Floor {{ floor.floor }}
+                            </span>
+                            <span :class="[
+                                'text-[10px] font-semibold rounded-full px-1.5 py-0.5',
+                                floorUnitCount(floor) > 0
+                                    ? 'bg-admin-accent/15 text-admin-accent'
+                                    : 'bg-slate-100 dark:bg-slate-700 text-muted-foreground'
+                            ]">
+                                {{ floorUnitCount(floor) || '—' }}
+                            </span>
+                        </div>
+                        <div v-if="!floors.length" class="px-3 py-8 text-center">
+                            <p class="text-xs text-muted-foreground">No floors in this section.</p>
+                        </div>
+                    </template>
                 </div>
             </div>
 
             <!-- ── CENTRE PANEL: circle grid ──────────────────────────── -->
             <div class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-900/40">
 
-                <!-- Empty state -->
-                <div v-if="!activeFloor" class="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
+                <!-- Block unit section — whole section is one unit -->
+                <div v-if="isBlockSection" class="flex h-full flex-col items-center justify-center gap-5 p-8 text-center">
+                    <div class="rounded-2xl border-2 border-amber-300 dark:border-amber-600/50 bg-white dark:bg-slate-800 shadow-lg p-8 max-w-sm w-full">
+                        <!-- Icon -->
+                        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-900/30">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-amber-600 dark:text-amber-400">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+                            </svg>
+                        </div>
+
+                        <h2 class="text-base font-bold text-foreground">Block Unit</h2>
+                        <p class="mt-1 text-sm text-muted-foreground">{{ currentSection?.name }}</p>
+                        <p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 px-3 py-1 text-xs font-semibold text-amber-700 dark:text-amber-400">
+                            Floors {{ currentSection?.floor_start }} – {{ currentSection?.floor_end }}
+                            &nbsp;·&nbsp; 1 unit (entire section)
+                        </p>
+
+                        <!-- Already generated -->
+                        <template v-if="blockUnit">
+                            <div class="mt-4 rounded-xl border border-border bg-slate-50 dark:bg-slate-700/50 px-4 py-3 text-left">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-semibold text-foreground">{{ blockUnit.unit_number }}</span>
+                                    <span :class="['text-[10px] font-bold rounded-full px-2 py-0.5', unitColor(blockUnit.status)]">
+                                        {{ blockUnit.status_label }}
+                                    </span>
+                                </div>
+                                <p class="mt-1 text-xs text-muted-foreground">
+                                    Floors {{ blockUnit.floor }}–{{ blockUnit.floor_end }}
+                                    <template v-if="blockUnit.size_sqft"> · {{ blockUnit.size_sqft }} sqft</template>
+                                    <template v-if="blockUnit.type_label"> · {{ blockUnit.type_label }}</template>
+                                </p>
+                            </div>
+                            <Link :href="route('admin.units.configure', blockUnit.id)"
+                                class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-admin-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-admin-accent/90 transition-colors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                                Configure Unit
+                            </Link>
+                        </template>
+
+                        <!-- Not yet generated -->
+                        <template v-else>
+                            <p class="mt-4 text-xs text-muted-foreground">No unit has been generated yet for this block section.</p>
+                            <button @click="generateBlock" :disabled="generatingBlock"
+                                class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors disabled:opacity-60">
+                                <svg v-if="generatingBlock" class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                                </svg>
+                                <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                                Generate Block Unit
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Empty state (no floor selected, normal section) -->
+                <div v-else-if="!activeFloor" class="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="text-muted-foreground/20">
                         <path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M12 3v18M3 7l9 4 9-4"/>
                     </svg>

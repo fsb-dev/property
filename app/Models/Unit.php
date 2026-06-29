@@ -15,7 +15,7 @@ class Unit extends Model implements HasMedia
 
     protected $fillable = [
         // Identity
-        'tenant_id', 'project_id', 'block_id', 'floor', 'sort_order',
+        'tenant_id', 'project_id', 'block_id', 'floor', 'floor_end', 'sort_order',
         'unit_number', 'unit_code', 'type', 'wing', 'block', 'description',
 
         // Specifications

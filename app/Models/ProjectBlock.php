@@ -16,6 +16,7 @@ class ProjectBlock extends Model
         'floor_start',
         'floor_end',
         'planned_units',
+        'is_block_unit',
         'specifications',
         'sort_order',
     ];
@@ -25,6 +26,7 @@ class ProjectBlock extends Model
         'floor_start'    => 'integer',
         'floor_end'      => 'integer',
         'planned_units'  => 'integer',
+        'is_block_unit'  => 'boolean',
         'sort_order'     => 'integer',
     ];
 

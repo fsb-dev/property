@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->unsignedSmallInteger('floor_start')->nullable();
             $table->unsignedSmallInteger('floor_end')->nullable();
             $table->unsignedSmallInteger('planned_units')->nullable();
+            $table->boolean('is_block_unit')->default(false); // entire section = 1 unit spanning all floors (showroom, lobby, etc.)
             $table->json('specifications')->nullable();      // section-specific: HVAC, cargo_access, internet, electrical
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->timestamps();

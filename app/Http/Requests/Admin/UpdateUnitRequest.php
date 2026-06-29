@@ -23,6 +23,7 @@ class UpdateUnitRequest extends FormRequest
             'project_id'         => ['required', 'integer', 'exists:projects,id'],
             'block_id'           => ['nullable', 'integer', 'exists:project_blocks,id'],
             'floor'              => ['nullable', 'integer', 'min:0', 'max:300'],
+            'floor_end'          => ['nullable', 'integer', 'min:0', 'max:300'],
             'type'               => ['nullable', Rule::enum(UnitType::class)],
             'wing'               => ['nullable', 'string', 'max:30'],
             'block'              => ['nullable', 'string', 'max:50'],

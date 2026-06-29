@@ -28,8 +28,27 @@ class BlueprintService
 
     public function formatSection(ProjectBlock $section): array
     {
-        $unitsByFloor = $section->units->groupBy('floor');
+        $base = [
+            'id'             => $section->id,
+            'name'           => $section->name,
+            'type'           => $section->type,
+            'floor_start'    => $section->floor_start,
+            'floor_end'      => $section->floor_end,
+            'planned_units'  => $section->planned_units,
+            'is_block_unit'  => (bool) $section->is_block_unit,
+        ];
 
+        if ($section->is_block_unit) {
+            // Block unit section — one unit covers all floors
+            $unit = $section->units->first();
+            return array_merge($base, [
+                'block_unit' => $unit ? $this->formatUnit($unit) : null,
+                'floors'     => [],
+            ]);
+        }
+
+        // Normal per-floor section
+        $unitsByFloor = $section->units->groupBy('floor');
         $floors = [];
         for ($f = $section->floor_start; $f <= $section->floor_end; $f++) {
             $units = $unitsByFloor->get($f, collect());
@@ -40,15 +59,7 @@ class BlueprintService
             ];
         }
 
-        return [
-            'id'            => $section->id,
-            'name'          => $section->name,
-            'type'          => $section->type,
-            'floor_start'   => $section->floor_start,
-            'floor_end'     => $section->floor_end,
-            'planned_units' => $section->planned_units,
-            'floors'        => $floors,
-        ];
+        return array_merge($base, ['block_unit' => null, 'floors' => $floors]);
     }
 
     public function formatUnit(Unit $unit): array
@@ -58,6 +69,7 @@ class BlueprintService
             'unit_number'  => $unit->unit_number,
             'unit_code'    => $unit->unit_code,
             'floor'        => $unit->floor,
+            'floor_end'    => $unit->floor_end,
             'sort_order'   => $unit->sort_order,
             'status'       => $unit->status->value,
             'status_label' => $unit->status->label(),
@@ -71,6 +83,37 @@ class BlueprintService
             'size_sqft'    => $unit->size_sqft,
             'price'        => $unit->price ? (float) $unit->price : null,
         ];
+    }
+
+    // ── Block unit generation ──────────────────────────────────────────────
+
+    /**
+     * Create a single unit that spans the entire section floor range.
+     * Idempotent — skips if a unit already exists for this section.
+     */
+    public function generateBlockUnit(ProjectBlock $section): array
+    {
+        $existing = Unit::where('block_id', $section->id)->first();
+
+        if ($existing) {
+            return ['skipped' => true, 'unit' => $this->formatUnit($existing)];
+        }
+
+        $prefix = $this->resolvePrefix($section);
+        $label  = sprintf('%s-%d-%d', $prefix, $section->floor_start, $section->floor_end);
+
+        $unit = Unit::create([
+            'project_id'  => $section->project_id,
+            'block_id'    => $section->id,
+            'floor'       => $section->floor_start,
+            'floor_end'   => $section->floor_end,
+            'sort_order'  => 1,
+            'unit_number' => $label,
+            'type'        => $this->defaultTypeForSection($section),
+            'status'      => UnitStatus::NotConfigured,
+        ]);
+
+        return ['skipped' => false, 'unit' => $this->formatUnit($unit)];
     }
 
     // ── Generate ───────────────────────────────────────────────────────────

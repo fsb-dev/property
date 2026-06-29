@@ -167,6 +167,7 @@ class ProjectService
                     'floor_start'    => $s->floor_start,
                     'floor_end'      => $s->floor_end,
                     'planned_units'  => $s->planned_units,
+                    'is_block_unit'  => (bool) $s->is_block_unit,
                     'specifications' => $s->specifications ?: new \stdClass(),
                 ])->toArray(),
             ])->toArray(),

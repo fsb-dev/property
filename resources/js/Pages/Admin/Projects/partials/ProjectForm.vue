@@ -107,7 +107,7 @@ function addSection(bIdx) {
 
     sections.push({
         id: null, name: '', type: 'residential',
-        floor_start: nextStart, floor_end: null, planned_units: null, specifications: {},
+        floor_start: nextStart, floor_end: null, planned_units: null, is_block_unit: false, specifications: {},
     });
 }
 
@@ -695,9 +695,29 @@ function removeCompliance(idx) {
                                             :class="[f, 'h-8 w-20 text-center text-sm']" />
 
                                         <div class="mx-1 h-4 w-px bg-border shrink-0" />
-                                        <span class="text-[11px] font-medium text-slate-400 shrink-0">Units</span>
-                                        <Input type="number" min="0" v-model="section.planned_units" placeholder="0"
-                                            :class="[f, 'h-8 w-24 text-center text-sm']" />
+
+                                        <!-- Block Unit toggle -->
+                                        <button type="button" @click="section.is_block_unit = !section.is_block_unit"
+                                            :class="['inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-colors shrink-0',
+                                                section.is_block_unit
+                                                    ? 'border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400'
+                                                    : 'border-border text-slate-400 hover:text-slate-600']"
+                                            title="Entire section is sold as one unit (showroom, lobby, whole floor etc.)">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                                <path v-if="section.is_block_unit" d="M9 12l2 2 4-4"/>
+                                            </svg>
+                                            Block Unit
+                                        </button>
+
+                                        <!-- planned_units hidden when is_block_unit (always 1) -->
+                                        <template v-if="!section.is_block_unit">
+                                            <div class="mx-1 h-4 w-px bg-border shrink-0" />
+                                            <span class="text-[11px] font-medium text-slate-400 shrink-0">Units</span>
+                                            <Input type="number" min="0" v-model="section.planned_units" placeholder="0"
+                                                :class="[f, 'h-8 w-24 text-center text-sm']" />
+                                        </template>
+                                        <span v-else class="text-[11px] text-amber-600 dark:text-amber-400 shrink-0">= 1 unit</span>
                                     </div>
 
                                     <!-- Section-specific specs (HVAC, cargo access, internet — can differ per floor range) -->

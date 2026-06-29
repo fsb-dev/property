@@ -49,6 +49,10 @@ class ProjectSeeder extends Seeder
         $this->horizonPlots($dev2, $f);
         $this->palmBreezeTownhouses($dev2, $f);
         $this->metroWarehouse($dev3, $f);
+
+        // Multi-building + block unit demos
+        $this->cityCenterMall($dev3, $f);
+        $this->panoramaTwinTowers($dev1, $f);
     }
 
     // ── 1. Mixed Apartment + Duplex ───────────────────────────────
@@ -557,6 +561,372 @@ class ProjectSeeder extends Seeder
                 'status'      => $this->nextStatus(),
             ]);
         }
+    }
+
+    // ── 8. City Center Mall & Residences ─────────────────────────
+    // 2 buildings: Mall Podium (floors 1-5) + Residential Tower (floors 6-25)
+    // Podium has a 3-floor block unit (anchor showroom) + regular retail floors
+    private function cityCenterMall(Developer $dev, callable $f): void
+    {
+        $project = Project::create([
+            'name'                => 'City Center Mall & Residences',
+            'slug'                => 'city-center-mall-residences',
+            'project_code'        => 'CCM-2025',
+            'theme_color'         => '#7C3AED',
+            'developer_id'        => $dev->id,
+            'type'                => ProjectType::MixedUse,
+            'status'              => ProjectStatus::UnderConstruction,
+            'location'            => 'Motijheel, Dhaka',
+            'address'             => 'Dilkusha Commercial Area, Motijheel, Dhaka-1000',
+            'description'         => 'A landmark mixed-use development: a 5-floor retail podium anchored by a flagship showroom spanning 3 floors, topped by a 20-floor residential tower.',
+            'start_date'          => '2024-07-01',
+            'handover_date'       => '2028-12-31',
+            'total_floors'        => 25,
+            'total_units'         => 62,
+            'overall_progress'    => 18,
+            'land_area'           => 35,
+            'land_area_unit'      => 'katha',
+            'built_up_area'       => 145000,
+            'estimated_value'     => 2200000000,
+            'booking_amount'      => 1000000,
+            'booking_amount_type' => 'fixed',
+            'commission_pct'      => 2.0,
+            'latitude'            => 23.7290,
+            'longitude'           => 90.4204,
+        ]);
+
+        // ── Building 1: Mall Podium (floors 1–5) ──────────────────
+        $podium = ProjectBuilding::create([
+            'project_id'    => $project->id,
+            'name'          => 'Mall Podium',
+            'total_floors'  => 5,
+            'specifications' => [
+                'passenger_lifts'  => 6,
+                'service_lifts'    => 4,
+                'parking_levels'   => 2,
+                'parking_capacity' => 200,
+                'lobby_type'       => 'Triple-height Grand Atrium',
+                'security'         => 'Biometric + Manned',
+                'generator'        => 'Full Backup',
+                'cargo_access'     => 'Dedicated Loading Bay',
+            ],
+            'sort_order' => 0,
+        ]);
+
+        // Section A: Anchor Showroom — floors 1–3 as ONE block unit
+        // (e.g. a car/bike showroom, flagship brand, anchor tenant)
+        $anchorSection = $podium->sections()->create([
+            'project_id'    => $project->id,
+            'name'          => 'Anchor Showroom',
+            'type'          => 'commercial',
+            'floor_start'   => 1,
+            'floor_end'     => 3,
+            'is_block_unit' => true,   // ← entire section = 1 unit
+            'specifications' => [
+                'hvac'           => 'Central Chiller',
+                'cargo_access'   => 'Dedicated Ramp',
+                'ceiling_height' => '8m triple-height ground floor',
+            ],
+            'sort_order' => 0,
+        ]);
+
+        // Create the single block unit for the anchor showroom
+        Unit::create([
+            'project_id'  => $project->id,
+            'block_id'    => $anchorSection->id,
+            'unit_number' => 'AS-1-3',        // Anchor Showroom, floors 1–3
+            'floor'       => 1,
+            'floor_end'   => 3,
+            'sort_order'  => 1,
+            'type'        => UnitType::Shop,
+            'size_sqft'   => 22000,           // 3 floors × ~7,300 sqft
+            'price'       => 550000000,
+            'status'      => UnitStatus::Available,
+        ]);
+
+        // Section B: Upper Retail (floors 4–5) — regular shops
+        $retailSection = $podium->sections()->create([
+            'project_id'    => $project->id,
+            'name'          => 'Upper Retail',
+            'type'          => 'commercial',
+            'floor_start'   => 4,
+            'floor_end'     => 5,
+            'planned_units' => 16,
+            'specifications' => [
+                'hvac' => 'Central Chiller',
+            ],
+            'sort_order' => 1,
+        ]);
+
+        $this->statusIdx = 0;
+        for ($floor = 4; $floor <= 5; $floor++) {
+            for ($pos = 1; $pos <= 8; $pos++) {
+                Unit::create([
+                    'project_id'  => $project->id,
+                    'block_id'    => $retailSection->id,
+                    'unit_number' => "UR-{$floor}0{$pos}",
+                    'floor'       => $floor,
+                    'sort_order'  => $pos - 1,
+                    'type'        => UnitType::Shop,
+                    'size_sqft'   => $pos <= 4 ? 900 : 600,
+                    'price'       => $pos <= 4 ? 12000000 : 8500000,
+                    'status'      => $this->nextStatus(),
+                ]);
+            }
+        }
+
+        // ── Building 2: Residential Tower (floors 6–25) ───────────
+        $tower = ProjectBuilding::create([
+            'project_id'    => $project->id,
+            'name'          => 'Residential Tower',
+            'total_floors'  => 20,
+            'specifications' => [
+                'passenger_lifts'  => 4,
+                'service_lifts'    => 2,
+                'parking_levels'   => 2,
+                'parking_capacity' => 100,
+                'lobby_type'       => 'Private sky-lobby on floor 6',
+                'security'         => 'Biometric Access',
+                'generator'        => 'Full Backup',
+                'internet'         => 'Fiber to the Unit',
+            ],
+            'sort_order' => 1,
+        ]);
+
+        // Section: Standard Apartments (floors 6–20)
+        $aptsSection = $tower->sections()->create([
+            'project_id'    => $project->id,
+            'name'          => 'Apartments',
+            'type'          => 'residential',
+            'floor_start'   => 6,
+            'floor_end'     => 20,
+            'planned_units' => 45,
+            'specifications' => [
+                'hvac'     => 'Split Units',
+                'internet' => 'Fiber to the Unit',
+            ],
+            'sort_order' => 0,
+        ]);
+
+        $this->statusIdx = 0;
+        for ($floor = 6; $floor <= 20; $floor++) {
+            for ($pos = 1; $pos <= 3; $pos++) {
+                $type = match($pos) { 1 => UnitType::TwoBed, 2 => UnitType::TwoBed, 3 => UnitType::ThreeBed };
+                Unit::create([
+                    'project_id'  => $project->id,
+                    'block_id'    => $aptsSection->id,
+                    'unit_number' => "RT-{$floor}0{$pos}",
+                    'floor'       => $floor,
+                    'sort_order'  => $pos - 1,
+                    'type'        => $type,
+                    'bedrooms'    => $pos === 3 ? 3 : 2,
+                    'size_sqft'   => $pos === 3 ? 1650 : 1150,
+                    'view'        => $pos <= 2 ? 'City View' : 'Garden View',
+                    'price'       => ($pos === 3 ? 14500000 : 10500000) + ($floor * 80000),
+                    'status'      => $this->nextStatus(),
+                ]);
+            }
+        }
+
+        $project->facilities()->sync($f([
+            'Swimming Pool', 'Gym / Fitness Center', 'Food Court', 'Rooftop Garden',
+            'High-Speed Internet', '24/7 Security', 'CCTV Surveillance',
+            'Elevator / Lift', 'Basement Parking', 'Conference Room',
+        ]));
+    }
+
+    // ── 9. Panorama Twin Towers ───────────────────────────────────
+    // 2 buildings each with a block lobby unit (floors 1-2) + regular floors
+    private function panoramaTwinTowers(Developer $dev, callable $f): void
+    {
+        $project = Project::create([
+            'name'                => 'Panorama Twin Towers',
+            'slug'                => 'panorama-twin-towers',
+            'project_code'        => 'PTT-2026',
+            'theme_color'         => '#0891B2',
+            'developer_id'        => $dev->id,
+            'type'                => ProjectType::MixedUse,
+            'status'              => ProjectStatus::Planning,
+            'location'            => 'Banani, Dhaka',
+            'address'             => 'Plot 53, Road 17, Banani, Dhaka-1213',
+            'description'         => 'Two iconic towers sharing a common podium: Tower Alpha for premium residences, Tower Beta for Grade-A offices. Each tower has a landmark lobby spanning floors 1–2.',
+            'start_date'          => '2026-01-15',
+            'handover_date'       => '2030-06-30',
+            'total_floors'        => 22,
+            'total_units'         => 96,
+            'overall_progress'    => 2,
+            'land_area'           => 40,
+            'land_area_unit'      => 'katha',
+            'built_up_area'       => 200000,
+            'estimated_value'     => 3500000000,
+            'booking_amount'      => 2000000,
+            'booking_amount_type' => 'fixed',
+            'commission_pct'      => 2.5,
+            'payment_plan_months' => 60,
+            'latitude'            => 23.7938,
+            'longitude'           => 90.4063,
+        ]);
+
+        $commonSpecs = [
+            'passenger_lifts'  => 4,
+            'service_lifts'    => 2,
+            'parking_levels'   => 3,
+            'parking_capacity' => 150,
+            'security'         => 'Biometric + Manned',
+            'generator'        => 'Full Backup',
+            'internet'         => 'Dual-Redundant Fiber',
+        ];
+
+        // ── Building 1: Tower Alpha (Residential) ─────────────────
+        $alphaBuilding = ProjectBuilding::create([
+            'project_id'    => $project->id,
+            'name'          => 'Tower Alpha',
+            'total_floors'  => 22,
+            'specifications' => array_merge($commonSpecs, [
+                'lobby_type' => 'Double-height glass atrium lobby',
+            ]),
+            'sort_order' => 0,
+        ]);
+
+        // Section A1: Grand Lobby — floors 1–2, block unit
+        $alphaLobby = $alphaBuilding->sections()->create([
+            'project_id'    => $project->id,
+            'name'          => 'Grand Lobby',
+            'type'          => 'commercial',
+            'floor_start'   => 1,
+            'floor_end'     => 2,
+            'is_block_unit' => true,
+            'specifications' => [
+                'hvac'           => 'Central Chiller',
+                'ceiling_height' => '6m double-height lobby',
+                'finish'         => 'Italian marble, bespoke art installation',
+            ],
+            'sort_order' => 0,
+        ]);
+
+        Unit::create([
+            'project_id'  => $project->id,
+            'block_id'    => $alphaLobby->id,
+            'unit_number' => 'AL-1-2',
+            'floor'       => 1,
+            'floor_end'   => 2,
+            'sort_order'  => 1,
+            'type'        => UnitType::CommercialSpace,
+            'size_sqft'   => 8000,
+            'price'       => 180000000,
+            'status'      => UnitStatus::Available,
+        ]);
+
+        // Section A2: Residential Floors (3–22)
+        $alphaApts = $alphaBuilding->sections()->create([
+            'project_id'    => $project->id,
+            'name'          => 'Residences',
+            'type'          => 'residential',
+            'floor_start'   => 3,
+            'floor_end'     => 22,
+            'planned_units' => 40,
+            'specifications' => ['hvac' => 'Split Units', 'internet' => 'Fiber to the Unit'],
+            'sort_order' => 1,
+        ]);
+
+        $this->statusIdx = 0;
+        for ($floor = 3; $floor <= 22; $floor++) {
+            for ($pos = 1; $pos <= 2; $pos++) {
+                $type = $floor >= 20 ? UnitType::Penthouse : UnitType::ThreeBed;
+                Unit::create([
+                    'project_id'  => $project->id,
+                    'block_id'    => $alphaApts->id,
+                    'unit_number' => "A-{$floor}0{$pos}",
+                    'floor'       => $floor,
+                    'sort_order'  => $pos - 1,
+                    'type'        => $type,
+                    'bedrooms'    => $floor >= 20 ? 4 : 3,
+                    'size_sqft'   => $floor >= 20 ? 3500 : 1800,
+                    'view'        => $pos === 1 ? 'Sea View' : 'City View',
+                    'price'       => ($floor >= 20 ? 45000000 : 18000000) + ($floor * 100000),
+                    'status'      => $this->nextStatus(),
+                ]);
+            }
+        }
+
+        // ── Building 2: Tower Beta (Office) ───────────────────────
+        $betaBuilding = ProjectBuilding::create([
+            'project_id'    => $project->id,
+            'name'          => 'Tower Beta',
+            'total_floors'  => 22,
+            'specifications' => array_merge($commonSpecs, [
+                'lobby_type' => 'Corporate glass lobby with concierge',
+            ]),
+            'sort_order' => 1,
+        ]);
+
+        // Section B1: Corporate Lobby — floors 1–2, block unit
+        $betaLobby = $betaBuilding->sections()->create([
+            'project_id'    => $project->id,
+            'name'          => 'Corporate Lobby',
+            'type'          => 'commercial',
+            'floor_start'   => 1,
+            'floor_end'     => 2,
+            'is_block_unit' => true,
+            'specifications' => [
+                'hvac'    => 'Central Chiller',
+                'finish'  => 'Glass facade, branded concierge desk',
+                'use'     => 'Anchor bank branch + café',
+            ],
+            'sort_order' => 0,
+        ]);
+
+        Unit::create([
+            'project_id'  => $project->id,
+            'block_id'    => $betaLobby->id,
+            'unit_number' => 'BL-1-2',
+            'floor'       => 1,
+            'floor_end'   => 2,
+            'sort_order'  => 1,
+            'type'        => UnitType::CommercialSpace,
+            'size_sqft'   => 9500,
+            'price'       => 220000000,
+            'status'      => UnitStatus::Booked,
+        ]);
+
+        // Section B2: Office Suites (3–22)
+        $betaOffices = $betaBuilding->sections()->create([
+            'project_id'    => $project->id,
+            'name'          => 'Office Suites',
+            'type'          => 'office',
+            'floor_start'   => 3,
+            'floor_end'     => 22,
+            'planned_units' => 54,
+            'specifications' => [
+                'hvac'                => 'Central Chiller',
+                'internet'            => 'Dual-Redundant Fiber',
+                'electrical_capacity' => '3.0 MVA',
+            ],
+            'sort_order' => 1,
+        ]);
+
+        $this->statusIdx = 0;
+        for ($floor = 3; $floor <= 22; $floor++) {
+            for ($pos = 1; $pos <= 3; $pos++) {
+                Unit::create([
+                    'project_id'  => $project->id,
+                    'block_id'    => $betaOffices->id,
+                    'unit_number' => "B-{$floor}0{$pos}",
+                    'floor'       => $floor,
+                    'sort_order'  => $pos - 1,
+                    'type'        => UnitType::Office,
+                    'size_sqft'   => $pos === 1 ? 5500 : ($pos === 2 ? 3200 : 2000),
+                    'price'       => ($pos === 1 ? 85000000 : ($pos === 2 ? 52000000 : 35000000)) + ($floor * 200000),
+                    'status'      => $this->nextStatus(),
+                ]);
+            }
+        }
+
+        $project->facilities()->sync($f([
+            'Swimming Pool', 'Gym / Fitness Center', 'Conference Room', 'Food Court',
+            'Rooftop Lounge', 'High-Speed Internet', '24/7 Security', 'CCTV Surveillance',
+            'Elevator / Lift', 'Basement Parking', 'Reception Area', 'Concierge Service',
+        ]));
     }
 
     // ── 7. Metro Warehouse ────────────────────────────────────────
