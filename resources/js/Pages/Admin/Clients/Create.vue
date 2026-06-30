@@ -8,25 +8,83 @@ const props = defineProps({
 });
 
 const form = useForm({
-    name:           '',
-    email:          '',
-    phone:          '',
-    password:       '',
-    gender:         null,
-    date_of_birth:  null,
-    nationality:    'Bangladeshi',
-    nid:            '',
-    passport_no:    '',
-    occupation:     '',
-    address:        '',
-    source:         null,
-    notes:          '',
-    status:         'active',
+    // Step 1 — Personal Information
+    name:                   '',
+    father_name:            '',
+    mother_name:            '',
+    date_of_birth:          null,
+    gender:                 null,
+    marital_status:         null,
+    nationality:            'Bangladeshi',
 
-    avatar:               null,
-    remove_avatar:        false,
-    new_kyc_documents:    [],
-    remove_kyc_documents: [],
+    // Step 2 — Contact Details
+    phone:                  '',
+    alternate_phone:        '',
+    email:                  '',
+    whatsapp:               '',
+    emergency_contact_name: '',
+    emergency_contact_phone:'',
+
+    // Step 3 — National ID / Passport
+    id_type:                null,
+    nid:                    '',
+    passport_no:            '',
+    passport_expiry:        null,
+    issuing_country:        null,
+    tin:                    '',
+
+    // Step 4 — Address
+    address:                '',
+    city:                   null,
+    area:                   '',
+    postal_code:            '',
+    country:                null,
+    permanent_address:      '',
+
+    // Step 5 — Employment
+    occupation:             '',
+    employment_type:        null,
+    company:                '',
+    designation:            '',
+    industry:               null,
+    office_address:         '',
+    tenure:                 '',
+
+    // Step 6 — Income
+    monthly_income:         '',
+    other_income:           '',
+    annual_income:          '',
+    existing_loans:         '',
+    primary_bank:           '',
+
+    // Step 7 — Co-applicant
+    coapplicant_name:                 '',
+    coapplicant_relationship:         '',
+    coapplicant_dob:                  null,
+    coapplicant_phone:                '',
+    coapplicant_email:                '',
+    coapplicant_nid:                  '',
+    coapplicant_occupation:           '',
+    coapplicant_monthly_income:       '',
+    coapplicant_annual_income:        '',
+    coapplicant_tin:                  '',
+    coapplicant_ownership_percentage: '',
+    coapplicant_address:              '',
+    coapplicant_signature:            '',
+
+
+    // Step 9 — Account & Notes
+    password:               '',
+    source:                 null,
+    status:                 'active',
+    tags:                   '',
+    notes:                  '',
+
+    // Step 10 — Photo & KYC
+    avatar:                 null,
+    remove_avatar:          false,
+    new_kyc_documents:      [],
+    remove_kyc_documents:   [],
 });
 
 function submit() {
@@ -45,9 +103,16 @@ function submit() {
                 <span class="text-foreground">New Client</span>
             </nav>
             <h1 class="text-xl font-bold text-foreground">Add New Client</h1>
-            <p class="mt-0.5 text-sm text-muted-foreground">Register a new client with their contact and identity details.</p>
+            <p class="mt-0.5 text-sm text-muted-foreground">Register a new client with their contact, identity and financial details.</p>
         </div>
 
-        <ClientForm :form="form" :enums="enums" mode="create" @submit="submit" />
+        <ClientForm
+            :form="form"
+            :enums="enums"
+            mode="create"
+            :current-avatar="null"
+            :current-kyc="[]"
+            @submit="submit"
+        />
     </AdminLayout>
 </template>

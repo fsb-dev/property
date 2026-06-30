@@ -112,15 +112,7 @@ const avatarInitials = (name) => name?.split(' ').map(w => w[0]).slice(0, 2).joi
             </Select>
             <button v-if="status" @click="status = ''" class="text-xs text-muted-foreground hover:text-foreground">✕ status</button>
 
-            <Select :model-value="source || undefined" @update:model-value="source = $event ?? ''">
-                <SelectTrigger class="w-[170px]">
-                    <SelectValue placeholder="All sources" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem v-for="s in enums.sources" :key="s.value" :value="s.value">{{ s.label }}</SelectItem>
-                </SelectContent>
-            </Select>
-            <button v-if="source" @click="source = ''" class="text-xs text-muted-foreground hover:text-foreground">✕ source</button>
+
         </div>
 
         <!-- Table -->
@@ -130,15 +122,14 @@ const avatarInitials = (name) => name?.split(' ').map(w => w[0]).slice(0, 2).joi
                     <TableRow>
                         <TableHead class="pl-4">Client</TableHead>
                         <TableHead>Phone</TableHead>
-                        <TableHead>Source</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Added</TableHead>
+                        <TableHead>Created </TableHead>
                         <TableHead class="pr-4 text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     <TableRow v-if="clients.data.length === 0">
-                        <TableCell colspan="6" class="py-16 text-center text-muted-foreground">
+                        <TableCell colspan="5" class="py-16 text-center text-muted-foreground">
                             <svg class="mx-auto mb-3 text-border" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                             No clients found
                         </TableCell>
@@ -165,8 +156,6 @@ const avatarInitials = (name) => name?.split(' ').map(w => w[0]).slice(0, 2).joi
                         </TableCell>
 
                         <TableCell class="text-sm text-muted-foreground">{{ client.phone ?? '—' }}</TableCell>
-
-                        <TableCell class="text-sm text-muted-foreground">{{ client.source_label ?? '—' }}</TableCell>
 
                         <TableCell>
                             <Badge :variant="statusVariant[client.status] ?? 'secondary'">
