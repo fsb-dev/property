@@ -70,7 +70,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/clients/{client}',               [ClientController::class, 'show'])->name('clients.show');
         Route::middleware('permission:edit clients')->group(function () {
             Route::get('/clients/{client}/edit',      [ClientController::class, 'edit'])->name('clients.edit');
-            Route::put('/clients/{client}',           [ClientController::class, 'update'])->name('clients.update');
+            Route::match(['put', 'post'], '/clients/{client}', [ClientController::class, 'update'])->name('clients.update');
         });
         Route::middleware('permission:delete clients')->group(function () {
             Route::delete('/clients/{client}',        [ClientController::class, 'destroy'])->name('clients.destroy');

@@ -38,11 +38,6 @@ const STEPS = [
     { key: "photo_kyc",  label: "Profile Photo",  kicker: "Step 9 of 9" },
 ];
 
-const marital_statuses = [
-    { value: "single", label: "Single" },
-    { value: "married", label: "Married" },
-];
-
 const activeStep = ref(0);
 
 const currentStep = computed(() => STEPS[activeStep.value]);
@@ -350,7 +345,7 @@ const f =
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem
-                                    v-for="s in marital_statuses"
+                                    v-for="s in enums.marital_statuses"
                                     :key="s.value"
                                     :value="s.value"
                                 >
@@ -1366,10 +1361,11 @@ const f =
                     </button>
 
                     <div class="flex items-center gap-3">
-                        <!-- Save Draft / Submit -->
+                        <!-- Save Draft -->
                         <button
-                            type="submit"
+                            type="button"
                             :disabled="form.processing"
+                            @click="emit('submit', 'draft')"
                             class="inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-transparent px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-60"
                         >
                             <svg
@@ -1417,7 +1413,8 @@ const f =
                         <!-- Publish (last step) -->
                         <button
                             v-else
-                            type="submit"
+                            type="button"
+                            @click="emit('submit', 'final')"
                             :disabled="form.processing"
                             class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
                         >

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreClientRequest;
-use App\Http\Requests\Admin\UpdateClientRequest;
+use App\Http\Requests\Admin\ClientRequest\StoreClientRequest;
+use App\Http\Requests\Admin\ClientRequest\UpdateClientRequest;
 use App\Models\Client;
 use App\Services\ClientService;
 use Illuminate\Http\Request;

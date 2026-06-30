@@ -18,27 +18,25 @@ const form = useForm({
     nationality:            'Bangladeshi',
 
     // Step 2 — Contact Details
+    email:                  '',
     phone:                  '',
     alternate_phone:        '',
-    email:                  '',
     whatsapp:               '',
     emergency_contact_name: '',
     emergency_contact_phone:'',
 
     // Step 3 — National ID / Passport
-    id_type:                null,
-    nid:                    '',
-    passport_no:            '',
-    passport_expiry:        null,
-    issuing_country:        null,
-    tin:                    '',
+    nid:                       '',
+    birth_certificate_number:  '',
+    passport_no:               '',
+    passport_expiry:           null,
 
     // Step 4 — Address
     address:                '',
-    city:                   null,
-    area:                   '',
-    postal_code:            '',
     country:                null,
+    city:                   '',
+    state:                  '',
+    postal_code:            '',
     permanent_address:      '',
 
     // Step 5 — Employment
@@ -50,12 +48,13 @@ const form = useForm({
     office_address:         '',
     tenure:                 '',
 
-    // Step 6 — Income
+    // Step 6 — Income & Financials
     monthly_income:         '',
-    other_income:           '',
     annual_income:          '',
+    other_income:           '',
     existing_loans:         '',
-    primary_bank:           '',
+    bank_name:              '',
+    account_number:         '',
 
     // Step 7 — Co-applicant
     coapplicant_name:                 '',
@@ -72,23 +71,25 @@ const form = useForm({
     coapplicant_address:              '',
     coapplicant_signature:            '',
 
-
-    // Step 9 — Account & Notes
+    // Meta
+    is_draft:               false,
     password:               '',
     source:                 null,
     status:                 'active',
-    tags:                   '',
     notes:                  '',
 
-    // Step 10 — Photo & KYC
+    // Step 8 & 9 — Documents & Photo
     avatar:                 null,
     remove_avatar:          false,
     new_kyc_documents:      [],
     remove_kyc_documents:   [],
 });
 
-function submit() {
-    form.post(route('admin.clients.store'));
+function submit(type = 'final') {
+    form.is_draft = type === 'draft';
+    form.post(route('admin.clients.store'), {
+        forceFormData: true,
+    });
 }
 </script>
 
