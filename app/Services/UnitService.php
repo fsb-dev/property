@@ -230,7 +230,8 @@ class UnitService
     {
         $booleans = ['living_room', 'dining_room', 'kitchen', 'pantry', 'server_room',
                      'cold_storage', 'temperature_control', 'fire_safety', 'truck_access'];
-        $integers = ['num_cabins', 'meeting_rooms', 'num_gates', 'electric_load',
+        $integers = ['master_bedrooms', 'master_bathrooms',
+                     'num_cabins', 'meeting_rooms', 'num_gates', 'electric_load',
                      'storage_capacity', 'loading_capacity'];
         $floats   = ['front_width', 'display_area', 'loading_area', 'open_space'];
 

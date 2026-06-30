@@ -78,6 +78,8 @@ const form = useForm({
 
     specs: {
         // residential
+        master_bedrooms:     props.unit.specs?.master_bedrooms  ?? '',
+        master_bathrooms:    props.unit.specs?.master_bathrooms ?? '',
         living_room:         !!(props.unit.specs?.living_room),
         dining_room:         !!(props.unit.specs?.dining_room),
         kitchen:             !!(props.unit.specs?.kitchen),
@@ -120,7 +122,8 @@ const form = useForm({
 });
 
 function submit() {
-    form.post(route('admin.units.update', props.unit.id), { method: 'put', forceFormData: true });
+    form.transform(data => ({ ...data, _method: 'put' }))
+        .post(route('admin.units.update', props.unit.id), { forceFormData: true });
 }
 
 const backHref = computed(() =>
@@ -170,6 +173,7 @@ const filteredTypes = computed(() => {
 const sectionFilled = computed(() => ({
     identity:     !!(form.unit_number || form.type),
     specs:        !!(form.bedrooms || form.bathrooms || form.balconies
+                    || form.specs.master_bedrooms || form.specs.master_bathrooms
                     || form.specs.living_room || form.specs.num_cabins
                     || form.specs.warehouse_type || form.specs.shop_type
                     || form.specs.office_type || form.specs.pantry
@@ -303,8 +307,8 @@ const STATUS_COLORS = {
                                 :class="[
                                     'w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all text-left',
                                     activeSection === sec.id
-                                        ? 'bg-admin-accent text-white shadow-sm'
-                                        : 'text-muted-foreground hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-foreground'
+                                        ? 'bg-[#F1ECFF] dark:bg-admin-accent/10 text-admin-accent'
+                                        : 'text-muted-foreground hover:bg-slate-50 dark:hover:bg-white/[0.03] hover:text-foreground'
                                 ]"
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -312,7 +316,7 @@ const STATUS_COLORS = {
                                 <span class="flex-1">{{ sec.label }}</span>
                                 <!-- Filled indicator -->
                                 <span v-if="sectionFilled[sec.id]"
-                                    :class="['h-1.5 w-1.5 rounded-full flex-shrink-0', activeSection === sec.id ? 'bg-white/60' : 'bg-emerald-500']" />
+                                    :class="['h-1.5 w-1.5 rounded-full flex-shrink-0', activeSection === sec.id ? 'bg-admin-accent' : 'bg-emerald-500']" />
                             </button>
                         </li>
                     </ul>
@@ -413,8 +417,16 @@ const STATUS_COLORS = {
                                         <Input v-model="form.bedrooms" type="number" min="0" max="20" placeholder="0" />
                                     </div>
                                     <div class="space-y-2">
+                                        <Label>Master Bedrooms</Label>
+                                        <Input v-model="form.specs.master_bedrooms" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
                                         <Label>Bathrooms</Label>
                                         <Input v-model="form.bathrooms" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Master Bathrooms</Label>
+                                        <Input v-model="form.specs.master_bathrooms" type="number" min="0" max="20" placeholder="0" />
                                     </div>
                                     <div class="space-y-2">
                                         <Label>Balconies</Label>
