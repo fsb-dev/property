@@ -38,12 +38,16 @@ class Unit extends Model implements HasMedia
 
         // Mortgage
         'eligible_banks', 'max_loan_amount', 'payment_plan_months',
+
+        // Type-specific attributes
+        'specs',
     ];
 
     protected $casts = [
         'servant_room'   => 'boolean',
         'store_room'     => 'boolean',
         'eligible_banks' => 'array',
+        'specs'          => 'array',
         'launch_date'    => 'date',
         'available_date' => 'date',
         'handover_date'  => 'date',

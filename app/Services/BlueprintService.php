@@ -121,9 +121,16 @@ class BlueprintService
     public function generateFloor(ProjectBlock $section, int $floor, int $count): array
     {
         $existing = Unit::where('block_id', $section->id)->where('floor', $floor)->count();
+        $totalExisting = Unit::where('block_id', $section->id)->count();
+
+
 
         if ($existing > 0) {
             return ['skipped' => true, 'message' => "Floor {$floor} already has {$existing} units."];
+        }
+
+        if ($totalExisting + $count > $section->planned_units) {
+            return ['skipped' => true, 'message' => "Unit capacity of {$section->planned_units} has been exceeded."];
         }
 
         $prefix = $this->resolvePrefix($section);
@@ -261,11 +268,13 @@ class BlueprintService
 
     private function defaultTypeForSection(ProjectBlock $section): ?string
     {
-        return match($section->type) {
-            'commercial' => 'shop',
-            'office'     => 'office',
-            'villa'      => 'villa',
-            default      => null,
+        return match ($section->type) {
+            'residential' => 'apartment',
+            'villa'       => 'villa',
+            'commercial'  => 'shop',
+            'office'      => 'office',
+            'industrial'  => 'warehouse',
+            default       => null, // mixed — user picks type manually
         };
     }
 

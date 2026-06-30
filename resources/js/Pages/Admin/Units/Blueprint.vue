@@ -98,7 +98,13 @@ async function generateFloor() {
         } else {
             showToast(res.data.message, 'info');
         }
-    } catch { showToast('Generation failed.', 'error'); }
+    } catch (error) {
+        if (error.response?.status === 409) {
+            showToast(error.response.data.message, 'error')
+        } else {
+            showToast('Generation failed.', 'error')
+        }
+    }
     finally { generating.value = false; }
 }
 
@@ -383,7 +389,7 @@ function sectionPlanned(section) {
                                             <template v-if="blockUnit.size_sqft"> · {{
                                                 blockUnit.size_sqft.toLocaleString() }} sqft</template>
                                             <template v-if="blockUnit.type_label"> · {{ blockUnit.type_label
-                                            }}</template>
+                                                }}</template>
                                         </p>
                                     </div>
                                     <span
@@ -489,15 +495,14 @@ function sectionPlanned(section) {
                             </button>
                             <Tooltip v-if="currentFloor?.units?.length"
                                 :text="floorHasLockedUnits ? 'This floor has booked or sold units and cannot be cleared.' : 'Remove all configurable units on this floor.'">
-                                <button @click="deleteFloor"
-                                    :disabled="floorHasLockedUnits"
-                                    :class="[
-                                        'inline-flex h-9 items-center gap-1.5 rounded-xl border px-3 text-sm font-medium transition-colors',
-                                        floorHasLockedUnits
-                                            ? 'cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-500'
-                                            : 'border-red-200 dark:border-red-800/40 bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/40'
-                                    ]">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <button @click="deleteFloor" :disabled="floorHasLockedUnits" :class="[
+                                    'inline-flex h-9 items-center gap-1.5 rounded-xl border px-3 text-sm font-medium transition-colors',
+                                    floorHasLockedUnits
+                                        ? 'cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-500'
+                                        : 'border-red-200 dark:border-red-800/40 bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/40'
+                                ]">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
                                         <path d="M3 6h18M19 6l-1 14H6L5 6M9 6V4h6v2" />
                                     </svg>
                                     Clear
@@ -513,29 +518,32 @@ function sectionPlanned(section) {
                         <template v-for="unit in currentFloor.units" :key="unit.id">
 
                             <!-- ── LOCKED: booked / sold — not reconfigurable ── -->
-                            <div v-if="isLocked(unit.status)"
-                                :class="[
-                                    'group/tip relative flex flex-col rounded-xl border-2 bg-slate-50 dark:bg-slate-800/50 p-3 shadow-sm opacity-70 cursor-not-allowed select-none',
-                                    statusBorder(unit.status)
-                                ]"
-                            >
+                            <div v-if="isLocked(unit.status)" :class="[
+                                'group/tip relative flex flex-col rounded-xl border-2 bg-slate-50 dark:bg-slate-800/50 p-3 shadow-sm opacity-70 cursor-not-allowed select-none',
+                                statusBorder(unit.status)
+                            ]">
                                 <!-- Tooltip -->
-                                <div class="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-900 dark:bg-slate-700 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-md transition-opacity duration-150 group-hover/tip:opacity-100">
+                                <div
+                                    class="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-900 dark:bg-slate-700 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-md transition-opacity duration-150 group-hover/tip:opacity-100">
                                     This unit is {{ unit.status_label }} and cannot be reconfigured.
-                                    <div class="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-slate-900 dark:border-t-slate-700" />
+                                    <div
+                                        class="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-slate-900 dark:border-t-slate-700" />
                                 </div>
 
                                 <!-- Lock badge -->
                                 <div class="absolute top-2 right-2">
-                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-muted-foreground/60">
-                                        <rect x="3" y="11" width="18" height="11" rx="2"/>
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" class="text-muted-foreground/60">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                     </svg>
                                 </div>
 
                                 <div class="flex items-start justify-between gap-1 mb-2 pr-4">
-                                    <span class="text-sm font-bold text-foreground leading-tight">{{ unit.unit_number }}</span>
-                                    <span class="h-2 w-2 flex-shrink-0 mt-1 rounded-full" :class="statusBg(unit.status)" />
+                                    <span class="text-sm font-bold text-foreground leading-tight">{{ unit.unit_number
+                                        }}</span>
+                                    <span class="h-2 w-2 flex-shrink-0 mt-1 rounded-full"
+                                        :class="statusBg(unit.status)" />
                                 </div>
 
                                 <span v-if="unit.type_label"
@@ -543,30 +551,31 @@ function sectionPlanned(section) {
                                     {{ unit.type_label }}
                                 </span>
 
-                                <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
+                                <div
+                                    class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
                                     <span v-if="unit.bedrooms">{{ unit.bedrooms }}bd</span>
                                     <span v-if="unit.bathrooms">{{ unit.bathrooms }}ba</span>
                                     <span v-if="unit.size_sqft">{{ unit.size_sqft.toLocaleString() }} ft²</span>
                                 </div>
 
                                 <div class="mt-2 pt-2 border-t border-border/50">
-                                    <span class="text-[10px] font-semibold" :class="STATUS[unit.status]?.text ?? 'text-slate-500'">
+                                    <span class="text-[10px] font-semibold"
+                                        :class="STATUS[unit.status]?.text ?? 'text-slate-500'">
                                         {{ unit.status_label }}
                                     </span>
                                 </div>
                             </div>
 
                             <!-- ── CONFIGURABLE: not_configured / configured / available ── -->
-                            <Link v-else
-                                :href="route('admin.units.configure', unit.id)"
-                                :class="[
-                                    'group relative flex flex-col rounded-xl border-2 bg-white dark:bg-slate-800 p-3 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5',
-                                    statusBorder(unit.status)
-                                ]"
-                            >
+                            <Link v-else :href="route('admin.units.configure', unit.id)" :class="[
+                                'group relative flex flex-col rounded-xl border-2 bg-white dark:bg-slate-800 p-3 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5',
+                                statusBorder(unit.status)
+                            ]">
                                 <div class="flex items-start justify-between gap-1 mb-2">
-                                    <span class="text-sm font-bold text-foreground leading-tight">{{ unit.unit_number }}</span>
-                                    <span class="h-2 w-2 flex-shrink-0 mt-1 rounded-full" :class="statusBg(unit.status)" />
+                                    <span class="text-sm font-bold text-foreground leading-tight">{{ unit.unit_number
+                                        }}</span>
+                                    <span class="h-2 w-2 flex-shrink-0 mt-1 rounded-full"
+                                        :class="statusBg(unit.status)" />
                                 </div>
 
                                 <span v-if="unit.type_label"
@@ -574,26 +583,38 @@ function sectionPlanned(section) {
                                     {{ unit.type_label }}
                                 </span>
 
-                                <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
+                                <div
+                                    class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
                                     <span v-if="unit.bedrooms" class="flex items-center gap-0.5">
-                                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V12a9 9 0 0 1 18 0v10"/><path d="M3 18h18"/></svg>
+                                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M3 22V12a9 9 0 0 1 18 0v10" />
+                                            <path d="M3 18h18" />
+                                        </svg>
                                         {{ unit.bedrooms }}bd
                                     </span>
                                     <span v-if="unit.bathrooms" class="flex items-center gap-0.5">
-                                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path
+                                                d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5" />
+                                            <line x1="2" y1="12" x2="22" y2="12" />
+                                        </svg>
                                         {{ unit.bathrooms }}ba
                                     </span>
                                     <span v-if="unit.size_sqft">{{ unit.size_sqft.toLocaleString() }} ft²</span>
                                 </div>
 
                                 <div class="mt-2 pt-2 border-t border-border/50">
-                                    <span class="text-[10px] font-semibold" :class="STATUS[unit.status]?.text ?? 'text-slate-500'">
+                                    <span class="text-[10px] font-semibold"
+                                        :class="STATUS[unit.status]?.text ?? 'text-slate-500'">
                                         {{ unit.status_label }}
                                     </span>
                                 </div>
 
                                 <!-- Hover overlay — configure prompt -->
-                                <div class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[10px] bg-admin-accent/90 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div
+                                    class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[10px] bg-admin-accent/90 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span class="text-xs font-semibold text-white">Configure →</span>
                                 </div>
                             </Link>

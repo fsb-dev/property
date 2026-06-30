@@ -67,6 +67,9 @@ return new class extends Migration {
             $table->decimal('max_loan_amount', 15, 2)->nullable();
             $table->unsignedSmallInteger('payment_plan_months')->nullable(); // unit-level override
 
+            // ── Type-specific attributes (keyed by unit type) ─────────────
+            $table->json('specs')->nullable();
+
             $table->timestamps();
 
             $table->index(['tenant_id', 'project_id', 'status']);

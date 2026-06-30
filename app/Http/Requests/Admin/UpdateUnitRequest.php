@@ -67,6 +67,9 @@ class UpdateUnitRequest extends FormRequest
             'available_date'     => ['nullable', 'date'],
             'handover_date'      => ['nullable', 'date'],
 
+            // Type-specific specs (residential / commercial / office / warehouse)
+            'specs'              => ['nullable', 'array'],
+
             // Mortgage
             'eligible_banks'     => ['nullable', 'array'],
             'eligible_banks.*'   => ['string', 'max:100'],
