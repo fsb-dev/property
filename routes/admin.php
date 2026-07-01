@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BlueprintController;
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
@@ -79,9 +80,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     // Bookings
     Route::middleware('permission:view bookings')->group(function () {
-        Route::get('/bookings', fn () => inertia('Admin/Bookings/Index'))->name('bookings.index');
-        Route::middleware('permission:create bookings')->get('/bookings/create', fn () => inertia('Admin/Bookings/Create'))->name('bookings.create');
-        Route::middleware('permission:edit bookings')->get('/bookings/{booking}/edit', fn () => inertia('Admin/Bookings/Edit'))->name('bookings.edit');
+        Route::get('/bookings',              [BookingController::class, 'index'])->name('bookings.index');
+        Route::middleware('permission:create bookings')->group(function () {
+            Route::get('/bookings/create',   [BookingController::class, 'create'])->name('bookings.create');
+            Route::post('/bookings',         [BookingController::class, 'store'])->name('bookings.store');
+        });
+        Route::get('/bookings/{booking}',    [BookingController::class, 'show'])->name('bookings.show');
+        Route::middleware('permission:edit bookings')->group(function () {
+            Route::get('/bookings/{booking}/edit',      [BookingController::class, 'edit'])->name('bookings.edit');
+            Route::put('/bookings/{booking}',           [BookingController::class, 'update'])->name('bookings.update');
+            Route::patch('/bookings/{booking}/status',  [BookingController::class, 'updateStatus'])->name('bookings.status');
+        });
+        Route::middleware('permission:delete bookings')->group(function () {
+            Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+        });
     });
 
     // Payments

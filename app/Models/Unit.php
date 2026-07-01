@@ -102,4 +102,9 @@ class Unit extends Model implements HasMedia
     {
         return $this->belongsTo(ProjectBlock::class, 'block_id');
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

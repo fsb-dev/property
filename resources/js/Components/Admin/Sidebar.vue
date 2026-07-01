@@ -31,7 +31,8 @@ const navLinks = [
         icon: `<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M19 8v6M22 11h-6"/>`,
     },
     {
-        label: 'Bookings', routeName: null,
+        label: 'Bookings', routeName: 'admin.bookings.index', activePattern: 'admin.bookings.*',
+        href: () => route('admin.bookings.index'),
         icon: `<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><path d="m9 14 2 2 4-4"/>`,
     },
     {
