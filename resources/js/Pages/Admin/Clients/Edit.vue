@@ -70,8 +70,7 @@ const form = useForm({
     coapplicant_tin:                  props.client.coapplicant_tin                   ?? '',
     coapplicant_ownership_percentage: props.client.coapplicant_ownership_percentage  ?? '',
     coapplicant_address:              props.client.coapplicant_address               ?? '',
-    coapplicant_signature:            props.client.coapplicant_signature             ?? '',
-
+    
     // Meta
     is_draft:               false,
     password:               '',

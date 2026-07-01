@@ -76,17 +76,15 @@ return new class extends Migration {
             $table->string('coapplicant_tin')->nullable();
             $table->string('coapplicant_ownership_percentage')->nullable();
             $table->text('coapplicant_address')->nullable();
-            $table->string('coapplicant_signature')->nullable();
 
             // ── Meta ──────────────────────────────────────────────────────
-            $table->string('source')->nullable();
+         
             $table->text('notes')->nullable();
             $table->string('status')->default('active');
             $table->rememberToken();
             $table->timestamps();
 
             $table->index('status');
-            $table->index('source');
         });
     }
 

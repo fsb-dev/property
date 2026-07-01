@@ -20,7 +20,7 @@ class Client extends Authenticatable implements HasMedia
 
     protected $fillable = [
         // Identity
-        'tenant_id', 'name', 'email', 'password', 'status', 'source', 'notes',
+        'tenant_id', 'name', 'email', 'password', 'status',  'notes',
 
         // Step 1: Personal
         'father_name', 'mother_name', 'gender', 'marital_status',
@@ -49,7 +49,7 @@ class Client extends Authenticatable implements HasMedia
         'coapplicant_phone', 'coapplicant_email', 'coapplicant_nid',
         'coapplicant_occupation', 'coapplicant_monthly_income', 'coapplicant_annual_income',
         'coapplicant_tin', 'coapplicant_ownership_percentage',
-        'coapplicant_address', 'coapplicant_signature',
+        'coapplicant_address', 
     ];
 
     protected $hidden = ['password', 'remember_token'];
