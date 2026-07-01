@@ -61,6 +61,7 @@ class BlueprintController extends Controller
             'count' => ['required', 'integer', 'min:1', 'max:200'],
         ]);
 
+        // if($section->planned_units)
         $result = $this->service->generateFloor($section, $data['floor'], $data['count']);
 
         return response()->json($result, $result['skipped'] ? 409 : 201);

@@ -131,7 +131,7 @@ class ProjectSeeder extends Seeder
                     'unit_number' => "A-{$floor}0{$pos}",
                     'floor'       => $floor,
                     'sort_order'  => $pos - 1,
-                    'type'        => UnitType::TwoBed,
+                    'type'        => UnitType::Apartment,
                     'bedrooms'    => 2,
                     'size_sqft'   => 1150,
                     'view'        => $pos <= 2 ? 'Lake View' : 'City View',
@@ -411,7 +411,7 @@ class ProjectSeeder extends Seeder
         ]));
 
         $this->statusIdx = 0;
-        $unitTypes = [UnitType::Studio, UnitType::TwoBed, UnitType::TwoBed, UnitType::ThreeBed];
+        $unitTypes = [UnitType::Studio, UnitType::Apartment, UnitType::Apartment, UnitType::Apartment];
         $sizes     = [520, 1050, 1150, 1650];
         $prices    = [4500000, 7800000, 8500000, 12000000];
 
@@ -711,7 +711,7 @@ class ProjectSeeder extends Seeder
         $this->statusIdx = 0;
         for ($floor = 6; $floor <= 20; $floor++) {
             for ($pos = 1; $pos <= 3; $pos++) {
-                $type = match($pos) { 1 => UnitType::TwoBed, 2 => UnitType::TwoBed, 3 => UnitType::ThreeBed };
+                $type = UnitType::Apartment;
                 Unit::create([
                     'project_id'  => $project->id,
                     'block_id'    => $aptsSection->id,
@@ -832,7 +832,7 @@ class ProjectSeeder extends Seeder
         $this->statusIdx = 0;
         for ($floor = 3; $floor <= 22; $floor++) {
             for ($pos = 1; $pos <= 2; $pos++) {
-                $type = $floor >= 20 ? UnitType::Penthouse : UnitType::ThreeBed;
+                $type = $floor >= 20 ? UnitType::Penthouse : UnitType::Apartment;
                 Unit::create([
                     'project_id'  => $project->id,
                     'block_id'    => $alphaApts->id,

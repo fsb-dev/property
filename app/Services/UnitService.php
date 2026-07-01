@@ -158,6 +158,9 @@ class UnitService
             'max_loan_amount'     => $unit->max_loan_amount ? (float) $unit->max_loan_amount : null,
             'payment_plan_months' => $unit->payment_plan_months,
 
+            // Type-specific specs
+            'specs'               => $unit->specs ?? [],
+
             // Media files
             'floor_plan'      => $unit->getFirstMediaUrl('floor_plan'),
             'floor_plan_pdf'  => $unit->getFirstMediaUrl('floor_plan_pdf'),
@@ -185,6 +188,10 @@ class UnitService
         $media      = Arr::only($data, $mediaKeys);
         $attributes = Arr::except($data, $mediaKeys);
 
+        if (isset($attributes['specs'])) {
+            $attributes['specs'] = $this->castSpecs($attributes['specs']);
+        }
+
         $unit = Unit::create($attributes);
         $this->attachMedia($unit, $media);
 
@@ -204,6 +211,10 @@ class UnitService
         $media      = Arr::only($data, $mediaKeys);
         $attributes = Arr::except($data, $mediaKeys);
 
+        if (isset($attributes['specs'])) {
+            $attributes['specs'] = $this->castSpecs($attributes['specs']);
+        }
+
         $unit->update($attributes);
         $this->attachMedia($unit, $media);
 
@@ -213,6 +224,27 @@ class UnitService
         }
 
         return $unit->fresh();
+    }
+
+    private function castSpecs(array $specs): array
+    {
+        $booleans = ['living_room', 'dining_room', 'kitchen', 'pantry', 'server_room',
+                     'cold_storage', 'temperature_control', 'fire_safety', 'truck_access'];
+        $integers = ['master_bedrooms', 'master_bathrooms',
+                     'num_cabins', 'meeting_rooms', 'num_gates', 'electric_load',
+                     'storage_capacity', 'loading_capacity'];
+        $floats   = ['front_width', 'display_area', 'loading_area', 'open_space'];
+
+        $result = [];
+        foreach ($specs as $key => $value) {
+            if ($value === '' || $value === null) continue;
+            if (in_array($key, $booleans))  { $result[$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN); continue; }
+            if (in_array($key, $integers))  { $result[$key] = (int) $value; continue; }
+            if (in_array($key, $floats))    { $result[$key] = (float) $value; continue; }
+            $result[$key] = $value;
+        }
+
+        return $result ?: [];
     }
 
     public function delete(Unit $unit): string

@@ -76,6 +76,39 @@ const form = useForm({
     max_loan_amount:     props.unit.max_loan_amount      ?? '',
     payment_plan_months: props.unit.payment_plan_months  ?? '',
 
+    specs: {
+        // residential
+        master_bedrooms:     props.unit.specs?.master_bedrooms  ?? '',
+        master_bathrooms:    props.unit.specs?.master_bathrooms ?? '',
+        living_room:         !!(props.unit.specs?.living_room),
+        dining_room:         !!(props.unit.specs?.dining_room),
+        kitchen:             !!(props.unit.specs?.kitchen),
+        // commercial
+        shop_type:           props.unit.specs?.shop_type     ?? '',
+        front_width:         props.unit.specs?.front_width   ?? '',
+        display_area:        props.unit.specs?.display_area  ?? '',
+        electric_load:       props.unit.specs?.electric_load ?? '',
+        // office
+        office_type:         props.unit.specs?.office_type   ?? '',
+        num_cabins:          props.unit.specs?.num_cabins     ?? '',
+        meeting_rooms:       props.unit.specs?.meeting_rooms  ?? '',
+        open_space:          props.unit.specs?.open_space     ?? '',
+        pantry:              !!(props.unit.specs?.pantry),
+        server_room:         !!(props.unit.specs?.server_room),
+        // warehouse
+        warehouse_type:      props.unit.specs?.warehouse_type      ?? '',
+        storage_capacity:    props.unit.specs?.storage_capacity    ?? '',
+        loading_area:        props.unit.specs?.loading_area        ?? '',
+        loading_capacity:    props.unit.specs?.loading_capacity    ?? '',
+        num_gates:           props.unit.specs?.num_gates           ?? '',
+        gate_size:           props.unit.specs?.gate_size           ?? '',
+        power_supply:        props.unit.specs?.power_supply        ?? '',
+        cold_storage:        !!(props.unit.specs?.cold_storage),
+        temperature_control: !!(props.unit.specs?.temperature_control),
+        fire_safety:         !!(props.unit.specs?.fire_safety),
+        truck_access:        !!(props.unit.specs?.truck_access),
+    },
+
     floor_plan:            null,
     remove_floor_plan:     false,
     floor_plan_pdf:        null,
@@ -89,17 +122,62 @@ const form = useForm({
 });
 
 function submit() {
-    form.post(route('admin.units.update', props.unit.id), { method: 'put', forceFormData: true });
+    form.transform(data => ({ ...data, _method: 'put' }))
+        .post(route('admin.units.update', props.unit.id), { forceFormData: true });
 }
 
 const backHref = computed(() =>
     props.unit.block_id ? route('admin.blueprint.show', props.unit.project_id) : route('admin.units.index')
 );
 
+// Section type → spec category (primary driver)
+const SECTION_SPEC_MAP = {
+    residential: 'residential',
+    villa:       'residential',
+    commercial:  'commercial',
+    office:      'office',
+    industrial:  'warehouse',
+};
+
+// Unit type → spec category (fallback for mixed sections only)
+const UNIT_SPEC_MAP = {
+    apartment: 'residential', studio: 'residential', penthouse: 'residential',
+    duplex: 'residential', villa: 'residential', townhouse: 'residential',
+    shop: 'commercial', commercial_space: 'commercial',
+    office: 'office',
+    warehouse: 'warehouse',
+};
+
+// Unit types allowed per section type — keeps the dropdown contextual
+const SECTION_TYPE_UNITS = {
+    residential: ['apartment', 'studio', 'penthouse', 'duplex'],
+    villa:       ['villa', 'townhouse', 'duplex'],
+    commercial:  ['shop', 'commercial_space'],
+    office:      ['office'],
+    industrial:  ['warehouse'],
+};
+
+// Spec fields driven by section type; falls back to unit type only for mixed sections
+const specCategory = computed(() =>
+    SECTION_SPEC_MAP[props.unit.section_type] ?? UNIT_SPEC_MAP[form.type] ?? null
+);
+
+// Type dropdown filtered to options relevant for this section
+const filteredTypes = computed(() => {
+    const allowed = SECTION_TYPE_UNITS[props.unit.section_type];
+    if (!allowed) return props.enums.types; // mixed section — show all
+    return props.enums.types.filter(t => allowed.includes(t.value));
+});
+
 // ── Section "has data" indicators ──────────────────────────────────────────
 const sectionFilled = computed(() => ({
     identity:     !!(form.unit_number || form.type),
-    specs:        !!(form.bedrooms || form.bathrooms || form.size_sqft),
+    specs:        !!(form.bedrooms || form.bathrooms || form.balconies
+                    || form.specs.master_bedrooms || form.specs.master_bathrooms
+                    || form.specs.living_room || form.specs.num_cabins
+                    || form.specs.warehouse_type || form.specs.shop_type
+                    || form.specs.office_type || form.specs.pantry
+                    || form.specs.cold_storage),
     measurements: !!(form.size_sqft || form.carpet_area),
     pricing:      !!(form.price || form.current_price),
     floorplan:    !!(floorPlanPreview.value || floorPlanPdfName.value),
@@ -229,8 +307,8 @@ const STATUS_COLORS = {
                                 :class="[
                                     'w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all text-left',
                                     activeSection === sec.id
-                                        ? 'bg-admin-accent text-white shadow-sm'
-                                        : 'text-muted-foreground hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-foreground'
+                                        ? 'bg-[#F1ECFF] dark:bg-admin-accent/10 text-admin-accent'
+                                        : 'text-muted-foreground hover:bg-slate-50 dark:hover:bg-white/[0.03] hover:text-foreground'
                                 ]"
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -238,7 +316,7 @@ const STATUS_COLORS = {
                                 <span class="flex-1">{{ sec.label }}</span>
                                 <!-- Filled indicator -->
                                 <span v-if="sectionFilled[sec.id]"
-                                    :class="['h-1.5 w-1.5 rounded-full flex-shrink-0', activeSection === sec.id ? 'bg-white/60' : 'bg-emerald-500']" />
+                                    :class="['h-1.5 w-1.5 rounded-full flex-shrink-0', activeSection === sec.id ? 'bg-admin-accent' : 'bg-emerald-500']" />
                             </button>
                         </li>
                     </ul>
@@ -285,7 +363,7 @@ const STATUS_COLORS = {
                                             <SelectValue placeholder="Select type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem v-for="t in enums.types" :key="t.value" :value="t.value">{{ t.label }}</SelectItem>
+                                            <SelectItem v-for="t in filteredTypes" :key="t.value" :value="t.value">{{ t.label }}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -314,80 +392,296 @@ const STATUS_COLORS = {
                     </div>
 
                     <!-- ── SPECIFICATIONS ─────────────────────────────── -->
-                    <div v-show="activeSection === 'specs'" class="space-y-6">
-                        <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
-                            <div class="border-b border-border px-6 py-4">
-                                <h2 class="text-base font-semibold text-foreground">Specifications</h2>
-                                <p class="mt-0.5 text-xs text-muted-foreground">Room counts, direction, and extras</p>
-                            </div>
-                            <div class="p-6 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+                    <div v-show="activeSection === 'specs'" class="space-y-5">
 
-                                <div class="space-y-2">
-                                    <Label>Bedrooms</Label>
-                                    <Input v-model="form.bedrooms" type="number" min="0" max="20" placeholder="0" />
-                                </div>
-                                <div class="space-y-2">
-                                    <Label>Bathrooms</Label>
-                                    <Input v-model="form.bathrooms" type="number" min="0" max="20" placeholder="0" />
-                                </div>
-                                <div class="space-y-2">
-                                    <Label>Balconies</Label>
-                                    <Input v-model="form.balconies" type="number" min="0" max="10" placeholder="0" />
-                                </div>
-                                <div class="space-y-2">
-                                    <Label>Parking Spaces</Label>
-                                    <Input v-model="form.parking_spaces" type="number" min="0" max="20" placeholder="0" />
-                                </div>
-
-                                <div class="space-y-2">
-                                    <Label>Facing Direction</Label>
-                                    <Select v-model="form.facing_direction">
-                                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem v-for="f in enums.facing" :key="f" :value="f">{{ f }}</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div class="space-y-2">
-                                    <Label>View</Label>
-                                    <Select v-model="form.view">
-                                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem v-for="v in enums.views" :key="v" :value="v">{{ v }}</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-
-                            <!-- Boolean extras -->
-                            <div class="border-t border-border px-6 py-4">
-                                <Label class="mb-3 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">Extra Rooms</Label>
-                                <div class="flex flex-wrap gap-3">
-                                    <button type="button" @click="form.servant_room = !form.servant_room"
-                                        :class="[
-                                            'flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all',
-                                            form.servant_room
-                                                ? 'border-admin-accent bg-admin-accent/10 text-admin-accent'
-                                                : 'border-border text-muted-foreground hover:border-admin-accent/40 hover:text-foreground'
-                                        ]">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                                        Servant Room
-                                        <span v-if="form.servant_room" class="h-1.5 w-1.5 rounded-full bg-admin-accent" />
-                                    </button>
-                                    <button type="button" @click="form.store_room = !form.store_room"
-                                        :class="[
-                                            'flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all',
-                                            form.store_room
-                                                ? 'border-admin-accent bg-admin-accent/10 text-admin-accent'
-                                                : 'border-border text-muted-foreground hover:border-admin-accent/40 hover:text-foreground'
-                                        ]">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><rect x="2" y="3" width="20" height="6" rx="1"/></svg>
-                                        Store Room
-                                        <span v-if="form.store_room" class="h-1.5 w-1.5 rounded-full bg-admin-accent" />
-                                    </button>
-                                </div>
+                        <!-- Notice only for mixed sections where unit type drives the spec fields -->
+                        <div v-if="!specCategory" class="flex items-start gap-3 rounded-2xl border border-amber-200 dark:border-amber-700/40 bg-amber-50 dark:bg-amber-900/20 p-4">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mt-0.5 flex-shrink-0 text-amber-500"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            <div>
+                                <p class="text-sm font-semibold text-amber-700 dark:text-amber-400">Select a unit type to see specification fields</p>
+                                <p class="mt-0.5 text-xs text-amber-600/80 dark:text-amber-500/80">This section is mixed-use. Go to <button type="button" @click="activeSection = 'identity'" class="underline underline-offset-2">Identity</button> and pick a Unit Type — the relevant fields will appear here.</p>
                             </div>
                         </div>
+
+                        <!-- ══ RESIDENTIAL (apartment / studio / villa / penthouse etc.) ══ -->
+                        <template v-if="specCategory === 'residential' || !specCategory">
+
+                            <!-- Room counts -->
+                            <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
+                                <div class="border-b border-border px-6 py-4">
+                                    <h2 class="text-base font-semibold text-foreground">Room Counts</h2>
+                                </div>
+                                <div class="p-6 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+                                    <div class="space-y-2">
+                                        <Label>Bedrooms</Label>
+                                        <Input v-model="form.bedrooms" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Master Bedrooms</Label>
+                                        <Input v-model="form.specs.master_bedrooms" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Bathrooms</Label>
+                                        <Input v-model="form.bathrooms" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Master Bathrooms</Label>
+                                        <Input v-model="form.specs.master_bathrooms" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Balconies</Label>
+                                        <Input v-model="form.balconies" type="number" min="0" max="10" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Parking Spaces</Label>
+                                        <Input v-model="form.parking_spaces" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Facing Direction</Label>
+                                        <Select v-model="form.facing_direction">
+                                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem v-for="f in enums.facing" :key="f" :value="f">{{ f }}</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>View</Label>
+                                        <Select v-model="form.view">
+                                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem v-for="v in enums.views" :key="v" :value="v">{{ v }}</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Extra rooms -->
+                            <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
+                                <div class="border-b border-border px-6 py-4">
+                                    <h2 class="text-base font-semibold text-foreground">Extra Rooms</h2>
+                                    <p class="mt-0.5 text-xs text-muted-foreground">Toggle rooms present in this unit</p>
+                                </div>
+                                <div class="p-6 flex flex-wrap gap-3">
+                                    <button v-for="[key, label, icon] in [
+                                        ['servant_room_col', 'Servant Room', 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M12 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
+                                        ['store_room_col',   'Store Room',   'M3 9v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9 M2 3h20v6H2z'],
+                                        ['specs_living_room',   'Living Room',  'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10'],
+                                        ['specs_dining_room',   'Dining Room',  'M3 11l18-5v12L3 14v-3z M11.6 16.8a3 3 0 1 1-5.8-1.6'],
+                                        ['specs_kitchen',       'Kitchen',      'M2 12h20 M6 4v16 M10 4v4 M14 4v4 M18 4v4'],
+                                    ]" :key="key" type="button"
+                                        @click="key.startsWith('specs_') ? form.specs[key.replace('specs_','')] = !form.specs[key.replace('specs_','')] : (key === 'servant_room_col' ? form.servant_room = !form.servant_room : form.store_room = !form.store_room)"
+                                        :class="[
+                                            'flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all',
+                                            (key === 'servant_room_col' ? form.servant_room : key === 'store_room_col' ? form.store_room : form.specs[key.replace('specs_','')])
+                                                ? 'border-admin-accent bg-admin-accent/10 text-admin-accent'
+                                                : 'border-border text-muted-foreground hover:border-admin-accent/40 hover:text-foreground'
+                                        ]">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" v-html="icon" />
+                                        {{ label }}
+                                        <span v-if="key === 'servant_room_col' ? form.servant_room : key === 'store_room_col' ? form.store_room : form.specs[key.replace('specs_','')]"
+                                            class="h-1.5 w-1.5 rounded-full bg-admin-accent" />
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- ══ COMMERCIAL (shop / commercial_space) ══ -->
+                        <template v-if="specCategory === 'commercial'">
+                            <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
+                                <div class="border-b border-border px-6 py-4">
+                                    <h2 class="text-base font-semibold text-foreground">Shop Specifications</h2>
+                                </div>
+                                <div class="p-6 grid grid-cols-2 gap-5 sm:grid-cols-3">
+                                    <div class="space-y-2">
+                                        <Label>Shop Type</Label>
+                                        <Input v-model="form.specs.shop_type" placeholder="e.g. Retail, F&B, Boutique" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Front Width (ft)</Label>
+                                        <Input v-model="form.specs.front_width" type="number" step="0.1" min="0" placeholder="e.g. 12.5" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Display Area (sqft)</Label>
+                                        <Input v-model="form.specs.display_area" type="number" min="0" placeholder="e.g. 400" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Ceiling Height (ft)</Label>
+                                        <Input v-model="form.ceiling_height" type="number" step="0.1" min="0" placeholder="e.g. 14" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Electric Load (kW)</Label>
+                                        <Input v-model="form.specs.electric_load" type="number" min="0" placeholder="e.g. 30" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Toilets</Label>
+                                        <Input v-model="form.bathrooms" type="number" min="0" max="10" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Parking Spaces</Label>
+                                        <Input v-model="form.parking_spaces" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Facing Direction</Label>
+                                        <Select v-model="form.facing_direction">
+                                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem v-for="f in enums.facing" :key="f" :value="f">{{ f }}</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- ══ OFFICE ══ -->
+                        <template v-if="specCategory === 'office'">
+                            <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
+                                <div class="border-b border-border px-6 py-4">
+                                    <h2 class="text-base font-semibold text-foreground">Office Specifications</h2>
+                                </div>
+                                <div class="p-6 grid grid-cols-2 gap-5 sm:grid-cols-3">
+                                    <div class="space-y-2">
+                                        <Label>Office Type</Label>
+                                        <Input v-model="form.specs.office_type" placeholder="e.g. Open Plan, Serviced, Co-work" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Number of Cabins</Label>
+                                        <Input v-model="form.specs.num_cabins" type="number" min="0" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Meeting Rooms</Label>
+                                        <Input v-model="form.specs.meeting_rooms" type="number" min="0" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Open Space (sqft)</Label>
+                                        <Input v-model="form.specs.open_space" type="number" min="0" placeholder="e.g. 800" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Ceiling Height (ft)</Label>
+                                        <Input v-model="form.ceiling_height" type="number" step="0.1" min="0" placeholder="e.g. 10" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Toilets</Label>
+                                        <Input v-model="form.bathrooms" type="number" min="0" max="10" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Parking Spaces</Label>
+                                        <Input v-model="form.parking_spaces" type="number" min="0" max="20" placeholder="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Facing Direction</Label>
+                                        <Select v-model="form.facing_direction">
+                                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem v-for="f in enums.facing" :key="f" :value="f">{{ f }}</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>View</Label>
+                                        <Select v-model="form.view">
+                                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem v-for="v in enums.views" :key="v" :value="v">{{ v }}</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <!-- Office extras -->
+                                <div class="border-t border-border px-6 py-4">
+                                    <Label class="mb-3 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">Facilities</Label>
+                                    <div class="flex flex-wrap gap-3">
+                                        <button v-for="[key, label] in [['pantry','Pantry'],['server_room','Server Room']]"
+                                            :key="key" type="button" @click="form.specs[key] = !form.specs[key]"
+                                            :class="['flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all', form.specs[key] ? 'border-admin-accent bg-admin-accent/10 text-admin-accent' : 'border-border text-muted-foreground hover:border-admin-accent/40 hover:text-foreground']">
+                                            {{ label }}
+                                            <span v-if="form.specs[key]" class="h-1.5 w-1.5 rounded-full bg-admin-accent" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- ══ WAREHOUSE ══ -->
+                        <template v-if="specCategory === 'warehouse'">
+
+                            <!-- Storage & structure -->
+                            <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
+                                <div class="border-b border-border px-6 py-4">
+                                    <h2 class="text-base font-semibold text-foreground">Storage & Structure</h2>
+                                </div>
+                                <div class="p-6 grid grid-cols-2 gap-5 sm:grid-cols-3">
+                                    <div class="space-y-2">
+                                        <Label>Warehouse Type</Label>
+                                        <Input v-model="form.specs.warehouse_type" placeholder="e.g. Cold, Dry, Bonded" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Storage Capacity (tons)</Label>
+                                        <Input v-model="form.specs.storage_capacity" type="number" min="0" placeholder="e.g. 500" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Ceiling Height (ft)</Label>
+                                        <Input v-model="form.ceiling_height" type="number" step="0.1" min="0" placeholder="e.g. 30" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Power Supply (kW)</Label>
+                                        <Input v-model="form.specs.power_supply" placeholder="e.g. 200kW, 3-phase" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Parking / Truck Bays</Label>
+                                        <Input v-model="form.parking_spaces" type="number" min="0" placeholder="0" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Loading & gates -->
+                            <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
+                                <div class="border-b border-border px-6 py-4">
+                                    <h2 class="text-base font-semibold text-foreground">Loading & Access</h2>
+                                </div>
+                                <div class="p-6 grid grid-cols-2 gap-5 sm:grid-cols-3">
+                                    <div class="space-y-2">
+                                        <Label>Loading Area (sqft)</Label>
+                                        <Input v-model="form.specs.loading_area" type="number" min="0" placeholder="e.g. 1200" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Loading Capacity (tons)</Label>
+                                        <Input v-model="form.specs.loading_capacity" type="number" min="0" placeholder="e.g. 20" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Number of Gates</Label>
+                                        <Input v-model="form.specs.num_gates" type="number" min="0" placeholder="e.g. 4" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label>Gate Size (w × h)</Label>
+                                        <Input v-model="form.specs.gate_size" placeholder="e.g. 5m × 5m" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Features / compliance -->
+                            <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm">
+                                <div class="border-b border-border px-6 py-4">
+                                    <h2 class="text-base font-semibold text-foreground">Features & Compliance</h2>
+                                    <p class="mt-0.5 text-xs text-muted-foreground">Toggle available features</p>
+                                </div>
+                                <div class="p-6 flex flex-wrap gap-3">
+                                    <button v-for="[key, label] in [
+                                        ['cold_storage',        'Cold Storage'],
+                                        ['temperature_control', 'Temperature Control'],
+                                        ['fire_safety',         'Fire Safety System'],
+                                        ['truck_access',        'Truck Access'],
+                                    ]" :key="key" type="button" @click="form.specs[key] = !form.specs[key]"
+                                        :class="['flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all', form.specs[key] ? 'border-admin-accent bg-admin-accent/10 text-admin-accent' : 'border-border text-muted-foreground hover:border-admin-accent/40 hover:text-foreground']">
+                                        {{ label }}
+                                        <span v-if="form.specs[key]" class="h-1.5 w-1.5 rounded-full bg-admin-accent" />
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+
                     </div>
 
                     <!-- ── MEASUREMENTS ───────────────────────────────── -->

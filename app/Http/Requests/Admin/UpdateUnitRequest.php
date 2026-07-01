@@ -9,7 +9,10 @@ use Illuminate\Validation\Rule;
 
 class UpdateUnitRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
     public function rules(): array
     {
@@ -41,7 +44,7 @@ class UpdateUnitRequest extends FormRequest
 
             // Measurements
             'size_sqft'          => ['nullable', 'integer', 'min:1'],
-            'super_built_up_area'=> ['nullable', 'integer', 'min:1'],
+            'super_built_up_area' => ['nullable', 'integer', 'min:1'],
             'carpet_area'        => ['nullable', 'integer', 'min:1'],
             'ceiling_height'     => ['nullable', 'numeric', 'min:0', 'max:50'],
             'terrace_area'       => ['nullable', 'integer', 'min:0'],
@@ -54,7 +57,7 @@ class UpdateUnitRequest extends FormRequest
             'parking_price'      => ['nullable', 'numeric', 'min:0'],
             'registration_fee'   => ['nullable', 'numeric', 'min:0'],
             'vat_pct'            => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'monthly_maintenance'=> ['nullable', 'numeric', 'min:0'],
+            'monthly_maintenance' => ['nullable', 'numeric', 'min:0'],
             'booking_amount'     => ['nullable', 'numeric', 'min:0'],
 
             // Media URLs
@@ -67,17 +70,20 @@ class UpdateUnitRequest extends FormRequest
             'available_date'     => ['nullable', 'date'],
             'handover_date'      => ['nullable', 'date'],
 
+            // Type-specific specs (residential / commercial / office / warehouse)
+            'specs'              => ['nullable', 'array'],
+
             // Mortgage
             'eligible_banks'     => ['nullable', 'array'],
             'eligible_banks.*'   => ['string', 'max:100'],
             'max_loan_amount'    => ['nullable', 'numeric', 'min:0'],
-            'payment_plan_months'=> ['nullable', 'integer', 'min:1', 'max:600'],
+            'payment_plan_months' => ['nullable', 'integer', 'min:1', 'max:600'],
 
             // Floor plan files
             'floor_plan'           => ['nullable', 'file', 'mimes:jpeg,png,webp', 'max:5120'],
             'remove_floor_plan'    => ['nullable', 'boolean'],
             'floor_plan_pdf'       => ['nullable', 'file', 'mimes:pdf', 'max:20480'],
-            'remove_floor_plan_pdf'=> ['nullable', 'boolean'],
+            'remove_floor_plan_pdf' => ['nullable', 'boolean'],
             'cad_dwg'              => ['nullable', 'file', 'max:20480'],
             'remove_cad_dwg'       => ['nullable', 'boolean'],
 
