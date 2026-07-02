@@ -84,10 +84,157 @@ class BookingService
             'conversion_rate'    => $total > 0 ? round($purchased / $total * 100, 1) : 0,
             'cancelled'          => $cancelled,
             'all_count'          => $total,
+            'avg_sales_cycle'    => $this->avgSalesCycle(),
+            'changes'            => $this->periodChanges(),
             'trend'              => $this->salesTrend(),
             'by_project'         => $this->salesByProject(),
             'top_reps'           => $this->topReps(),
         ];
+    }
+
+    // ── KPI trend badges — real period-over-period comparisons ─────────────
+
+    // Rolling 30-day windows rather than calendar months, so the numbers
+    // don't degenerate to "0 vs N" on the first couple of days of a month.
+    private function periodChanges(): array
+    {
+        $current  = $this->periodCounts(now()->subDays(30), now());
+        $previous = $this->periodCounts(now()->subDays(60), now()->subDays(30));
+
+        return [
+            'total_reservations' => $this->pctChange($current['reserved'], $previous['reserved']),
+            'total_sales'        => $this->pctChange($current['purchased'], $previous['purchased']),
+            'sales_value'        => $this->pctChange($current['sales_value'], $previous['sales_value']),
+            'conversion_rate'    => $this->pctChange($current['conversion'], $previous['conversion']),
+            'cancelled'          => $this->pctChange($current['cancelled'], $previous['cancelled']),
+        ];
+    }
+
+    private function periodCounts($from, $to): array
+    {
+        $rows = Booking::whereBetween('booking_date', [$from, $to])->get(['status', 'price_agreed']);
+
+        $reserved  = $rows->where('status', BookingStatus::Reserved)->count();
+        $purchased = $rows->where('status', BookingStatus::Purchased)->count();
+        $cancelled = $rows->where('status', BookingStatus::Cancelled)->count();
+        $total     = $reserved + $purchased + $cancelled;
+
+        return [
+            'reserved'    => $reserved,
+            'purchased'   => $purchased,
+            'cancelled'   => $cancelled,
+            'sales_value' => (float) $rows->where('status', BookingStatus::Purchased)->sum('price_agreed'),
+            'conversion'  => $total > 0 ? round($purchased / $total * 100, 1) : 0,
+        ];
+    }
+
+    private function pctChange(float $current, float $previous): array
+    {
+        if ($previous == 0.0) {
+            return ['dir' => $current > 0 ? 'up' : 'flat', 'pct' => $current > 0 ? 100.0 : 0.0];
+        }
+
+        $pct = round((($current - $previous) / $previous) * 100, 1);
+
+        return ['dir' => $pct >= 0 ? 'up' : 'down', 'pct' => abs($pct)];
+    }
+
+    // Average days between booking_date and the sale being marked Purchased
+    // (approximated by updated_at, since status transitions aren't timestamped
+    // separately). The headline number is all-time; the badge compares the
+    // last 30 days of sales against the 30 days before that.
+    private function avgSalesCycle(): array
+    {
+        $currentDays  = $this->avgCycleDays(now()->subDays(30), now());
+        $previousDays = $this->avgCycleDays(now()->subDays(60), now()->subDays(30));
+
+        return [
+            'days'      => $this->avgCycleDays(),
+            'day_delta' => $currentDays - $previousDays, // negative = cycle got shorter (an improvement)
+        ];
+    }
+
+    private function avgCycleDays($from = null, $to = null): int
+    {
+        $query = Booking::where('status', BookingStatus::Purchased);
+        if ($from && $to) {
+            $query->whereBetween('booking_date', [$from, $to]);
+        }
+
+        $bookings = $query->get(['booking_date', 'updated_at']);
+        if ($bookings->isEmpty()) {
+            return 0;
+        }
+
+        $totalDays = $bookings->sum(fn (Booking $b) => max(0, $b->booking_date->diffInDays($b->updated_at)));
+
+        return (int) round($totalDays / $bookings->count());
+    }
+
+    // ── Upcoming Activities — real, derived from installments/approvals ────
+
+    public function upcomingActivities(int $limit = 4): array
+    {
+        $items = collect();
+
+        Installment::where('status', 'upcoming')
+            ->whereBetween('due_date', [now(), now()->addDays(14)])
+            ->with('paymentPlan.booking.client', 'paymentPlan.booking.unit')
+            ->orderBy('due_date')
+            ->limit(6)
+            ->get()
+            ->each(function (Installment $i) use ($items) {
+                $booking = $i->paymentPlan?->booking;
+                if (!$booking) {
+                    return;
+                }
+                $items->push([
+                    'icon'   => 'due',
+                    'title'  => 'Payment due from '.($booking->client?->name ?? 'a buyer'),
+                    'sub'    => 'Unit '.($booking->unit?->unit_number ?? '—').' · Due '.$i->due_date->format('d M'),
+                    'accent' => 'bg-violet-50 text-violet-600',
+                    'date'   => $i->due_date,
+                ]);
+            });
+
+        Booking::where('status', BookingStatus::Reserved)
+            ->whereNotNull('reserved_until')
+            ->whereBetween('reserved_until', [now(), now()->addDays(7)])
+            ->with('client', 'unit')
+            ->orderBy('reserved_until')
+            ->limit(6)
+            ->get()
+            ->each(function (Booking $b) use ($items) {
+                $items->push([
+                    'icon'   => 'visit',
+                    'title'  => 'Reservation expiring for '.($b->client?->name ?? 'a buyer'),
+                    'sub'    => 'Unit '.($b->unit?->unit_number ?? '—').' · Expires '.$b->reserved_until->format('d M'),
+                    'accent' => 'bg-amber-50 text-amber-600',
+                    'date'   => $b->reserved_until,
+                ]);
+            });
+
+        Booking::whereIn('status', [BookingStatus::Reserved, BookingStatus::Purchased])
+            ->where('meta->approvals->manager', 'Pending')
+            ->with('client')
+            ->latest('booking_date')
+            ->limit(6)
+            ->get()
+            ->each(function (Booking $b) use ($items) {
+                $items->push([
+                    'icon'   => 'doc',
+                    'title'  => 'Follow up on pending approval',
+                    'sub'    => 'Manager sign-off outstanding for '.($b->client?->name ?? 'a buyer'),
+                    'accent' => 'bg-sky-50 text-sky-600',
+                    'date'   => $b->booking_date,
+                ]);
+            });
+
+        return $items->sortBy('date')
+            ->take($limit)
+            ->map(fn ($i) => ['icon' => $i['icon'], 'title' => $i['title'], 'sub' => $i['sub'], 'accent' => $i['accent']])
+            ->values()
+            ->all();
     }
 
     private function salesTrend(): array

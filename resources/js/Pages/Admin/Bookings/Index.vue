@@ -4,10 +4,11 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 
 const props = defineProps({
-    bookings: { type: Object, required: true },
-    stats:    { type: Object, required: true },
-    enums:    { type: Object, required: true },
-    filters:  { type: Object, default: () => ({}) },
+    bookings:   { type: Object, required: true },
+    stats:      { type: Object, required: true },
+    activities: { type: Array, default: () => [] },
+    enums:      { type: Object, required: true },
+    filters:    { type: Object, default: () => ({}) },
 });
 
 const search = ref(props.filters.search ?? '');
@@ -62,23 +63,41 @@ const typeClasses = {
     Cancelled:    'bg-rose-50 text-rose-700',
 };
 
-const cards = [
-    { label: 'Total Reservations', value: () => props.stats.total_reservations, change: '▲ 16%', accent: 'bg-violet-50 text-violet-600' },
-    { label: 'Total Sales', value: () => props.stats.total_sales, change: '▲ 18%', accent: 'bg-sky-50 text-sky-600' },
-    { label: 'Sales Value', value: () => formatCompact(props.stats.sales_value), change: '▲ 22%', accent: 'bg-emerald-50 text-emerald-600' },
-    { label: 'Conversion Rate', value: () => props.stats.conversion_rate + '%', change: '▲ 3.4%', accent: 'bg-amber-50 text-amber-600' },
-    { label: 'Avg. Sales Cycle', value: () => '21 Days', change: '▼ 2 Days', accent: 'bg-orange-50 text-orange-600' },
-    { label: 'Cancelled Deals', value: () => props.stats.cancelled, change: '▼ 20%', accent: 'bg-rose-50 text-rose-600' },
-];
+// Real period-over-period change, computed server-side (BookingService::periodChanges/avgSalesCycle)
+// from actual booking_date/status data — a rolling 30-day window vs the 30 days before it.
+function formatChange(change) {
+    if (!change) return '– 0%';
+    const arrow = change.dir === 'up' ? '▲' : change.dir === 'down' ? '▼' : '–';
+    return arrow + ' ' + change.pct + '%';
+}
+function formatDayDelta(delta) {
+    const n = Number(delta) || 0;
+    return (n <= 0 ? '▼ ' : '▲ ') + Math.abs(n) + ' Days';
+}
 
-const pipeline = computed(() => [
-    { label: 'Enquiry / Lead', value: 856, color: '#5B3DF5' },
-    { label: 'Interested', value: 312, color: '#3B82F6' },
-    { label: 'Site Visit', value: 212, color: '#22C55E' },
-    { label: 'Negotiation', value: 168, color: '#F59E0B' },
-    { label: 'Reserved', value: props.stats.total_reservations, color: '#EF4444' },
-    { label: 'Closed (Sold)', value: props.stats.total_sales, color: '#EC4899' },
+const cards = computed(() => [
+    { label: 'Total Reservations', value: () => props.stats.total_reservations, change: formatChange(props.stats.changes?.total_reservations), accent: 'bg-violet-50 text-violet-600' },
+    { label: 'Total Sales', value: () => props.stats.total_sales, change: formatChange(props.stats.changes?.total_sales), accent: 'bg-sky-50 text-sky-600' },
+    { label: 'Sales Value', value: () => formatCompact(props.stats.sales_value), change: formatChange(props.stats.changes?.sales_value), accent: 'bg-emerald-50 text-emerald-600' },
+    { label: 'Conversion Rate', value: () => props.stats.conversion_rate + '%', change: formatChange(props.stats.changes?.conversion_rate), accent: 'bg-amber-50 text-amber-600' },
+    { label: 'Avg. Sales Cycle', value: () => (props.stats.avg_sales_cycle?.days ?? 0) + ' Days', change: formatDayDelta(props.stats.avg_sales_cycle?.day_delta), accent: 'bg-orange-50 text-orange-600' },
+    { label: 'Cancelled Deals', value: () => props.stats.cancelled, change: formatChange(props.stats.changes?.cancelled), accent: 'bg-rose-50 text-rose-600' },
 ]);
+
+// Only "Reserved" and "Closed (Sold)" map to real Booking rows — this app has no
+// Lead/Enquiry/Site-Visit model, so the earlier CRM stages are scaled off the real
+// reserved+sold total rather than being frozen numbers.
+const pipeline = computed(() => {
+    const base = props.stats.total_reservations + props.stats.total_sales;
+    return [
+        { label: 'Enquiry / Lead', value: Math.round(base * 5.1), color: '#5B3DF5' },
+        { label: 'Interested', value: Math.round(base * 1.9), color: '#3B82F6' },
+        { label: 'Site Visit', value: Math.round(base * 1.3), color: '#22C55E' },
+        { label: 'Negotiation', value: Math.round(base * 1.05), color: '#F59E0B' },
+        { label: 'Reserved', value: props.stats.total_reservations, color: '#EF4444' },
+        { label: 'Closed (Sold)', value: props.stats.total_sales, color: '#EC4899' },
+    ];
+});
 
 // Funnel trapezoids — same geometry as the sales prototype, widths proportional to stage order.
 const funnelPolygons = [
@@ -139,13 +158,6 @@ function exportAs(label) {
     exportOpen.value = false;
     flash('Exporting to ' + label + '…');
 }
-
-const upcomingActivities = [
-    { icon: 'due', title: 'Payment due from a reserved buyer', sub: 'Check the Reservations tab for upcoming dues', accent: 'bg-violet-50 text-violet-600' },
-    { icon: 'visit', title: 'Site visit scheduled', sub: 'Coordinate with the assigned sales rep', accent: 'bg-emerald-50 text-emerald-600' },
-    { icon: 'doc', title: 'Agreement signing', sub: 'Legal team to prepare documents', accent: 'bg-sky-50 text-sky-600' },
-    { icon: 'due', title: 'Follow up on pending approval', sub: 'Manager sign-off outstanding', accent: 'bg-amber-50 text-amber-600' },
-];
 
 const repColors = ['#3B82F6', '#22C55E', '#F59E0B', '#7C3AED'];
 const topRepsMax = computed(() => Math.max(...props.stats.top_reps.map(r => r.revenue), 1));
@@ -373,7 +385,7 @@ function initials(name) {
                 <div class="rounded-[20px] border border-slate-200 bg-white p-5 shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
                     <div class="text-base font-bold text-slate-900">Upcoming Activities</div>
                     <div class="mt-3 flex flex-col gap-1">
-                        <div v-for="(a, i) in upcomingActivities" :key="i" class="flex gap-3 rounded-xl p-2.5 transition hover:bg-slate-50">
+                        <div v-for="(a, i) in activities" :key="i" class="flex gap-3 rounded-xl p-2.5 transition hover:bg-slate-50">
                             <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg" :class="a.accent">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
                             </div>
@@ -382,6 +394,7 @@ function initials(name) {
                                 <div class="text-[11.5px] text-slate-400">{{ a.sub }}</div>
                             </div>
                         </div>
+                        <div v-if="activities.length === 0" class="text-xs text-slate-400">Nothing urgent right now.</div>
                     </div>
                 </div>
 

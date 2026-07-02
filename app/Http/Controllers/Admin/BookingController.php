@@ -17,10 +17,11 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         return inertia('Admin/Bookings/Index', [
-            'bookings' => $this->service->paginate($request),
-            'stats'    => $this->service->stats(),
-            'enums'    => $this->service->enums(),
-            'filters'  => $request->only('search', 'status'),
+            'bookings'   => $this->service->paginate($request),
+            'stats'      => $this->service->stats(),
+            'activities' => $this->service->upcomingActivities(),
+            'enums'      => $this->service->enums(),
+            'filters'    => $request->only('search', 'status'),
         ]);
     }
 

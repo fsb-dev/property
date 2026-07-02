@@ -14,6 +14,10 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
+// Seeds a fixed, controlled set of 30 bookings — enough status/date variety
+// for the Index page's KPIs, trend chart, and pipeline to show real numbers
+// without depending on however many units another seeder happened to flag
+// Booked/Sold.
 class BookingSeeder extends Seeder
 {
     private array $sources    = ['Website', 'Walk-in', 'Referral', 'Facebook', 'Sales Call'];
@@ -21,6 +25,11 @@ class BookingSeeder extends Seeder
     private array $planTypes  = ['24-month installment', '36-month installment', 'Custom Plan', 'Full Payment'];
     private array $banks      = ['City Bank', 'BRAC Bank', 'Eastern Bank'];
     private array $methods    = ['bank_transfer', 'bkash', 'nagad', 'card'];
+
+    private const TOTAL     = 30;
+    private const RESERVED  = 14;
+    private const PURCHASED = 12;
+    private const CANCELLED = 4; // TOTAL - RESERVED - PURCHASED
 
     public function run(): void
     {
@@ -51,17 +60,31 @@ class BookingSeeder extends Seeder
             return;
         }
 
-        // Real units already sitting in Booked/Sold status (ProjectSeeder's status cycle) —
-        // one Booking each, so unit status and booking status agree.
-        Unit::where('status', UnitStatus::Booked)->get()
-            ->each(fn (Unit $unit) => $this->makeBooking($tenant, $unit, 'reserved', $clients, $reps));
+        // Wipe any previously seeded bookings (and, via FK cascade, their
+        // payment plans / installments / payments) and free up the units
+        // they held, so this run always produces exactly TOTAL bookings.
+        $previouslyHeldUnitIds = Booking::pluck('unit_id')->filter()->all();
+        Booking::query()->delete();
+        Unit::whereIn('id', $previouslyHeldUnitIds)->update(['status' => UnitStatus::Available]);
 
-        Unit::where('status', UnitStatus::Sold)->get()
-            ->each(fn (Unit $unit) => $this->makeBooking($tenant, $unit, 'purchased', $clients, $reps));
+        $units = Unit::where('status', UnitStatus::Available)
+            ->inRandomOrder()
+            ->take(self::TOTAL)
+            ->get();
 
-        // A handful of historical cancellations on units that are Available again.
-        Unit::where('status', UnitStatus::Available)->inRandomOrder()->take(4)->get()
-            ->each(fn (Unit $unit) => $this->makeBooking($tenant, $unit, 'cancelled', $clients, $reps));
+        if ($units->count() < self::TOTAL) {
+            $this->command?->warn('Not enough available units to seed '.self::TOTAL.' bookings — seeding '.$units->count().' instead.');
+        }
+
+        $plan = collect(
+            array_merge(
+                array_fill(0, self::RESERVED, 'reserved'),
+                array_fill(0, self::PURCHASED, 'purchased'),
+                array_fill(0, self::CANCELLED, 'cancelled'),
+            )
+        )->shuffle();
+
+        $units->values()->each(fn (Unit $unit, int $i) => $this->makeBooking($tenant, $unit, $plan[$i] ?? 'reserved', $clients, $reps));
     }
 
     private function makeBooking(Tenant $tenant, Unit $unit, string $status, $clients, $reps): void
@@ -70,15 +93,11 @@ class BookingSeeder extends Seeder
         $discount  = collect([0, 0, 2, 4, 5, 7.5])->random();
         $final     = round($basePrice * (1 - $discount / 100), 2);
 
-        $bookingDate = now()->subDays(fake()->numberBetween(5, 150));
+        // Spread across ~6 months so the trend chart and month-over-month
+        // KPI comparisons on the Index page have real variety to show.
+        $bookingDate = now()->subDays(fake()->numberBetween(1, 180));
 
         $meta = [
-            'documents' => [
-                'national_id'      => 'Verified',
-                'income_proof'     => 'Uploaded',
-                'bank_statement'   => 'Uploaded',
-                'agreement_draft'  => $status === 'purchased' ? 'Signed' : 'Pending',
-            ],
             'mortgage' => [
                 'loan_required' => fake()->boolean(60) ? 'Yes' : 'No',
                 'eligible_bank' => collect($this->banks)->random(),
@@ -120,6 +139,13 @@ class BookingSeeder extends Seeder
             'notes'          => null,
             'meta'           => $meta,
         ]);
+
+        // Keep the unit's own status consistent with the booking we just made.
+        $unit->update(['status' => match ($status) {
+            'reserved'  => UnitStatus::Booked,
+            'purchased' => UnitStatus::Sold,
+            default     => UnitStatus::Available, // cancelled — back on the market
+        }]);
 
         if ($status === 'cancelled') {
             return;
