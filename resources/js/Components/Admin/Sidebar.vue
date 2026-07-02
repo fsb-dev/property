@@ -45,7 +45,8 @@ const navLinks = [
         icon: `<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/>`,
     },
     {
-        label: 'Construction', routeName: null,
+        label: 'Construction', routeName: 'admin.construction.index', activePattern: 'admin.construction.*',
+        href: () => route('admin.construction.index'),
         icon: `<path d="M2 20h20"/><path d="M6 20V10l6-7 6 7v10"/><path d="M10 20v-5h4v5"/>`,
     },
     {

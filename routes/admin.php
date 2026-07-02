@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BlueprintController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\ConstructionController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InvestmentController;
 use App\Http\Controllers\Admin\MediaController;
@@ -111,8 +112,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     // Construction
     Route::middleware('permission:view construction')->group(function () {
-        Route::get('/construction', fn () => inertia('Admin/Construction/Index'))->name('construction.index');
-        Route::middleware('permission:manage construction')->get('/construction/update', fn () => inertia('Admin/Construction/Update'))->name('construction.update');
+        Route::get('/construction', [ConstructionController::class, 'index'])->name('construction.index');
+        Route::middleware('permission:manage construction')->group(function () {
+            Route::post('/construction/site-updates', [ConstructionController::class, 'storeSiteUpdate'])->name('construction.site-updates.store');
+        });
     });
 
     // Documents
