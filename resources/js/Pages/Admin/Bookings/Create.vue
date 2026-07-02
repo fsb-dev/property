@@ -8,6 +8,8 @@ const props = defineProps({
 });
 
 const form = useForm({
+    draft_id: null,
+
     buyer_mode: 'existing',
     client_id: '',
     new_client_name: '',
@@ -31,7 +33,6 @@ const form = useForm({
     total_installments: 24,
 
     meta: {
-        documents: { national_id: '', passport: '', income_proof: '', bank_statement: '' },
         mortgage: { loan_required: 'No', eligible_bank: '', loan_amount: '', interest_rate: '', indicative_emi: '', status: '' },
         approvals: { sales: 'Pending', finance: 'Pending', manager: 'Pending', legal: 'Pending' },
     },

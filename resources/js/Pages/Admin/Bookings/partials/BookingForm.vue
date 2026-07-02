@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import axios from 'axios';
 import { Input } from '@/Components/ui/input';
@@ -12,6 +12,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
+import {
+    Combobox,
+    ComboboxAnchor,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList,
+} from '@/Components/ui/combobox';
 import DatePicker from '@/Components/ui/date-picker/DatePicker.vue';
 
 const props = defineProps({
@@ -24,16 +32,15 @@ const emit = defineEmits(['submit']);
 
 // ── Steps ──────────────────────────────────────────────────────────────
 const STEPS = [
-    { key: 'buyer',      label: 'Select Buyer',        subtitle: 'Who is reserving',    kicker: 'Step 1 of 10' },
-    { key: 'project',    label: 'Select Project',      subtitle: 'Project & unit',      kicker: 'Step 2 of 10' },
-    { key: 'details',    label: 'Reservation Details', subtitle: 'Dates & owner',       kicker: 'Step 3 of 10' },
-    { key: 'pricing',    label: 'Pricing',             subtitle: 'Price & charges',     kicker: 'Step 4 of 10' },
-    { key: 'plan',       label: 'Payment Plan',        subtitle: 'Installments',        kicker: 'Step 5 of 10' },
-    { key: 'documents',  label: 'Documents',           subtitle: 'KYC checklist',       kicker: 'Step 6 of 10' },
-    { key: 'mortgage',   label: 'Mortgage',            subtitle: 'Loan & EMI',          kicker: 'Step 7 of 10' },
-    { key: 'approvals',  label: 'Approvals',           subtitle: 'Sign-off chain',      kicker: 'Step 8 of 10' },
-    { key: 'review',     label: 'Review',              subtitle: 'Validation & summary',kicker: 'Step 9 of 10' },
-    { key: 'publish',    label: 'Publish',             subtitle: 'Confirm & reserve',   kicker: 'Step 10 of 10' },
+    { key: 'buyer',      label: 'Select Buyer',        subtitle: 'Who is reserving',    kicker: 'Step 1 of 9' },
+    { key: 'project',    label: 'Select Project',      subtitle: 'Project & unit',      kicker: 'Step 2 of 9' },
+    { key: 'details',    label: 'Reservation Details', subtitle: 'Dates & owner',       kicker: 'Step 3 of 9' },
+    { key: 'pricing',    label: 'Pricing',             subtitle: 'Price & charges',     kicker: 'Step 4 of 9' },
+    { key: 'plan',       label: 'Payment Plan',        subtitle: 'Installments',        kicker: 'Step 5 of 9' },
+    { key: 'mortgage',   label: 'Mortgage',            subtitle: 'Loan & EMI',          kicker: 'Step 6 of 9' },
+    { key: 'approvals',  label: 'Approvals',           subtitle: 'Sign-off chain',      kicker: 'Step 7 of 9' },
+    { key: 'review',     label: 'Review',              subtitle: 'Validation & summary',kicker: 'Step 8 of 9' },
+    { key: 'publish',    label: 'Publish',             subtitle: 'Confirm & reserve',   kicker: 'Step 9 of 9' },
 ];
 
 const activeStep = ref(0);
@@ -55,17 +62,35 @@ function stepState(idx) {
 // ── Field style ────────────────────────────────────────────────────────
 const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:border-white/[0.09] focus-visible:ring-1';
 
-// ── Draft (demo-only — Bookings has no draft status, so this just gives visual feedback) ──
+// ── Draft ──────────────────────────────────────────────────────────────
+// Saved as a real `bookings` row with status=draft (see BookingService::saveDraft).
+// Reuses the same row id across repeated clicks instead of inserting duplicates,
+// and that same id is later passed to the final submit so publishing converts
+// this row in place rather than leaving it behind as an orphan.
+const draftBookingId = ref(null);
 const draftMsg = ref('');
+const draftSaving = ref(false);
 let draftTimer;
-function saveDraft() {
-    draftMsg.value = 'Draft saved';
-    clearTimeout(draftTimer);
-    draftTimer = setTimeout(() => (draftMsg.value = ''), 1800);
+async function saveDraft() {
+    draftSaving.value = true;
+    try {
+        const { data } = await axios.post(route('admin.bookings.draft'), {
+            id: draftBookingId.value,
+            ...props.form.data(),
+        });
+        draftBookingId.value = data.id;
+        draftMsg.value = 'Draft saved';
+    } catch (e) {
+        draftMsg.value = 'Could not save draft';
+    } finally {
+        draftSaving.value = false;
+        clearTimeout(draftTimer);
+        draftTimer = setTimeout(() => (draftMsg.value = ''), 1800);
+    }
 }
 
 // ── Buyer ────────────────────────────────────────────────────────────────
-const pickerTile = ref('existing'); // existing | new | search | ai
+const pickerTile = ref(props.form.buyer_mode === 'new' ? 'new' : 'existing'); // existing | new | search | ai
 const buyerTiles = [
     { key: 'existing', icon: '👤', title: 'Existing Buyer', sub: 'Pick from your CRM' },
     { key: 'new',      icon: '✨', title: 'New Buyer',      sub: 'Create a new record' },
@@ -95,8 +120,14 @@ const searchResults = ref([]);
 const searching = ref(false);
 const selectedClientDetail = ref(null);
 let searchTimer;
+let skipNextSearch = false; // the Combobox rewrites buyerSearch to the picked name on select — don't re-search for that
 
 watch(buyerSearch, (term) => {
+    if (skipNextSearch) {
+        skipNextSearch = false;
+        searchResults.value = [];
+        return;
+    }
     clearTimeout(searchTimer);
     const q = term.trim();
     if (q.length < 2) {
@@ -114,11 +145,11 @@ watch(buyerSearch, (term) => {
     }, 300);
 });
 
-function selectClient(client) {
-    props.form.client_id = client.id;
-    selectedClientDetail.value = client;
+function onSelectClient(client) {
+    skipNextSearch = true;
+    props.form.client_id = client?.id ?? '';
+    selectedClientDetail.value = client ?? null;
     searchResults.value = [];
-    buyerSearch.value = client.name;
 }
 
 async function fetchClientDetail(id) {
@@ -132,16 +163,92 @@ async function fetchClientDetail(id) {
 
 const buyerName = computed(() => props.form.buyer_mode === 'existing' ? selectedClientDetail.value?.name : props.form.new_client_name);
 
-// ── Project / Unit ───────────────────────────────────────────────────────
+// Editing a booking that already has a buyer picked — hydrate the detail box.
+onMounted(() => {
+    if (props.form.buyer_mode === 'existing' && props.form.client_id) {
+        fetchClientDetail(props.form.client_id);
+    }
+    if (props.form.unit_id) {
+        fetchUnitDetail(props.form.unit_id);
+    }
+});
+
+// ── Project / Building / Unit ──────────────────────────────────────────────
 const selectedProjectId = ref('');
-const building = ref('');
-const block = ref('');
-const floorFilter = ref('');
-const availableUnits = computed(() =>
-    props.enums.units.filter(u => !selectedProjectId.value || String(u.project_id) === String(selectedProjectId.value))
+const selectedBuildingId = ref('');
+const buildingsForProject = computed(() =>
+    props.enums.buildings.filter(b => String(b.project_id) === String(selectedProjectId.value))
 );
-const selectedUnit = computed(() => props.enums.units.find(u => String(u.id) === String(props.form.unit_id)));
-const unitPrice = computed(() => selectedUnit.value?.price ?? 0);
+
+function onProjectChange(id) {
+    selectedProjectId.value = id ?? '';
+    selectedBuildingId.value = '';
+    clearUnitSelection();
+}
+function onBuildingChange(id) {
+    selectedBuildingId.value = id ?? '';
+    clearUnitSelection();
+}
+function clearUnitSelection() {
+    props.form.unit_id = '';
+    selectedUnitDetail.value = null;
+    unitSearch.value = '';
+    unitSearchResults.value = [];
+}
+
+// Live server-side unit search (by unit number), scoped to the chosen project + building.
+const unitSearch = ref('');
+const unitSearchResults = ref([]);
+const unitSearching = ref(false);
+const selectedUnitDetail = ref(null);
+let unitSearchTimer;
+let skipNextUnitSearch = false; // the Combobox rewrites unitSearch to the picked unit number on select — don't re-search for that
+
+watch(unitSearch, (term) => {
+    if (skipNextUnitSearch) {
+        skipNextUnitSearch = false;
+        unitSearchResults.value = [];
+        return;
+    }
+    clearTimeout(unitSearchTimer);
+    if (!selectedBuildingId.value) {
+        unitSearchResults.value = [];
+        return;
+    }
+    unitSearchTimer = setTimeout(async () => {
+        unitSearching.value = true;
+        try {
+            const { data } = await axios.get(route('admin.units.search'), {
+                params: { q: term.trim(), project_id: selectedProjectId.value, building_id: selectedBuildingId.value },
+            });
+            unitSearchResults.value = data;
+        } finally {
+            unitSearching.value = false;
+        }
+    }, 300);
+});
+
+function onSelectUnit(unit) {
+    skipNextUnitSearch = true;
+    props.form.unit_id = unit?.id ?? '';
+    selectedUnitDetail.value = unit ?? null;
+    unitSearchResults.value = [];
+}
+
+async function fetchUnitDetail(id) {
+    if (!id) {
+        selectedUnitDetail.value = null;
+        return;
+    }
+    const { data } = await axios.get(route('admin.units.search'), { params: { id } });
+    selectedUnitDetail.value = data;
+    if (data) {
+        selectedProjectId.value = data.project_id ?? '';
+        selectedBuildingId.value = data.building_id ?? '';
+    }
+}
+
+const unitPrice = computed(() => selectedUnitDetail.value?.price ?? 0);
 
 // ── Pricing ──────────────────────────────────────────────────────────────
 const campaign = ref('');
@@ -167,7 +274,7 @@ const firstDueDate = computed(() => {
 
 // ── Review ───────────────────────────────────────────────────────────────
 const validationChecks = computed(() => [
-    { ok: !!selectedUnit.value, label: 'Unit still available', note: selectedUnit.value ? `No competing reservation on ${selectedUnit.value.unit_number}` : 'Select a unit to continue' },
+    { ok: !!selectedUnitDetail.value, label: 'Unit still available', note: selectedUnitDetail.value ? `No competing reservation on ${selectedUnitDetail.value.unit_number}` : 'Select a unit to continue' },
     { ok: !!buyerName.value, label: 'Buyer identified', note: buyerName.value || 'Select or add a buyer to continue' },
     { ok: props.form.meta.approvals.manager === 'Approved', label: props.form.meta.approvals.manager === 'Approved' ? 'Manager approval confirmed' : 'Manager approval pending', note: props.form.meta.approvals.manager === 'Approved' ? 'Manager has signed off' : 'Required before final confirmation' },
     { ok: true, label: 'No pricing conflict', note: 'Final price within approved range' },
@@ -176,6 +283,9 @@ const validationChecks = computed(() => [
 function submitFinal() {
     props.form.price_agreed = finalPrice.value;
     props.form.down_payment = downPaymentValue.value;
+    if (props.mode === 'create') {
+        props.form.draft_id = draftBookingId.value;
+    }
     emit('submit');
 }
 </script>
@@ -253,33 +363,39 @@ function submitFinal() {
                     </div>
 
                     <template v-if="form.buyer_mode === 'existing'">
-                        <div class="col-span-2 relative space-y-1.5">
+                        <div class="col-span-2 space-y-1.5">
                             <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Search buyer</Label>
-                            <Input
-                                v-model="buyerSearch"
-                                placeholder="Search by name or phone"
-                                :class="[f, form.errors.client_id && 'border-destructive']"
-                            />
+                            <Combobox
+                                :model-value="selectedClientDetail"
+                                by="id"
+                                @update:model-value="onSelectClient"
+                            >
+                                <ComboboxAnchor>
+                                    <ComboboxInput
+                                        v-model="buyerSearch"
+                                        :display-value="(c) => c?.name ?? ''"
+                                        placeholder="Search by name or phone"
+                                        :class="[f, form.errors.client_id && 'border-destructive']"
+                                    />
+                                </ComboboxAnchor>
+                                <ComboboxList v-if="buyerSearch.trim().length >= 2">
+                                    <div v-if="searching" class="py-4 text-center text-xs text-muted-foreground">Searching…</div>
+                                    <template v-else>
+                                        <ComboboxEmpty>No matching clients found.</ComboboxEmpty>
+                                        <ComboboxItem v-for="c in searchResults" :key="c.id" :value="c" :text-value="c.name">
+                                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-xs font-bold text-white">
+                                                <img v-if="c.avatar" :src="c.avatar" :alt="c.name" class="h-full w-full object-cover" />
+                                                <span v-else>{{ c.name.split(' ').map(w => w[0]).slice(0,2).join('') }}</span>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <p class="truncate text-sm font-medium text-foreground">{{ c.name }}</p>
+                                                <p class="truncate text-xs text-muted-foreground">{{ c.phone ?? 'No phone on file' }}</p>
+                                            </div>
+                                        </ComboboxItem>
+                                    </template>
+                                </ComboboxList>
+                            </Combobox>
                             <p v-if="form.errors.client_id" class="text-xs text-destructive">{{ form.errors.client_id }}</p>
-
-                            <div v-if="searching" class="text-xs text-muted-foreground">Searching…</div>
-                            <div v-else-if="searchResults.length" class="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-border bg-admin-surface-card shadow-lg">
-                                <button
-                                    v-for="c in searchResults" :key="c.id" type="button"
-                                    @click="selectClient(c)"
-                                    class="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.03]"
-                                >
-                                    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-xs font-bold text-white">
-                                        <img v-if="c.avatar" :src="c.avatar" :alt="c.name" class="h-full w-full object-cover" />
-                                        <span v-else>{{ c.name.split(' ').map(w => w[0]).slice(0,2).join('') }}</span>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="truncate text-sm font-medium text-foreground">{{ c.name }}</p>
-                                        <p class="truncate text-xs text-muted-foreground">{{ c.phone ?? 'No phone on file' }}</p>
-                                    </div>
-                                </button>
-                            </div>
-                            <div v-else-if="buyerSearch.trim().length >= 2" class="text-xs text-muted-foreground">No matching clients found.</div>
                         </div>
 
                         <div v-if="selectedClientDetail" class="col-span-2 flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-4 py-3">
@@ -324,7 +440,7 @@ function submitFinal() {
                 <div v-show="activeStep === 1" class="grid grid-cols-2 gap-5 p-6">
                     <div class="space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Project</Label>
-                        <Select :model-value="selectedProjectId || undefined" @update:model-value="selectedProjectId = $event ?? ''; form.unit_id = ''">
+                        <Select :model-value="selectedProjectId || undefined" @update:model-value="onProjectChange($event)">
                             <SelectTrigger :class="f"><SelectValue placeholder="Select project" /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem v-for="p in enums.projects" :key="p.id" :value="p.id">{{ p.name }}</SelectItem>
@@ -333,52 +449,56 @@ function submitFinal() {
                     </div>
                     <div class="space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Building</Label>
-                        <Select :model-value="building || undefined" @update:model-value="building = $event ?? ''">
-                            <SelectTrigger :class="f"><SelectValue placeholder="Select building" /></SelectTrigger>
+                        <Select :model-value="selectedBuildingId || undefined" :disabled="!selectedProjectId" @update:model-value="onBuildingChange($event)">
+                            <SelectTrigger :class="f"><SelectValue :placeholder="selectedProjectId ? 'Select building' : 'Select a project first'" /></SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Tower A">Tower A</SelectItem>
-                                <SelectItem value="Tower B">Tower B</SelectItem>
-                                <SelectItem value="Tower C">Tower C</SelectItem>
+                                <SelectItem v-for="b in buildingsForProject" :key="b.id" :value="b.id">{{ b.name }}</SelectItem>
                             </SelectContent>
                         </Select>
+                        <p v-if="selectedProjectId && buildingsForProject.length === 0" class="text-xs font-medium text-amber-600">No buildings configured for this project.</p>
                     </div>
-                    <div class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Block</Label>
-                        <Select :model-value="block || undefined" @update:model-value="block = $event ?? ''">
-                            <SelectTrigger :class="f"><SelectValue placeholder="Select block" /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Block A">Block A</SelectItem>
-                                <SelectItem value="Block B">Block B</SelectItem>
-                                <SelectItem value="Block C">Block C</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Floor</Label>
-                        <Select :model-value="floorFilter || undefined" @update:model-value="floorFilter = $event ?? ''">
-                            <SelectTrigger :class="f"><SelectValue placeholder="Any floor" /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Floor 7">Floor 7</SelectItem>
-                                <SelectItem value="Floor 9">Floor 9</SelectItem>
-                                <SelectItem value="Floor 12">Floor 12</SelectItem>
-                                <SelectItem value="Floor 15">Floor 15</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Unit</Label>
-                        <Select :model-value="form.unit_id || undefined" @update:model-value="form.unit_id = $event ?? ''">
-                            <SelectTrigger :class="[f, form.errors.unit_id && 'border-destructive']"><SelectValue placeholder="Select unit" /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem v-for="u in availableUnits" :key="u.id" :value="u.id">{{ u.label }} — BDT {{ Number(u.price).toLocaleString() }}</SelectItem>
-                            </SelectContent>
-                        </Select>
+
+                    <div class="col-span-2 relative space-y-1.5">
+                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Search unit</Label>
+                        <Combobox
+                            :model-value="selectedUnitDetail"
+                            by="id"
+                            @update:model-value="onSelectUnit"
+                        >
+                            <ComboboxAnchor>
+                                <ComboboxInput
+                                    v-model="unitSearch"
+                                    :display-value="(u) => u?.unit_number ?? ''"
+                                    :disabled="!selectedBuildingId"
+                                    :placeholder="selectedBuildingId ? 'Search by unit number' : 'Select a building first'"
+                                    :class="[f, form.errors.unit_id && 'border-destructive']"
+                                />
+                            </ComboboxAnchor>
+                            <ComboboxList v-if="selectedBuildingId">
+                                <div v-if="unitSearching" class="py-4 text-center text-xs text-muted-foreground">Searching…</div>
+                                <template v-else>
+                                    <ComboboxEmpty>No available units found.</ComboboxEmpty>
+                                    <ComboboxItem v-for="u in unitSearchResults" :key="u.id" :value="u" :text-value="u.unit_number">
+                                        <div class="min-w-0">
+                                            <p class="truncate text-sm font-medium text-foreground">{{ u.unit_number }} · Floor {{ u.floor ?? '—' }}</p>
+                                            <p class="truncate text-xs text-muted-foreground">{{ u.type_label }} · BDT {{ Number(u.price).toLocaleString() }}</p>
+                                        </div>
+                                    </ComboboxItem>
+                                </template>
+                            </ComboboxList>
+                        </Combobox>
                         <p v-if="form.errors.unit_id" class="text-xs text-destructive">{{ form.errors.unit_id }}</p>
-                        <p v-else-if="selectedProjectId && availableUnits.length === 0" class="text-xs font-medium text-amber-600">No available units left in this project.</p>
                     </div>
-                    <div v-if="selectedUnit" class="col-span-2 space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Availability</Label>
-                        <Input :model-value="'Unit ' + selectedUnit.unit_number + ' — Available · BDT ' + Number(selectedUnit.price).toLocaleString()" disabled :class="f" />
+
+                    <div v-if="selectedUnitDetail" class="col-span-2 flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-4 py-3">
+                        <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-admin-accent text-base font-bold text-white">{{ selectedUnitDetail.unit_number.slice(0, 2) }}</div>
+                        <div class="min-w-0 grid flex-1 grid-cols-2 gap-x-4 gap-y-1">
+                            <div class="col-span-2 text-sm font-semibold text-foreground">Unit {{ selectedUnitDetail.unit_number }} — {{ selectedUnitDetail.status_label }}</div>
+                            <div class="text-xs text-muted-foreground">{{ selectedUnitDetail.project_name }} · {{ selectedUnitDetail.building_name }}</div>
+                            <div class="text-xs text-muted-foreground">Floor {{ selectedUnitDetail.floor ?? '—' }} · {{ selectedUnitDetail.type_label }}</div>
+                            <div class="text-xs text-muted-foreground">{{ selectedUnitDetail.bedrooms ?? '—' }} bed · {{ selectedUnitDetail.bathrooms ?? '—' }} bath</div>
+                            <div class="text-xs font-semibold text-foreground">BDT {{ Number(selectedUnitDetail.price).toLocaleString() }}</div>
+                        </div>
                     </div>
                 </div>
 
@@ -528,27 +648,8 @@ function submitFinal() {
                     </div>
                 </div>
 
-                <!-- ── Step 6: Documents ──────────────────────────────────────── -->
+                <!-- ── Step 6: Mortgage ───────────────────────────────────────── -->
                 <div v-show="activeStep === 5" class="grid grid-cols-2 gap-5 p-6">
-                    <div v-for="doc in [['national_id','National ID'],['passport','Passport'],['income_proof','Income Proof'],['bank_statement','Bank Statement']]" :key="doc[0]" class="space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ doc[1] }}</Label>
-                        <Select :model-value="form.meta.documents[doc[0]] || 'Not uploaded'" @update:model-value="form.meta.documents[doc[0]] = $event">
-                            <SelectTrigger :class="f"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Not uploaded">Not uploaded</SelectItem>
-                                <SelectItem value="Uploaded">Uploaded</SelectItem>
-                                <SelectItem value="Verified">Verified</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div class="col-span-2 space-y-1.5">
-                        <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Agreement Draft</Label>
-                        <div class="rounded-lg border border-dashed border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">Auto-generated draft — generated on publish</div>
-                    </div>
-                </div>
-
-                <!-- ── Step 7: Mortgage ───────────────────────────────────────── -->
-                <div v-show="activeStep === 6" class="grid grid-cols-2 gap-5 p-6">
                     <div class="space-y-1.5">
                         <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Loan Required</Label>
                         <Select :model-value="form.meta.mortgage.loan_required" @update:model-value="form.meta.mortgage.loan_required = $event">
@@ -596,8 +697,8 @@ function submitFinal() {
                     </div>
                 </div>
 
-                <!-- ── Step 8: Approvals ──────────────────────────────────────── -->
-                <div v-show="activeStep === 7" class="grid grid-cols-2 gap-5 p-6">
+                <!-- ── Step 7: Approvals ──────────────────────────────────────── -->
+                <div v-show="activeStep === 6" class="grid grid-cols-2 gap-5 p-6">
                     <div v-for="key in ['sales','finance','manager','legal']" :key="key" class="space-y-1.5">
                         <Label class="text-xs font-medium capitalize text-slate-500 dark:text-slate-400">{{ key }} Approval</Label>
                         <Select :model-value="form.meta.approvals[key]" @update:model-value="form.meta.approvals[key] = $event">
@@ -610,8 +711,8 @@ function submitFinal() {
                     </div>
                 </div>
 
-                <!-- ── Step 9: Review ─────────────────────────────────────────── -->
-                <div v-show="activeStep === 8" class="p-6">
+                <!-- ── Step 8: Review ─────────────────────────────────────────── -->
+                <div v-show="activeStep === 7" class="p-6">
                     <p class="mb-3 text-sm font-semibold text-foreground">Validation &amp; Conflict Check</p>
                     <div class="flex flex-col gap-2">
                         <div v-for="(c, i) in validationChecks" :key="i" class="flex items-center gap-3 rounded-lg border border-border px-3.5 py-2.5">
@@ -625,7 +726,7 @@ function submitFinal() {
 
                     <div class="mt-5 flex flex-col divide-y divide-border border-t border-border">
                         <div class="flex items-center justify-between py-2.5"><span class="text-sm text-muted-foreground">Buyer</span><span class="text-sm font-semibold text-foreground">{{ buyerName || '—' }}</span></div>
-                        <div class="flex items-center justify-between py-2.5"><span class="text-sm text-muted-foreground">Unit</span><span class="text-sm font-semibold text-foreground">{{ selectedUnit?.unit_number || '—' }}</span></div>
+                        <div class="flex items-center justify-between py-2.5"><span class="text-sm text-muted-foreground">Unit</span><span class="text-sm font-semibold text-foreground">{{ selectedUnitDetail?.unit_number || '—' }}</span></div>
                         <div class="flex items-center justify-between py-2.5"><span class="text-sm text-muted-foreground">Final Price</span><span class="text-sm font-semibold text-foreground">BDT {{ finalPrice.toLocaleString() }}</span></div>
                         <div class="flex items-center justify-between py-2.5"><span class="text-sm text-muted-foreground">Booking Amount</span><span class="text-sm font-semibold text-foreground">BDT {{ downPaymentValue.toLocaleString() }}</span></div>
                         <div class="flex items-center justify-between py-2.5"><span class="text-sm text-muted-foreground">Payment Plan</span><span class="text-sm font-semibold text-foreground">{{ form.plan_type }}</span></div>
@@ -643,8 +744,8 @@ function submitFinal() {
                     </div>
                 </div>
 
-                <!-- ── Step 10: Publish ───────────────────────────────────────── -->
-                <div v-show="activeStep === 9" class="p-6">
+                <!-- ── Step 9: Publish ───────────────────────────────────────── -->
+                <div v-show="activeStep === 8" class="p-6">
                     <div class="flex flex-col divide-y divide-border rounded-lg border border-border">
                         <div class="flex items-center justify-between px-4 py-3"><span class="text-sm text-muted-foreground">Reservation ID</span><span class="text-sm font-semibold text-foreground">Assigned on publish</span></div>
                         <div class="flex items-center justify-between px-4 py-3"><span class="text-sm text-muted-foreground">Status</span><span class="text-sm font-semibold text-green-600 dark:text-green-400">Ready to reserve</span></div>
@@ -669,9 +770,10 @@ function submitFinal() {
 
                     <div class="flex items-center gap-3">
                         <span v-if="draftMsg" class="text-xs font-medium text-muted-foreground">{{ draftMsg }}</span>
-                        <button type="button" @click="saveDraft" class="inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-transparent px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
-                            Save Draft
+                        <button v-if="mode === 'create'" type="button" @click="saveDraft" :disabled="draftSaving" class="inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-transparent px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-60">
+                            <svg v-if="draftSaving" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
+                            <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+                            {{ draftSaving ? 'Saving…' : 'Save Draft' }}
                         </button>
 
                         <button v-if="!isLast" type="button" @click="goNext" class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90">

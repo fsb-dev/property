@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\Admin\BookingRequest;
 
-use App\Enums\BookingStatus;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
+// Mirrors StoreBookingRequest — editing now goes through the same wizard as
+// creating, so the same fields need to be valid. `status` is intentionally
+// absent: status transitions stay on the dedicated updateStatus() action.
 class UpdateBookingRequest extends FormRequest
 {
     public function authorize(): bool { return true; }
@@ -13,14 +14,35 @@ class UpdateBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status'         => ['required', new Enum(BookingStatus::class)],
-            'price_agreed'   => ['required', 'numeric', 'min:0'],
-            'reserved_until' => ['nullable', 'date'],
-            'sales_rep_id'   => ['nullable', 'exists:users,id'],
+            // ── Buyer ─────────────────────────────────────────────────────
+            'buyer_mode'        => ['required', 'in:existing,new'],
+            'client_id'         => ['required_if:buyer_mode,existing', 'nullable', 'exists:clients,id'],
+            'new_client_name'   => ['required_if:buyer_mode,new', 'nullable', 'string', 'max:255'],
+            'new_client_phone'  => ['required_if:buyer_mode,new', 'nullable', 'string', 'max:30'],
+            'new_client_email'  => ['nullable', 'email', 'max:255'],
+
+            // ── Unit ──────────────────────────────────────────────────────
+            'unit_id' => ['required', 'exists:units,id'],
+
+            // ── Reservation details ─────────────────────────────────────
+            'booking_date'   => ['required', 'date'],
+            'reserved_until' => ['nullable', 'date', 'after_or_equal:booking_date'],
             'source'         => ['nullable', 'string', 'max:50'],
             'priority'       => ['nullable', 'string', 'max:20'],
-            'discount_pct'   => ['nullable', 'numeric', 'min:0', 'max:100'],
             'notes'          => ['nullable', 'string', 'max:2000'],
+            'sales_rep_id'   => ['nullable', 'exists:users,id'],
+
+            // ── Pricing ───────────────────────────────────────────────────
+            'discount_pct'  => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'price_agreed'  => ['required', 'numeric', 'min:0'],
+
+            // ── Payment plan ──────────────────────────────────────────────
+            'plan_type'          => ['nullable', 'string', 'max:50'],
+            'down_payment'       => ['nullable', 'numeric', 'min:0'],
+            'total_installments' => ['nullable', 'integer', 'min:1', 'max:120'],
+
+            // ── Demo-only extras (mortgage / approvals) ────────────────────
+            'meta' => ['nullable', 'array'],
         ];
     }
 }

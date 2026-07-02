@@ -45,6 +45,43 @@ class UnitService
             ]);
     }
 
+    /** Live search used by the booking wizard — Available units only, scoped to a project/building. */
+    public function search(array $filters): array
+    {
+        return Unit::query()
+            ->where('status', UnitStatus::Available)
+            ->when($filters['project_id'] ?? null, fn ($q, $v) => $q->where('project_id', $v))
+            ->when($filters['building_id'] ?? null, fn ($q, $v) => $q->whereHas('section', fn ($s) => $s->where('building_id', $v)))
+            ->when($filters['q'] ?? null, fn ($q, $v) => $q->where('unit_number', 'like', "%{$v}%"))
+            ->with(['project:id,name', 'section.building:id,name'])
+            ->orderBy('unit_number')
+            ->limit(10)
+            ->get()
+            ->map(fn (Unit $u) => $this->brief($u))
+            ->toArray();
+    }
+
+    public function brief(Unit $unit): array
+    {
+        $unit->loadMissing(['project:id,name', 'section.building:id,name']);
+
+        return [
+            'id'            => $unit->id,
+            'unit_number'   => $unit->unit_number,
+            'project_id'    => $unit->project_id,
+            'project_name'  => $unit->project?->name,
+            'building_id'   => $unit->section?->building_id,
+            'building_name' => $unit->section?->building?->name,
+            'section_name'  => $unit->section?->name,
+            'floor'         => $unit->floor,
+            'type_label'    => $unit->type?->label(),
+            'bedrooms'      => $unit->bedrooms,
+            'bathrooms'     => $unit->bathrooms,
+            'price'         => (float) ($unit->current_price ?: $unit->price ?: 0),
+            'status_label'  => $unit->status->label(),
+        ];
+    }
+
     public function stats(): array
     {
         return [

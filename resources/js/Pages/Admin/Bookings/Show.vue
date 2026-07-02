@@ -18,7 +18,7 @@ const statusClasses = {
     handed_over: 'bg-violet-50 text-violet-700',
 };
 
-const tabs = ['Overview', 'Buyer', 'Project', 'Unit', 'Pricing', 'Payments', 'Documents', 'Mortgage', 'Agreement', 'Approvals', 'Timeline', 'Activity'];
+const tabs = ['Overview', 'Buyer', 'Project', 'Unit', 'Pricing', 'Payments', 'Mortgage', 'Agreement', 'Approvals', 'Timeline', 'Activity'];
 
 function fmt(n) {
     return 'BDT ' + (Number(n) || 0).toLocaleString();
@@ -64,10 +64,6 @@ const panels = computed(() => {
                 ['Collected', fmt(b.payments.collected) + ' of ' + fmt(b.payments.total)],
                 ['Next Due', b.payments.next_due ? b.payments.next_due.due_date + ' · ' + fmt(b.payments.next_due.amount) : 'Fully scheduled'],
             ],
-        },
-        Documents: {
-            sub: 'Documents attached to this reservation.',
-            rows: b.meta.documents ? Object.entries(b.meta.documents).map(([k, v]) => [k.replace(/_/g, ' '), v || '—']) : [],
         },
         Mortgage: {
             sub: 'Financing details.',

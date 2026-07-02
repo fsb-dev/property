@@ -35,6 +35,19 @@ class UnitController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        if ($id = $request->integer('id')) {
+            $unit = Unit::find($id);
+
+            return response()->json($unit ? $this->service->brief($unit) : null);
+        }
+
+        return response()->json(
+            $this->service->search($request->only(['project_id', 'building_id', 'q']))
+        );
+    }
+
     public function store(StoreUnitRequest $request): RedirectResponse
     {
         $unit = $this->service->create($request->validated());

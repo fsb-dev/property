@@ -10,6 +10,7 @@ use App\Models\Installment;
 use App\Models\PaymentPlan;
 use App\Models\Payment;
 use App\Models\Project;
+use App\Models\ProjectBuilding;
 use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\User;
@@ -164,18 +165,9 @@ class BookingService
             'projects' => Project::query()->orderBy('name')->get(['id', 'name'])->map(fn ($p) => [
                 'id' => $p->id, 'name' => $p->name,
             ]),
-            'units' => Unit::query()
-                ->where('status', UnitStatus::Available)
-                ->with('project:id,name')
-                ->orderBy('unit_number')
-                ->get(['id', 'project_id', 'unit_number', 'type', 'floor', 'bedrooms', 'price', 'current_price'])
-                ->map(fn (Unit $u) => [
-                    'id'         => $u->id,
-                    'project_id' => $u->project_id,
-                    'unit_number'=> $u->unit_number,
-                    'label'      => $u->unit_number.($u->floor ? ' · Floor '.$u->floor : ''),
-                    'price'      => (float) ($u->current_price ?: $u->price ?: 0),
-                ]),
+            'buildings' => ProjectBuilding::query()->orderBy('name')->get(['id', 'project_id', 'name'])->map(fn ($b) => [
+                'id' => $b->id, 'project_id' => $b->project_id, 'name' => $b->name,
+            ]),
             'clients' => Client::query()->orderBy('name')->get(['id', 'name', 'phone']),
             'sales_reps' => User::role('sales_manager')->get(['id', 'name']),
         ];
@@ -276,7 +268,6 @@ class BookingService
             ],
 
             'meta' => [
-                'documents'    => $meta['documents'] ?? null,
                 'mortgage'     => $meta['mortgage'] ?? null,
                 'approvals'    => $meta['approvals'] ?? null,
                 'agreement'    => $meta['agreement'] ?? null,
@@ -300,18 +291,51 @@ class BookingService
 
     public function forEdit(Booking $booking): array
     {
+        $booking->load('paymentPlan');
+        $plan = $booking->paymentPlan;
+        $meta = $booking->meta ?? [];
+
         return [
-            'id'             => $booking->id,
-            'status'         => $booking->status->value,
-            'price_agreed'   => (float) $booking->price_agreed,
-            'discount_pct'   => (float) ($booking->discount_pct ?? 0),
+            'id' => $booking->id,
+
+            // ── Buyer — an existing booking always has a real client already ──
+            'buyer_mode'       => 'existing',
+            'client_id'        => $booking->client_id,
+            'new_client_name'  => '',
+            'new_client_phone' => '',
+            'new_client_email' => '',
+
+            // ── Unit ──────────────────────────────────────────────────────
+            'unit_id' => $booking->unit_id,
+
+            // ── Reservation details ─────────────────────────────────────
+            'booking_date'   => $booking->booking_date?->format('Y-m-d'),
             'reserved_until' => $booking->reserved_until?->format('Y-m-d'),
-            'sales_rep_id'   => $booking->sales_rep_id,
             'source'         => $booking->source,
-            'priority'       => $booking->priority,
+            'priority'       => $booking->priority ?? 'Normal',
+            'sales_rep_id'   => $booking->sales_rep_id,
             'notes'          => $booking->notes,
-            'buyer_name'     => $booking->client?->name,
-            'unit_number'    => $booking->unit?->unit_number,
+
+            // ── Pricing ───────────────────────────────────────────────────
+            'discount_pct' => (float) ($booking->discount_pct ?? 0),
+            'price_agreed' => (float) $booking->price_agreed,
+
+            // ── Payment plan ──────────────────────────────────────────────
+            'plan_type'          => $plan?->plan_type ?? '24-month installment',
+            'down_payment'       => $plan ? (float) $plan->down_payment : '',
+            'total_installments' => $plan?->total_installments ?? 24,
+
+            // ── Demo-only extras (mortgage / approvals) ────────────────────
+            'meta' => [
+                'mortgage'  => $meta['mortgage'] ?? ['loan_required' => 'No', 'eligible_bank' => '', 'loan_amount' => '', 'interest_rate' => '', 'indicative_emi' => '', 'status' => ''],
+                'approvals' => $meta['approvals'] ?? ['sales' => 'Pending', 'finance' => 'Pending', 'manager' => 'Pending', 'legal' => 'Pending'],
+            ],
+
+            // ── Read-only extras for the page header ─────────────────────
+            'status'       => $booking->status->value,
+            'status_label' => $booking->status->label(),
+            'buyer_name'   => $booking->client?->name,
+            'unit_number'  => $booking->unit?->unit_number,
         ];
     }
 
@@ -335,7 +359,7 @@ class BookingService
 
             $unit = Unit::findOrFail($data['unit_id']);
 
-            $booking = Booking::create([
+            $attributes = [
                 'tenant_id'      => $tenant->id,
                 'client_id'      => $clientId,
                 'unit_id'        => $unit->id,
@@ -349,7 +373,19 @@ class BookingService
                 'reserved_until' => $data['reserved_until'] ?? null,
                 'notes'          => $data['notes'] ?? null,
                 'meta'           => $data['meta'] ?? null,
-            ]);
+            ];
+
+            // publishing a saved draft — convert that row rather than leaving it orphaned
+            $draft = !empty($data['draft_id'])
+                ? Booking::where('id', $data['draft_id'])->where('status', BookingStatus::Draft)->first()
+                : null;
+
+            if ($draft) {
+                $draft->update($attributes);
+                $booking = $draft;
+            } else {
+                $booking = Booking::create($attributes);
+            }
 
             $downPayment  = (float) ($data['down_payment'] ?? round($data['price_agreed'] * 0.2, 2));
             $installments = (int) ($data['total_installments'] ?? 24);
@@ -374,22 +410,130 @@ class BookingService
         });
     }
 
+    // Saves the wizard's current state as a bookings row with status=draft.
+    // Deliberately skips client creation, payment plan generation and unit
+    // status changes — none of that is real until the reservation is published.
+    public function saveDraft(array $data): Booking
+    {
+        $tenant = Tenant::first() ?? Tenant::create(['name' => 'HomeVerse Real Estate', 'slug' => 'homeverse', 'status' => 'active']);
+
+        $attributes = [
+            'tenant_id'      => $tenant->id,
+            'client_id'      => ($data['buyer_mode'] ?? null) === 'existing' ? ($data['client_id'] ?? null) : null,
+            'unit_id'        => $data['unit_id'] ?? null,
+            'sales_rep_id'   => $data['sales_rep_id'] ?? null,
+            'status'         => BookingStatus::Draft,
+            'source'         => $data['source'] ?? null,
+            'priority'       => $data['priority'] ?? 'Normal',
+            'price_agreed'   => $data['price_agreed'] ?? 0,
+            'discount_pct'   => $data['discount_pct'] ?? 0,
+            'booking_date'   => $data['booking_date'] ?? null,
+            'reserved_until' => $data['reserved_until'] ?? null,
+            'notes'          => $data['notes'] ?? null,
+            'meta'           => $data['meta'] ?? null,
+        ];
+
+        $booking = !empty($data['id'])
+            ? Booking::where('id', $data['id'])->where('status', BookingStatus::Draft)->first()
+            : null;
+
+        if ($booking) {
+            $booking->update($attributes);
+        } else {
+            $booking = Booking::create($attributes);
+        }
+
+        return $booking;
+    }
+
+    // Same shape as create(): buyer, unit, pricing and plan are all editable
+    // through the wizard. `status` is deliberately untouched here — status
+    // transitions stay on updateStatus().
     public function update(Booking $booking, array $data): Booking
     {
-        $booking->update([
-            'status'         => $data['status'],
-            'price_agreed'   => $data['price_agreed'],
-            'reserved_until' => $data['reserved_until'] ?? null,
-            'sales_rep_id'   => $data['sales_rep_id'] ?? null,
-            'source'         => $data['source'] ?? null,
-            'priority'       => $data['priority'] ?? $booking->priority,
-            'discount_pct'   => $data['discount_pct'] ?? $booking->discount_pct,
-            'notes'          => $data['notes'] ?? null,
+        return DB::transaction(function () use ($booking, $data) {
+            $tenant = Tenant::find($booking->tenant_id) ?? Tenant::first();
+
+            $clientId = $data['buyer_mode'] === 'new'
+                ? Client::create([
+                    'tenant_id' => $tenant->id,
+                    'name'      => $data['new_client_name'],
+                    'phone'     => $data['new_client_phone'] ?? null,
+                    'email'     => $data['new_client_email'] ?? null,
+                    'password'  => Str::random(12),
+                    'status'    => 'active',
+                ])->id
+                : $data['client_id'];
+
+            $oldUnitId = $booking->unit_id;
+            $unit = Unit::findOrFail($data['unit_id']);
+
+            $booking->update([
+                'client_id'      => $clientId,
+                'unit_id'        => $unit->id,
+                'sales_rep_id'   => $data['sales_rep_id'] ?? null,
+                'source'         => $data['source'] ?? null,
+                'priority'       => $data['priority'] ?? $booking->priority,
+                'price_agreed'   => $data['price_agreed'],
+                'discount_pct'   => $data['discount_pct'] ?? 0,
+                'booking_date'   => $data['booking_date'],
+                'reserved_until' => $data['reserved_until'] ?? null,
+                'notes'          => $data['notes'] ?? null,
+                'meta'           => $data['meta'] ?? $booking->meta,
+            ]);
+
+            // the unit changed hands — free up whichever one we're leaving
+            if ($oldUnitId && $oldUnitId !== $unit->id) {
+                Unit::where('id', $oldUnitId)->where('status', UnitStatus::Booked)
+                    ->update(['status' => UnitStatus::Available]);
+            }
+
+            $this->syncUnitStatus($booking->fresh());
+            $this->reconcilePaymentPlan($booking->fresh(), $tenant, $data, $oldUnitId !== $unit->id);
+
+            return $booking->fresh();
+        });
+    }
+
+    // Only reshapes the installment schedule when nothing has actually been
+    // collected against it yet. Every booking gets an auto-recorded down
+    // payment at creation time, so we specifically check for installments
+    // that have progressed past "upcoming" — not just any Payment row —
+    // otherwise this guard would never fire and edits could never reshape
+    // a plan.
+    private function reconcilePaymentPlan(Booking $booking, Tenant $tenant, array $data, bool $unitChanged): void
+    {
+        $plan = $booking->paymentPlan;
+        $hasCollectedInstallments = $plan && $plan->installments()->where('status', '!=', 'upcoming')->exists();
+
+        $planChanged = !$plan
+            || $unitChanged
+            || (float) $plan->total_amount !== (float) $data['price_agreed']
+            || (int) $plan->total_installments !== (int) ($data['total_installments'] ?? $plan->total_installments)
+            || $plan->plan_type !== ($data['plan_type'] ?? $plan->plan_type);
+
+        if (!$planChanged || $hasCollectedInstallments) {
+            return;
+        }
+
+        $plan?->delete(); // cascades installments; any payments simply lose their installment_id
+
+        $downPayment  = (float) ($data['down_payment'] ?? round($data['price_agreed'] * 0.2, 2));
+        $installments = (int) ($data['total_installments'] ?? 24);
+
+        $newPlan = PaymentPlan::create([
+            'tenant_id'          => $tenant->id,
+            'booking_id'         => $booking->id,
+            'plan_type'          => $data['plan_type'] ?? '24-month installment',
+            'total_amount'       => $data['price_agreed'],
+            'down_payment'       => $downPayment,
+            'start_date'         => $data['booking_date'],
+            'total_installments' => $installments,
+            'duration_months'    => $installments,
+            'status'             => 'active',
         ]);
 
-        $this->syncUnitStatus($booking);
-
-        return $booking->fresh();
+        $this->generateInstallments($tenant, $newPlan, $downPayment, $data['price_agreed'], $installments, $data['booking_date']);
     }
 
     public function updateStatus(Booking $booking, string $status, ?string $reason = null): Booking

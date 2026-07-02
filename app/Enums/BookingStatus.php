@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum BookingStatus: string
 {
+    case Draft      = 'draft';
     case Reserved   = 'reserved';
     case Purchased  = 'purchased';
     case Cancelled  = 'cancelled';
@@ -12,6 +13,7 @@ enum BookingStatus: string
     public function label(): string
     {
         return match($this) {
+            self::Draft      => 'Draft',
             self::Reserved   => 'Reserved',
             self::Purchased  => 'Sold',
             self::Cancelled  => 'Cancelled',
@@ -22,6 +24,7 @@ enum BookingStatus: string
     public function color(): string
     {
         return match($this) {
+            self::Draft      => 'slate',
             self::Reserved   => 'amber',
             self::Purchased  => 'green',
             self::Cancelled  => 'red',

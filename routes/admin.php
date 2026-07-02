@@ -33,6 +33,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Units — CRUD
     Route::middleware('permission:view units')->group(function () {
         Route::get('/units',                     [UnitController::class, 'index'])->name('units.index');
+        Route::get('/units/search',              [UnitController::class, 'search'])->name('units.search');
         Route::middleware('permission:create units')->group(function () {
             Route::get('/units/create',          [UnitController::class, 'create'])->name('units.create');
             Route::post('/units',                [UnitController::class, 'store'])->name('units.store');
@@ -85,6 +86,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::middleware('permission:create bookings')->group(function () {
             Route::get('/bookings/create',   [BookingController::class, 'create'])->name('bookings.create');
             Route::post('/bookings',         [BookingController::class, 'store'])->name('bookings.store');
+            Route::post('/bookings/draft',   [BookingController::class, 'saveDraft'])->name('bookings.draft');
         });
         Route::get('/bookings/{booking}',    [BookingController::class, 'show'])->name('bookings.show');
         Route::middleware('permission:edit bookings')->group(function () {

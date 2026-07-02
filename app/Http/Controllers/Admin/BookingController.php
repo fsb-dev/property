@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BookingRequest\SaveBookingDraftRequest;
 use App\Http\Requests\Admin\BookingRequest\StoreBookingRequest;
 use App\Http\Requests\Admin\BookingRequest\UpdateBookingRequest;
 use App\Models\Booking;
@@ -36,6 +37,16 @@ class BookingController extends Controller
 
         return redirect()->route('admin.bookings.show', $booking)
             ->with('success', 'Reservation created successfully.');
+    }
+
+    public function saveDraft(SaveBookingDraftRequest $request)
+    {
+        $booking = $this->service->saveDraft($request->validated());
+
+        return response()->json([
+            'id'       => $booking->id,
+            'saved_at' => $booking->updated_at,
+        ]);
     }
 
     public function show(Booking $booking)
