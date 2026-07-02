@@ -202,7 +202,7 @@ const f =
                         </Label>
                         <Input
                             v-model="form.name"
-                            placeholder="e.g. Rahim Uddin"
+                            placeholder="e.g. Full Name"
                             :class="[
                                 f,
                                 form.errors.name && 'border-destructive',
@@ -224,7 +224,7 @@ const f =
                         >
                         <Input
                             v-model="form.father_name"
-                            placeholder="Full name"
+                            placeholder="Father's Name"
                             :class="[
                                 f,
                                 form.errors.father_name && 'border-destructive',
@@ -246,7 +246,7 @@ const f =
                         >
                         <Input
                             v-model="form.mother_name"
-                            placeholder="Full name"
+                            placeholder="Mother's Name"
                             :class="[
                                 f,
                                 form.errors.mother_name && 'border-destructive',

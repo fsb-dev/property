@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BlueprintController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InvestmentController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\UnitController;
@@ -98,6 +99,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
             Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
         });
     });
+
+    // Investment Data — analytics-only page, sourced from a static JSON fixture (no DB)
+    Route::get('/investment', [InvestmentController::class, 'index'])->name('investment.index');
 
     // Payments
     Route::middleware('permission:view payments')->group(function () {

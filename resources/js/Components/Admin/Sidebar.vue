@@ -36,6 +36,11 @@ const navLinks = [
         icon: `<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><path d="m9 14 2 2 4-4"/>`,
     },
     {
+        label: 'Investment', routeName: 'admin.investment.index', activePattern: 'admin.investment.*',
+        href: () => route('admin.investment.index'),
+        icon: `<path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/>`,
+    },
+    {
         label: 'Payments', routeName: null,
         icon: `<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/>`,
     },
