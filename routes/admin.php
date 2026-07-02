@@ -64,6 +64,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Clients — static segments (/create) must come before wildcard ({client})
     Route::middleware('permission:view clients')->group(function () {
         Route::get('/clients',                        [ClientController::class, 'index'])->name('clients.index');
+        Route::get('/clients/search',                 [ClientController::class, 'search'])->name('clients.search');
         Route::middleware('permission:create clients')->group(function () {
             Route::get('/clients/create',             [ClientController::class, 'create'])->name('clients.create');
             Route::post('/clients',                   [ClientController::class, 'store'])->name('clients.store');

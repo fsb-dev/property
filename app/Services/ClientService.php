@@ -44,6 +44,32 @@ class ClientService
             ]);
     }
 
+    public function search(string $term): array
+    {
+        return Client::query()
+            ->when($term !== '', fn($q) =>
+                $q->where('name', 'like', "%{$term}%")
+                  ->orWhere('phone', 'like', "%{$term}%")
+            )
+            ->orderBy('name')
+            ->limit(10)
+            ->get()
+            ->map(fn(Client $c) => $this->brief($c))
+            ->toArray();
+    }
+
+    public function brief(Client $client): array
+    {
+        return [
+            'id'          => $client->id,
+            'name'        => $client->name,
+            'phone'       => $client->phone,
+            'father_name' => $client->father_name,
+            'mother_name' => $client->mother_name,
+            'avatar'      => $client->getFirstMediaUrl('avatar', 'thumb') ?: $client->getFirstMediaUrl('avatar'),
+        ];
+    }
+
     public function stats(): array
     {
         return [

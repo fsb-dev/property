@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import axios from 'axios';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Textarea } from '@/Components/ui/textarea';
@@ -75,21 +76,61 @@ function pickTile(tile) {
     pickerTile.value = tile;
     if (tile === 'new') {
         props.form.buyer_mode = 'new';
+        window.open(route('admin.clients.create'), '_blank');
     } else {
         props.form.buyer_mode = 'existing';
         if (tile === 'ai' && !props.form.client_id) {
-            props.form.client_id = props.enums.clients[0]?.id ?? '';
+            const first = props.enums.clients[0];
+            if (first) {
+                props.form.client_id = first.id;
+                fetchClientDetail(first.id);
+            }
         }
     }
 }
+
+// Live server-side buyer search (by name / phone) + selected buyer detail box.
 const buyerSearch = ref('');
-const filteredClients = computed(() => {
-    const term = buyerSearch.value.trim().toLowerCase();
-    if (!term) return props.enums.clients;
-    return props.enums.clients.filter(c => (c.name ?? '').toLowerCase().includes(term) || (c.phone ?? '').includes(term));
+const searchResults = ref([]);
+const searching = ref(false);
+const selectedClientDetail = ref(null);
+let searchTimer;
+
+watch(buyerSearch, (term) => {
+    clearTimeout(searchTimer);
+    const q = term.trim();
+    if (q.length < 2) {
+        searchResults.value = [];
+        return;
+    }
+    searchTimer = setTimeout(async () => {
+        searching.value = true;
+        try {
+            const { data } = await axios.get(route('admin.clients.search'), { params: { q } });
+            searchResults.value = data;
+        } finally {
+            searching.value = false;
+        }
+    }, 300);
 });
-const selectedClient = computed(() => props.enums.clients.find(c => String(c.id) === String(props.form.client_id)));
-const buyerName = computed(() => props.form.buyer_mode === 'existing' ? selectedClient.value?.name : props.form.new_client_name);
+
+function selectClient(client) {
+    props.form.client_id = client.id;
+    selectedClientDetail.value = client;
+    searchResults.value = [];
+    buyerSearch.value = client.name;
+}
+
+async function fetchClientDetail(id) {
+    if (!id) {
+        selectedClientDetail.value = null;
+        return;
+    }
+    const { data } = await axios.get(route('admin.clients.search'), { params: { id } });
+    selectedClientDetail.value = data;
+}
+
+const buyerName = computed(() => props.form.buyer_mode === 'existing' ? selectedClientDetail.value?.name : props.form.new_client_name);
 
 // ── Project / Unit ───────────────────────────────────────────────────────
 const selectedProjectId = ref('');
@@ -212,32 +253,56 @@ function submitFinal() {
                     </div>
 
                     <template v-if="form.buyer_mode === 'existing'">
-                        <div class="space-y-1.5">
+                        <div class="col-span-2 relative space-y-1.5">
                             <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Search buyer</Label>
-                            <Input v-model="buyerSearch" placeholder="Search by name or phone" :class="f" />
-                        </div>
-                        <div class="space-y-1.5">
-                            <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Buyer</Label>
-                            <Select :model-value="form.client_id || undefined" @update:model-value="form.client_id = $event ?? ''">
-                                <SelectTrigger :class="[f, form.errors.client_id && 'border-destructive']"><SelectValue placeholder="Select buyer" /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem v-for="c in filteredClients" :key="c.id" :value="c.id">{{ c.name }}{{ c.phone ? ' · ' + c.phone : '' }}</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <Input
+                                v-model="buyerSearch"
+                                placeholder="Search by name or phone"
+                                :class="[f, form.errors.client_id && 'border-destructive']"
+                            />
                             <p v-if="form.errors.client_id" class="text-xs text-destructive">{{ form.errors.client_id }}</p>
+
+                            <div v-if="searching" class="text-xs text-muted-foreground">Searching…</div>
+                            <div v-else-if="searchResults.length" class="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-border bg-admin-surface-card shadow-lg">
+                                <button
+                                    v-for="c in searchResults" :key="c.id" type="button"
+                                    @click="selectClient(c)"
+                                    class="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.03]"
+                                >
+                                    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-xs font-bold text-white">
+                                        <img v-if="c.avatar" :src="c.avatar" :alt="c.name" class="h-full w-full object-cover" />
+                                        <span v-else>{{ c.name.split(' ').map(w => w[0]).slice(0,2).join('') }}</span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="truncate text-sm font-medium text-foreground">{{ c.name }}</p>
+                                        <p class="truncate text-xs text-muted-foreground">{{ c.phone ?? 'No phone on file' }}</p>
+                                    </div>
+                                </button>
+                            </div>
+                            <div v-else-if="buyerSearch.trim().length >= 2" class="text-xs text-muted-foreground">No matching clients found.</div>
                         </div>
-                        <div v-if="selectedClient" class="col-span-2 flex items-center gap-3 rounded-lg border border-border bg-muted/40 px-4 py-3">
-                            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-admin-accent text-sm font-bold text-white">{{ selectedClient.name.split(' ').map(w => w[0]).slice(0,2).join('') }}</div>
-                            <div class="min-w-0">
-                                <div class="text-sm font-semibold text-foreground">
-                                    {{ selectedClient.name }}
+
+                        <div v-if="selectedClientDetail" class="col-span-2 flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-4 py-3">
+                            <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-base font-bold text-white">
+                                <img v-if="selectedClientDetail.avatar" :src="selectedClientDetail.avatar" :alt="selectedClientDetail.name" class="h-full w-full object-cover" />
+                                <span v-else>{{ selectedClientDetail.name.split(' ').map(w => w[0]).slice(0,2).join('') }}</span>
+                            </div>
+                            <div class="min-w-0 grid flex-1 grid-cols-2 gap-x-4 gap-y-1">
+                                <div class="col-span-2 text-sm font-semibold text-foreground">
+                                    {{ selectedClientDetail.name }}
                                     <span v-if="pickerTile === 'ai'" class="ml-1.5 rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-bold text-green-700 dark:bg-green-500/15 dark:text-green-400">AI match 92%</span>
                                 </div>
-                                <div class="text-xs text-muted-foreground">{{ selectedClient.phone ?? 'No phone on file' }}</div>
+                                <div class="text-xs text-muted-foreground">Phone: {{ selectedClientDetail.phone ?? '—' }}</div>
+                                <div class="text-xs text-muted-foreground">Father: {{ selectedClientDetail.father_name ?? '—' }}</div>
+                                <div class="text-xs text-muted-foreground">Mother: {{ selectedClientDetail.mother_name ?? '—' }}</div>
                             </div>
                         </div>
                     </template>
                     <template v-else>
+                        <div class="col-span-2 flex items-center justify-between rounded-lg border border-admin-accent/20 bg-admin-accent/5 px-4 py-2.5">
+                            <p class="text-xs text-muted-foreground">A full client profile page opened in a new tab. Fill the details below for this reservation, or use the full form there.</p>
+                            <a :href="route('admin.clients.create')" target="_blank" rel="noopener" class="ml-3 flex-shrink-0 text-xs font-semibold text-admin-accent hover:underline">Reopen ↗</a>
+                        </div>
                         <div class="space-y-1.5">
                             <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Buyer Name</Label>
                             <Input v-model="form.new_client_name" placeholder="Rahim Uddin" :class="[f, form.errors.new_client_name && 'border-destructive']" />

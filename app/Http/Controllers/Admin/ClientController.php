@@ -31,6 +31,19 @@ class ClientController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        if ($id = $request->integer('id')) {
+            $client = Client::find($id);
+
+            return response()->json($client ? $this->service->brief($client) : null);
+        }
+
+        return response()->json(
+            $this->service->search($request->string('q')->toString())
+        );
+    }
+
     public function store(StoreClientRequest $request)
     {
         $this->service->create($request->validated());
