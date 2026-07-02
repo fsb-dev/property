@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ConstructionController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InvestmentController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::delete('/sections/{section}/floor',                [BlueprintController::class, 'deleteFloor'])->name('blueprint.floor.delete');
         Route::post( '/units/bulk-status',                        [BlueprintController::class, 'bulkStatus'])->name('blueprint.bulk-status');
     });
+
+    // Payments
+    Route::get('/payments',         [PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/records', [PaymentController::class, 'records'])->name('payments.records');
+    Route::get('/payments/record',  [PaymentController::class, 'record'])->name('payments.record');
 
     // Clients — static segments (/create) must come before wildcard ({client})
     Route::middleware('permission:view clients')->group(function () {
