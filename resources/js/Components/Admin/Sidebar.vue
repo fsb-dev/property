@@ -70,6 +70,11 @@ const navLinks = [
         href: () => route('admin.ai-agent.index'),
         icon: `<path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/>`,
     },
+    {
+        label: 'Analytics & Reports', routeName: 'admin.analysis.index', activePattern: 'admin.analysis.*',
+        href: () => route('admin.analysis.index'),
+        icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>`,
+    },
 ];
 
 const profileMenuItems = [

@@ -1,0 +1,375 @@
+{
+    "kpis": [
+        { "key": "revenue",     "label": "Total Revenue (YTD)",  "value": "BDT 425.60M", "change": 18.6, "suffix": "%", "dir": "up", "icon": "revenue",  "bg": "#F1ECFF", "color": "#5B3DF5" },
+        { "key": "sales",       "label": "Total Sales (YTD)",    "value": "BDT 312.20M", "change": 16.3, "suffix": "%", "dir": "up", "icon": "sales",    "bg": "#E8F0FF", "color": "#3B82F6" },
+        { "key": "units",       "label": "Total Units Sold",     "value": "1,245",       "change": 14.8, "suffix": "%", "dir": "up", "icon": "units",    "bg": "#E6F7EE", "color": "#22C55E" },
+        { "key": "profit",      "label": "Gross Profit (YTD)",   "value": "BDT 186.45M", "change": 20.7, "suffix": "%", "dir": "up", "icon": "profit",   "bg": "#FFF3E0", "color": "#F59E0B" },
+        { "key": "projects",    "label": "Active Projects",      "value": "18",          "change": 5,    "suffix": "",  "dir": "up", "icon": "projects", "bg": "#F1ECFF", "color": "#5B3DF5" },
+        { "key": "buyers",      "label": "Total Buyers",         "value": "3,285",       "change": 17.2, "suffix": "%", "dir": "up", "icon": "buyers",   "bg": "#E8F0FF", "color": "#3B82F6" },
+        { "key": "conversion",  "label": "Conversion Rate",      "value": "38.6%",       "change": 6.4,  "suffix": "%", "dir": "up", "icon": "target",   "bg": "#E6F7EE", "color": "#22C55E" }
+    ],
+
+    "revenueOverview": {
+        "years": [
+            {
+                "year": "2026",
+                "total": "BDT 425.60M",
+                "change": 18.6,
+                "months": [
+                    { "label": "Jan", "value": 205 },
+                    { "label": "Feb", "value": 224 },
+                    { "label": "Mar", "value": 246 },
+                    { "label": "Apr", "value": 272 },
+                    { "label": "May", "value": 262 },
+                    { "label": "Jun", "value": 297 },
+                    { "label": "Jul", "value": 287 },
+                    { "label": "Aug", "value": 318 },
+                    { "label": "Sep", "value": 305 },
+                    { "label": "Oct", "value": 338 },
+                    { "label": "Nov", "value": 322 },
+                    { "label": "Dec", "value": 425.6 }
+                ]
+            },
+            {
+                "year": "2025",
+                "total": "BDT 359.60M",
+                "change": 16.4,
+                "months": [
+                    { "label": "Jan", "value": 173 },
+                    { "label": "Feb", "value": 189 },
+                    { "label": "Mar", "value": 208 },
+                    { "label": "Apr", "value": 230 },
+                    { "label": "May", "value": 221 },
+                    { "label": "Jun", "value": 251 },
+                    { "label": "Jul", "value": 243 },
+                    { "label": "Aug", "value": 269 },
+                    { "label": "Sep", "value": 258 },
+                    { "label": "Oct", "value": 286 },
+                    { "label": "Nov", "value": 272 },
+                    { "label": "Dec", "value": 359.6 }
+                ]
+            },
+            {
+                "year": "2024",
+                "total": "BDT 303.90M",
+                "change": 14.2,
+                "months": [
+                    { "label": "Jan", "value": 146 },
+                    { "label": "Feb", "value": 160 },
+                    { "label": "Mar", "value": 176 },
+                    { "label": "Apr", "value": 194 },
+                    { "label": "May", "value": 187 },
+                    { "label": "Jun", "value": 212 },
+                    { "label": "Jul", "value": 205 },
+                    { "label": "Aug", "value": 227 },
+                    { "label": "Sep", "value": 218 },
+                    { "label": "Oct", "value": 242 },
+                    { "label": "Nov", "value": 230 },
+                    { "label": "Dec", "value": 303.9 }
+                ]
+            }
+        ]
+    },
+
+    "salesByProject": {
+        "years": [
+            {
+                "year": "2026",
+                "total": "BDT 312.20M",
+                "segments": [
+                    { "key": "lake_view",   "name": "Lake View Residence", "pct": 28, "value": "BDT 87.82M", "color": "#5B3DF5" },
+                    { "key": "green_park",  "name": "Green Park Heights",  "pct": 24, "value": "BDT 74.98M", "color": "#22C55E" },
+                    { "key": "skyline",     "name": "Skyline Towers",      "pct": 18, "value": "BDT 56.20M", "color": "#F59E0B" },
+                    { "key": "city_mall",   "name": "City Central Mall",   "pct": 12, "value": "BDT 37.34M", "color": "#3B82F6" },
+                    { "key": "metro",       "name": "Metro Line 4 Ext.",   "pct": 10, "value": "BDT 31.86M", "color": "#EF4444" },
+                    { "key": "others",      "name": "Others",              "pct": 8,  "value": "BDT 24.00M", "color": "#94A3B8" }
+                ]
+            },
+            {
+                "year": "2025",
+                "total": "BDT 267.40M",
+                "segments": [
+                    { "key": "lake_view",   "name": "Lake View Residence", "pct": 24, "value": "BDT 64.18M", "color": "#5B3DF5" },
+                    { "key": "green_park",  "name": "Green Park Heights",  "pct": 26, "value": "BDT 69.52M", "color": "#22C55E" },
+                    { "key": "skyline",     "name": "Skyline Towers",      "pct": 20, "value": "BDT 53.48M", "color": "#F59E0B" },
+                    { "key": "city_mall",   "name": "City Central Mall",   "pct": 14, "value": "BDT 37.44M", "color": "#3B82F6" },
+                    { "key": "metro",       "name": "Metro Line 4 Ext.",   "pct": 9,  "value": "BDT 24.07M", "color": "#EF4444" },
+                    { "key": "others",      "name": "Others",              "pct": 7,  "value": "BDT 18.72M", "color": "#94A3B8" }
+                ]
+            },
+            {
+                "year": "2024",
+                "total": "BDT 229.10M",
+                "segments": [
+                    { "key": "lake_view",   "name": "Lake View Residence", "pct": 20, "value": "BDT 45.82M", "color": "#5B3DF5" },
+                    { "key": "green_park",  "name": "Green Park Heights",  "pct": 27, "value": "BDT 61.86M", "color": "#22C55E" },
+                    { "key": "skyline",     "name": "Skyline Towers",      "pct": 21, "value": "BDT 48.11M", "color": "#F59E0B" },
+                    { "key": "city_mall",   "name": "City Central Mall",   "pct": 15, "value": "BDT 34.37M", "color": "#3B82F6" },
+                    { "key": "metro",       "name": "Metro Line 4 Ext.",   "pct": 9,  "value": "BDT 20.62M", "color": "#EF4444" },
+                    { "key": "others",      "name": "Others",              "pct": 8,  "value": "BDT 18.33M", "color": "#94A3B8" }
+                ]
+            }
+        ]
+    },
+
+    "profitMargin": {
+        "years": [
+            {
+                "year": "2026",
+                "months": [
+                    { "label": "Jan", "profit": 50,  "margin": 8.0 },
+                    { "label": "Feb", "profit": 68,  "margin": 13.4 },
+                    { "label": "Mar", "profit": 89,  "margin": 17.7 },
+                    { "label": "Apr", "profit": 61,  "margin": 15.5 },
+                    { "label": "May", "profit": 71,  "margin": 17.0 },
+                    { "label": "Jun", "profit": 82,  "margin": 19.1 },
+                    { "label": "Jul", "profit": 64,  "margin": 17.7 },
+                    { "label": "Aug", "profit": 75,  "margin": 20.2 },
+                    { "label": "Sep", "profit": 86,  "margin": 21.3 },
+                    { "label": "Oct", "profit": 93,  "margin": 22.3 },
+                    { "label": "Nov", "profit": 79,  "margin": 20.5 },
+                    { "label": "Dec", "profit": 107, "margin": 24.5 }
+                ]
+            },
+            {
+                "year": "2025",
+                "months": [
+                    { "label": "Jan", "profit": 43, "margin": 6.8 },
+                    { "label": "Feb", "profit": 58, "margin": 11.4 },
+                    { "label": "Mar", "profit": 76, "margin": 15.0 },
+                    { "label": "Apr", "profit": 52, "margin": 13.2 },
+                    { "label": "May", "profit": 61, "margin": 14.5 },
+                    { "label": "Jun", "profit": 70, "margin": 16.2 },
+                    { "label": "Jul", "profit": 55, "margin": 15.0 },
+                    { "label": "Aug", "profit": 64, "margin": 17.2 },
+                    { "label": "Sep", "profit": 74, "margin": 18.1 },
+                    { "label": "Oct", "profit": 80, "margin": 19.0 },
+                    { "label": "Nov", "profit": 68, "margin": 17.4 },
+                    { "label": "Dec", "profit": 92, "margin": 20.8 }
+                ]
+            },
+            {
+                "year": "2024",
+                "months": [
+                    { "label": "Jan", "profit": 37, "margin": 5.8 },
+                    { "label": "Feb", "profit": 50, "margin": 9.7 },
+                    { "label": "Mar", "profit": 65, "margin": 12.8 },
+                    { "label": "Apr", "profit": 44, "margin": 11.2 },
+                    { "label": "May", "profit": 52, "margin": 12.3 },
+                    { "label": "Jun", "profit": 60, "margin": 13.8 },
+                    { "label": "Jul", "profit": 47, "margin": 12.8 },
+                    { "label": "Aug", "profit": 55, "margin": 14.6 },
+                    { "label": "Sep", "profit": 63, "margin": 15.4 },
+                    { "label": "Oct", "profit": 68, "margin": 16.2 },
+                    { "label": "Nov", "profit": 58, "margin": 14.8 },
+                    { "label": "Dec", "profit": 79, "margin": 17.7 }
+                ]
+            }
+        ]
+    },
+
+    "performance": {
+        "tabs": ["Overview", "Sales", "Revenue", "Projects", "Buyers", "Marketing", "Financial"],
+        "metricsByTab": {
+            "Overview": [
+                { "key": "units_sold",    "label": "Units Sold",        "value": "1,245",       "change": 14.8, "dir": "up",   "color": "#5B3DF5", "spark": [22, 18, 20, 12, 15, 8, 5] },
+                { "key": "avg_price",     "label": "Avg. Unit Price",   "value": "BDT 25.12M",  "change": 8.2,  "dir": "up",   "color": "#5B3DF5", "spark": [18, 20, 14, 16, 10, 13, 7] },
+                { "key": "bookings",      "label": "Bookings",          "value": "2,145",       "change": 16.5, "dir": "up",   "color": "#22C55E", "spark": [20, 16, 18, 11, 13, 7, 6] },
+                { "key": "collections",   "label": "Collections",       "value": "BDT 298.45M", "change": 17.3, "dir": "up",   "color": "#F59E0B", "spark": [22, 17, 19, 13, 14, 9, 5] },
+                { "key": "pending",       "label": "Pending Amount",    "value": "BDT 114.32M", "change": 4.6,  "dir": "down", "color": "#EF4444", "spark": [10, 14, 9, 16, 12, 18, 15] },
+                { "key": "refunds",       "label": "Refunds",           "value": "BDT 8.76M",   "change": 12.7, "dir": "down", "color": "#7C3AED", "spark": [12, 9, 15, 11, 17, 13, 18] },
+                { "key": "net_margin",    "label": "Net Margin",        "value": "29.4%",       "change": 3.1,  "dir": "up",   "color": "#0D9488", "spark": [20, 15, 17, 12, 14, 9, 7] },
+                { "key": "new_buyers",    "label": "New Buyers",        "value": "486",         "change": 21.0, "dir": "up",   "color": "#3B82F6", "spark": [21, 18, 19, 13, 12, 8, 5] }
+            ],
+            "Sales": [
+                { "key": "sales_total",       "label": "Total Sales (YTD)", "value": "BDT 312.20M", "change": 16.3, "dir": "up", "color": "#3B82F6", "spark": [18, 20, 14, 16, 10, 13, 7] },
+                { "key": "sales_units",       "label": "Units Sold",        "value": "1,245",       "change": 14.8, "dir": "up", "color": "#5B3DF5", "spark": [22, 18, 20, 12, 15, 8, 5] },
+                { "key": "sales_avg_price",   "label": "Avg. Unit Price",   "value": "BDT 25.12M",  "change": 8.2,  "dir": "up", "color": "#5B3DF5", "spark": [18, 20, 14, 16, 10, 13, 7] },
+                { "key": "sales_top_project", "label": "Top Project Sales", "value": "BDT 87.82M",  "change": 24.6, "dir": "up", "color": "#F59E0B", "spark": [10, 13, 16, 14, 18, 20, 24] }
+            ],
+            "Revenue": [
+                { "key": "revenue_total",       "label": "Total Revenue (YTD)", "value": "BDT 425.60M", "change": 18.6, "dir": "up", "color": "#5B3DF5", "spark": [16, 18, 20, 19, 22, 24, 27] },
+                { "key": "revenue_profit",      "label": "Gross Profit (YTD)",  "value": "BDT 186.45M", "change": 20.7, "dir": "up", "color": "#F59E0B", "spark": [14, 16, 15, 18, 20, 22, 25] },
+                { "key": "revenue_margin",      "label": "Net Margin",          "value": "29.4%",       "change": 3.1,  "dir": "up", "color": "#0D9488", "spark": [20, 15, 17, 12, 14, 9, 7] },
+                { "key": "revenue_collections", "label": "Collections",         "value": "BDT 298.45M", "change": 17.3, "dir": "up", "color": "#F59E0B", "spark": [22, 17, 19, 13, 14, 9, 5] }
+            ],
+            "Projects": [
+                { "key": "projects_active",     "label": "Active Projects",     "value": "18",         "change": 5,    "suffix": "", "dir": "up", "color": "#5B3DF5", "spark": [8, 10, 9, 12, 14, 15, 18] },
+                { "key": "projects_units",      "label": "Units Sold",          "value": "1,245",      "change": 14.8, "dir": "up", "color": "#5B3DF5", "spark": [22, 18, 20, 12, 15, 8, 5] },
+                { "key": "projects_avg_price",  "label": "Avg. Unit Price",     "value": "BDT 25.12M", "change": 8.2,  "dir": "up", "color": "#5B3DF5", "spark": [18, 20, 14, 16, 10, 13, 7] },
+                { "key": "projects_completion", "label": "Avg. Completion Rate","value": "82%",        "change": 6.5,  "dir": "up", "color": "#22C55E", "spark": [10, 12, 14, 13, 16, 18, 20] }
+            ],
+            "Buyers": [
+                { "key": "buyers_total",      "label": "Total Buyers",       "value": "3,285", "change": 17.2, "dir": "up", "color": "#3B82F6", "spark": [14, 16, 15, 18, 20, 19, 22] },
+                { "key": "buyers_new",        "label": "New Buyers",         "value": "486",   "change": 21.0, "dir": "up", "color": "#3B82F6", "spark": [21, 18, 19, 13, 12, 8, 5] },
+                { "key": "buyers_local",      "label": "Local Buyers Share", "value": "72%",   "change": 2.1,  "dir": "up", "color": "#5B3DF5", "spark": [10, 11, 10, 12, 13, 12, 14] },
+                { "key": "buyers_conversion", "label": "Conversion Rate",    "value": "38.6%", "change": 6.4,  "dir": "up", "color": "#22C55E", "spark": [12, 14, 13, 16, 18, 17, 20] }
+            ],
+            "Marketing": [
+                { "key": "marketing_leads",       "label": "Leads (YTD)",     "value": "12,540", "change": 9.8,  "dir": "up", "color": "#5B3DF5", "spark": [14, 16, 15, 18, 17, 20, 22] },
+                { "key": "marketing_qualified",   "label": "Qualified Leads", "value": "7,890",  "change": 11.2, "dir": "up", "color": "#3B82F6", "spark": [12, 14, 13, 16, 15, 18, 20] },
+                { "key": "marketing_visits",      "label": "Site Visits",     "value": "4,820",  "change": 8.4,  "dir": "up", "color": "#14B8A6", "spark": [10, 12, 11, 14, 13, 16, 18] },
+                { "key": "marketing_conversion",  "label": "Conversion Rate", "value": "38.6%",  "change": 6.4,  "dir": "up", "color": "#22C55E", "spark": [12, 14, 13, 16, 18, 17, 20] }
+            ],
+            "Financial": [
+                { "key": "financial_profit",  "label": "Gross Profit (YTD)", "value": "BDT 186.45M", "change": 20.7, "dir": "up",   "color": "#F59E0B", "spark": [14, 16, 15, 18, 20, 22, 25] },
+                { "key": "financial_pending", "label": "Pending Amount",     "value": "BDT 114.32M", "change": 4.6,  "dir": "down", "color": "#EF4444", "spark": [10, 14, 9, 16, 12, 18, 15] },
+                { "key": "financial_refunds", "label": "Refunds",            "value": "BDT 8.76M",   "change": 12.7, "dir": "down", "color": "#7C3AED", "spark": [12, 9, 15, 11, 17, 13, 18] },
+                { "key": "financial_margin",  "label": "Net Margin",         "value": "29.4%",       "change": 3.1,  "dir": "up",   "color": "#0D9488", "spark": [20, 15, 17, 12, 14, 9, 7] }
+            ]
+        }
+    },
+
+    "topProjects": [
+        { "key": "lake_view",  "name": "Lake View Residence", "sales": "BDT 87.82M", "units": 352, "growth": 24.6, "bg": "#5B3DF5" },
+        { "key": "green_park", "name": "Green Park Heights",  "sales": "BDT 74.98M", "units": 298, "growth": 18.3, "bg": "#22C55E" },
+        { "key": "skyline",    "name": "Skyline Towers",      "sales": "BDT 56.20M", "units": 210, "growth": 15.7, "bg": "#F59E0B" },
+        { "key": "city_mall",  "name": "City Central Mall",   "sales": "BDT 37.34M", "units": 128, "growth": 11.4, "bg": "#3B82F6" },
+        { "key": "metro",      "name": "Metro Line 4 Ext.",   "sales": "BDT 31.86M", "units": 98,  "growth": 9.8,  "bg": "#EF4444" }
+    ],
+
+    "funnel": {
+        "years": [
+            {
+                "year": "2026",
+                "stages": [
+                    { "key": "leads",      "name": "Leads",           "count": "12,540", "pct": 100 },
+                    { "key": "qualified",  "name": "Qualified Leads", "count": "7,890",  "pct": 63 },
+                    { "key": "visits",     "name": "Site Visits",     "count": "4,820",  "pct": 38 },
+                    { "key": "bookings",   "name": "Bookings",        "count": "2,145",  "pct": 17 },
+                    { "key": "sales",      "name": "Sales",           "count": "1,245",  "pct": 10 }
+                ]
+            },
+            {
+                "year": "2025",
+                "stages": [
+                    { "key": "leads",      "name": "Leads",           "count": "10,684", "pct": 100 },
+                    { "key": "qualified",  "name": "Qualified Leads", "count": "6,723",  "pct": 63 },
+                    { "key": "visits",     "name": "Site Visits",     "count": "4,107",  "pct": 38 },
+                    { "key": "bookings",   "name": "Bookings",        "count": "1,828",  "pct": 17 },
+                    { "key": "sales",      "name": "Sales",           "count": "1,061",  "pct": 10 }
+                ]
+            },
+            {
+                "year": "2024",
+                "stages": [
+                    { "key": "leads",      "name": "Leads",           "count": "9,103", "pct": 100 },
+                    { "key": "qualified",  "name": "Qualified Leads", "count": "5,728", "pct": 63 },
+                    { "key": "visits",     "name": "Site Visits",     "count": "3,499", "pct": 38 },
+                    { "key": "bookings",   "name": "Bookings",        "count": "1,558", "pct": 17 },
+                    { "key": "sales",      "name": "Sales",           "count": "904",   "pct": 10 }
+                ]
+            }
+        ]
+    },
+
+    "buyerDemographics": {
+        "years": [
+            {
+                "year": "2026",
+                "total": "3,285",
+                "segments": [
+                    { "key": "local",  "name": "Local Buyers",  "pct": 72, "value": "2,364", "color": "#5B3DF5" },
+                    { "key": "expat",  "name": "Expat Buyers",  "pct": 18, "value": "591",   "color": "#3B82F6" },
+                    { "key": "nrb",    "name": "NRB Buyers",    "pct": 6,  "value": "197",   "color": "#F59E0B" },
+                    { "key": "invest", "name": "Investors",     "pct": 4,  "value": "133",   "color": "#EF4444" }
+                ]
+            },
+            {
+                "year": "2025",
+                "total": "2,799",
+                "segments": [
+                    { "key": "local",  "name": "Local Buyers",  "pct": 70, "value": "1,959", "color": "#5B3DF5" },
+                    { "key": "expat",  "name": "Expat Buyers",  "pct": 19, "value": "532",   "color": "#3B82F6" },
+                    { "key": "nrb",    "name": "NRB Buyers",    "pct": 7,  "value": "196",   "color": "#F59E0B" },
+                    { "key": "invest", "name": "Investors",     "pct": 4,  "value": "112",   "color": "#EF4444" }
+                ]
+            },
+            {
+                "year": "2024",
+                "total": "2,385",
+                "segments": [
+                    { "key": "local",  "name": "Local Buyers",  "pct": 68, "value": "1,622", "color": "#5B3DF5" },
+                    { "key": "expat",  "name": "Expat Buyers",  "pct": 20, "value": "477",   "color": "#3B82F6" },
+                    { "key": "nrb",    "name": "NRB Buyers",    "pct": 8,  "value": "191",   "color": "#F59E0B" },
+                    { "key": "invest", "name": "Investors",     "pct": 4,  "value": "95",    "color": "#EF4444" }
+                ]
+            }
+        ]
+    },
+
+    "monthlyComparison": {
+        "metrics": [
+            {
+                "key": "revenue", "label": "Revenue", "unitPrefix": "BDT ", "unitSuffix": "M", "axisMax": 300,
+                "months": [
+                    { "label": "Jan", "thisYear": 162, "lastYear": 124 },
+                    { "label": "Feb", "thisYear": 191, "lastYear": 143 },
+                    { "label": "Mar", "thisYear": 219, "lastYear": 171 },
+                    { "label": "Apr", "thisYear": 181, "lastYear": 133 },
+                    { "label": "May", "thisYear": 257, "lastYear": 191 },
+                    { "label": "Jun", "thisYear": 210, "lastYear": 162 },
+                    { "label": "Jul", "thisYear": 195, "lastYear": 148 },
+                    { "label": "Aug", "thisYear": 229, "lastYear": 176 },
+                    { "label": "Sep", "thisYear": 210, "lastYear": 157 },
+                    { "label": "Oct", "thisYear": 248, "lastYear": 195 },
+                    { "label": "Nov", "thisYear": 224, "lastYear": 171 },
+                    { "label": "Dec", "thisYear": 271, "lastYear": 210 }
+                ]
+            },
+            {
+                "key": "units", "label": "Units Sold", "unitPrefix": "", "unitSuffix": "", "axisMax": 150,
+                "months": [
+                    { "label": "Jan", "thisYear": 85,  "lastYear": 74 },
+                    { "label": "Feb", "thisYear": 92,  "lastYear": 80 },
+                    { "label": "Mar", "thisYear": 105, "lastYear": 91 },
+                    { "label": "Apr", "thisYear": 88,  "lastYear": 77 },
+                    { "label": "May", "thisYear": 110, "lastYear": 96 },
+                    { "label": "Jun", "thisYear": 98,  "lastYear": 85 },
+                    { "label": "Jul", "thisYear": 94,  "lastYear": 82 },
+                    { "label": "Aug", "thisYear": 108, "lastYear": 94 },
+                    { "label": "Sep", "thisYear": 101, "lastYear": 88 },
+                    { "label": "Oct", "thisYear": 118, "lastYear": 103 },
+                    { "label": "Nov", "thisYear": 106, "lastYear": 92 },
+                    { "label": "Dec", "thisYear": 140, "lastYear": 122 }
+                ]
+            },
+            {
+                "key": "bookings", "label": "Bookings", "unitPrefix": "", "unitSuffix": "", "axisMax": 240,
+                "months": [
+                    { "label": "Jan", "thisYear": 147, "lastYear": 126 },
+                    { "label": "Feb", "thisYear": 159, "lastYear": 137 },
+                    { "label": "Mar", "thisYear": 181, "lastYear": 155 },
+                    { "label": "Apr", "thisYear": 152, "lastYear": 131 },
+                    { "label": "May", "thisYear": 190, "lastYear": 163 },
+                    { "label": "Jun", "thisYear": 169, "lastYear": 145 },
+                    { "label": "Jul", "thisYear": 162, "lastYear": 139 },
+                    { "label": "Aug", "thisYear": 186, "lastYear": 160 },
+                    { "label": "Sep", "thisYear": 174, "lastYear": 149 },
+                    { "label": "Oct", "thisYear": 203, "lastYear": 174 },
+                    { "label": "Nov", "thisYear": 183, "lastYear": 157 },
+                    { "label": "Dec", "thisYear": 239, "lastYear": 205 }
+                ]
+            }
+        ]
+    },
+
+    "reportShortcuts": [
+        { "key": "sales_perf",  "name": "Sales Performance Report",     "color": "#5B3DF5", "bg": "#F1ECFF" },
+        { "key": "financial",   "name": "Financial Summary Report",     "color": "#F59E0B", "bg": "#FFF3E0" },
+        { "key": "project",     "name": "Project Progress Report",      "color": "#EF4444", "bg": "#FDE8E8" },
+        { "key": "buyer",       "name": "Buyer Demographics Report",    "color": "#3B82F6", "bg": "#E8F0FF" },
+        { "key": "marketing",   "name": "Marketing Campaign Report",    "color": "#22C55E", "bg": "#E6F7EE" },
+        { "key": "inventory",   "name": "Inventory Status Report",      "color": "#0D9488", "bg": "#CCFBF1" }
+    ],
+
+    "recentReports": [
+        { "name": "Sales Performance - May 2026",   "gen": "Generated 15 May 2026, 10:30 AM", "color": "#5B3DF5", "bg": "#F1ECFF" },
+        { "name": "Financial Summary - Q2 2026",    "gen": "Generated 14 May 2026, 04:15 PM", "color": "#22C55E", "bg": "#E6F7EE" },
+        { "name": "Project Progress - May 2026",    "gen": "Generated 14 May 2026, 11:20 AM", "color": "#F59E0B", "bg": "#FFF3E0" },
+        { "name": "Buyer Insights - May 2026",      "gen": "Generated 13 May 2026, 09:10 PM", "color": "#3B82F6", "bg": "#E8F0FF" },
+        { "name": "Marketing Report - May 2026",    "gen": "Generated 12 May 2026, 02:30 PM", "color": "#EF4444", "bg": "#FDE8E8" }
+    ],
+
+    "lastUpdated": "15 May 2026, 10:30 AM"
+}
