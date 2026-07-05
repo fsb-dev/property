@@ -121,6 +121,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/construction', [ConstructionController::class, 'index'])->name('construction.index');
         Route::middleware('permission:manage construction')->group(function () {
             Route::post('/construction/site-updates', [ConstructionController::class, 'storeSiteUpdate'])->name('construction.site-updates.store');
+            Route::post('/construction/status', [ConstructionController::class, 'storeStatus'])->name('construction.status.store');
+            Route::delete('/construction/status/{project}', [ConstructionController::class, 'destroyStatus'])->name('construction.status.destroy');
         });
     });
 

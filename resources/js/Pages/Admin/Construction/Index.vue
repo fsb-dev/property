@@ -21,6 +21,8 @@ const props = defineProps({
     siteActivity:       { type: Array,  required: true },
     table:              { type: Object, required: true },
     projectOptions:     { type: Array,  required: true },
+    statusOptions:      { type: Array,  required: true },
+    allProjects:        { type: Array,  required: true },
     filters:            { type: Object, default: () => ({}) },
 });
 
@@ -216,6 +218,55 @@ function submitUpdate() {
         onSuccess: () => { showAddUpdate.value = false; form.reset(); },
     });
 }
+
+// ── Add / Edit Construction Status dialog ─────────────────────
+const showStatusDialog = ref(false);
+const editingStatusRow = ref(null); // null while adding, the table row while editing
+const statusForm = useForm({
+    project_id: '',
+    status: 'on_track',
+    time_progress: 0,
+    quality_score: 0,
+    budget_total: 0,
+    budget_used: 0,
+});
+
+function openAddStatus() {
+    editingStatusRow.value = null;
+    statusForm.reset();
+    statusForm.clearErrors();
+    showStatusDialog.value = true;
+}
+
+function openEditStatus(row) {
+    editingStatusRow.value = row;
+    statusForm.clearErrors();
+    statusForm.project_id = row.id;
+    statusForm.status = row.status;
+    statusForm.time_progress = row.time;
+    statusForm.quality_score = row.quality;
+    statusForm.budget_total = row.budget_total;
+    statusForm.budget_used = row.budget_used;
+    showStatusDialog.value = true;
+}
+
+function submitStatus() {
+    statusForm.post(route('admin.construction.status.store'), {
+        preserveScroll: true,
+        onSuccess: () => { showStatusDialog.value = false; statusForm.reset(); },
+    });
+}
+
+// ── Delete (reset) Construction Status confirm ────────────────
+const deleteStatusForm = useForm({});
+const confirmingStatusDelete = ref(null);
+function confirmDeleteStatus(row) { confirmingStatusDelete.value = row; }
+function submitDeleteStatus() {
+    deleteStatusForm.delete(route('admin.construction.status.destroy', confirmingStatusDelete.value.id), {
+        preserveScroll: true,
+        onSuccess: () => { confirmingStatusDelete.value = null; },
+    });
+}
 </script>
 
 <template>
@@ -376,9 +427,18 @@ function submitUpdate() {
             <div class="min-w-0 rounded-2xl border border-border bg-admin-surface-card p-4">
                 <div class="mb-3 flex flex-wrap items-center justify-between gap-3 px-2">
                     <div class="text-base font-bold text-foreground">Projects Construction Status</div>
-                    <div class="relative w-full max-w-[260px]">
-                        <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        <Input v-model="search" placeholder="Search project, location..." class="pl-9" />
+                    <div class="flex items-center gap-2">
+                        <div class="relative w-full max-w-[260px]">
+                            <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            <Input v-model="search" placeholder="Search project, location..." class="pl-9" />
+                        </div>
+                        <button
+                            @click="openAddStatus"
+                            class="inline-flex flex-none items-center gap-1.5 rounded-lg bg-admin-accent px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-admin-accent/90"
+                        >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                            Add Status
+                        </button>
                     </div>
                 </div>
 
@@ -392,8 +452,8 @@ function submitUpdate() {
                             <TableHead>Quality Score</TableHead>
                             <TableHead>Budget Used</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>Next Milestone</TableHead>
-                            <TableHead class="pr-4">Target Date</TableHead>
+                            <TableHead>Target Date</TableHead>
+                            <TableHead class="pr-4 text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -441,8 +501,25 @@ function submitUpdate() {
                             <TableCell>
                                 <Badge :variant="row.status_variant">{{ row.status_label }}</Badge>
                             </TableCell>
-                            <TableCell class="whitespace-nowrap text-[12.5px] font-semibold text-foreground/80">{{ row.milestone }}</TableCell>
-                            <TableCell class="pr-4 whitespace-nowrap text-[12.5px] text-muted-foreground">{{ row.target }}</TableCell>
+                            <TableCell class="whitespace-nowrap text-[12.5px] text-muted-foreground">{{ row.target }}</TableCell>
+                            <TableCell class="pr-4">
+                                <div class="flex items-center justify-end gap-1">
+                                    <button
+                                        @click="openEditStatus(row)"
+                                        class="flex h-7 w-7 flex-none items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-admin-accent"
+                                        title="Edit construction status"
+                                    >
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </button>
+                                    <button
+                                        @click="confirmDeleteStatus(row)"
+                                        class="flex h-7 w-7 flex-none items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500"
+                                        title="Reset construction status"
+                                    >
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                    </button>
+                                </div>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -658,11 +735,12 @@ function submitUpdate() {
                                 <div class="relative">
                                     <span class="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">৳</span>
                                     <input
-                                        type="number" min="0" step="1000"
+                                        type="text"
                                         :value="form.budget_total"
-                                        :disabled="!form.project_id"
-                                        @input="form.budget_total = Math.max(0, Number($event.target.value) || 0)"
-                                        class="h-9 w-full rounded-md border border-input bg-background py-2 pl-6 pr-2 text-sm font-semibold tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed"
+                                        readonly
+                                        tabindex="-1"
+                                        style="pointer-events:none; opacity:0.5; cursor:not-allowed;"
+                                        class="h-9 w-full rounded-md border border-input bg-muted py-2 pl-6 pr-2 text-sm font-semibold tabular-nums"
                                     />
                                 </div>
                             </div>
@@ -712,6 +790,130 @@ function submitUpdate() {
                         </button>
                     </DialogFooter>
                 </form>
+            </DialogContent>
+        </Dialog>
+
+        <!-- Add / Edit Construction Status Dialog -->
+        <Dialog v-model:open="showStatusDialog">
+            <DialogContent class="flex max-h-[88vh] w-full max-w-md flex-col gap-0 overflow-hidden p-0">
+                <DialogHeader class="shrink-0 border-b border-border px-6 py-4">
+                    <DialogTitle>{{ editingStatusRow ? 'Edit Construction Status' : 'Add Construction Status' }}</DialogTitle>
+                </DialogHeader>
+
+                <form @submit.prevent="submitStatus" class="flex min-h-0 flex-1 flex-col">
+                    <div class="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
+                        <div class="space-y-1.5">
+                            <Label class="text-xs font-medium text-muted-foreground">Project</Label>
+                            <div v-if="editingStatusRow" class="rounded-md border border-input bg-muted px-3 py-2 text-sm font-semibold">
+                                {{ editingStatusRow.name }}
+                            </div>
+                            <Select
+                                v-else
+                                :model-value="statusForm.project_id ? String(statusForm.project_id) : undefined"
+                                @update:model-value="statusForm.project_id = $event ? Number($event) : ''"
+                            >
+                                <SelectTrigger><SelectValue placeholder="Select a project" /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem v-for="p in allProjects" :key="p.id" :value="String(p.id)">{{ p.name }}</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <p v-if="statusForm.errors.project_id" class="text-xs text-destructive">{{ statusForm.errors.project_id }}</p>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <Label class="text-xs font-medium text-muted-foreground">Status</Label>
+                            <Select v-model="statusForm.status">
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem v-for="s in statusOptions" :key="s.value" :value="s.value">{{ s.label }}</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <p v-if="statusForm.errors.status" class="text-xs text-destructive">{{ statusForm.errors.status }}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <Label class="text-xs font-medium text-muted-foreground">Time Progress (%)</Label>
+                                <Input
+                                    type="number" min="0" max="100" step="1"
+                                    :model-value="statusForm.time_progress"
+                                    @update:model-value="statusForm.time_progress = Math.min(100, Math.max(0, Number($event) || 0))"
+                                />
+                                <p v-if="statusForm.errors.time_progress" class="text-xs text-destructive">{{ statusForm.errors.time_progress }}</p>
+                            </div>
+                            <div class="space-y-1.5">
+                                <Label class="text-xs font-medium text-muted-foreground">Quality Score (%)</Label>
+                                <Input
+                                    type="number" min="0" max="100" step="1"
+                                    :model-value="statusForm.quality_score"
+                                    @update:model-value="statusForm.quality_score = Math.min(100, Math.max(0, Number($event) || 0))"
+                                />
+                                <p v-if="statusForm.errors.quality_score" class="text-xs text-destructive">{{ statusForm.errors.quality_score }}</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <Label class="text-xs font-medium text-muted-foreground">Total Budget</Label>
+                                <div class="relative">
+                                    <span class="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">৳</span>
+                                    <input
+                                        type="number" min="0" step="1000"
+                                        :value="statusForm.budget_total"
+                                        @input="statusForm.budget_total = Math.max(0, Number($event.target.value) || 0)"
+                                        class="h-9 w-full rounded-md border border-input bg-background py-2 pl-6 pr-2 text-sm font-semibold tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    />
+                                </div>
+                                <p v-if="statusForm.errors.budget_total" class="text-xs text-destructive">{{ statusForm.errors.budget_total }}</p>
+                            </div>
+                            <div class="space-y-1.5">
+                                <Label class="text-xs font-medium text-muted-foreground">Used So Far</Label>
+                                <div class="relative">
+                                    <span class="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">৳</span>
+                                    <input
+                                        type="number" min="0" step="1000"
+                                        :value="statusForm.budget_used"
+                                        @input="statusForm.budget_used = Math.max(0, Number($event.target.value) || 0)"
+                                        class="h-9 w-full rounded-md border border-input bg-background py-2 pl-6 pr-2 text-sm font-semibold tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    />
+                                </div>
+                                <p v-if="statusForm.errors.budget_used" class="text-xs text-destructive">{{ statusForm.errors.budget_used }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <DialogFooter class="shrink-0 border-t border-border px-6 py-4">
+                        <button type="button" @click="showStatusDialog = false" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
+                        <button type="submit" :disabled="statusForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
+                            <svg v-if="statusForm.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                            Save Status
+                        </button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+
+        <!-- Delete (reset) Construction Status confirm dialog -->
+        <Dialog :open="!!confirmingStatusDelete" @update:open="(v) => { if (!v) confirmingStatusDelete = null; }">
+            <DialogContent class="w-full max-w-sm">
+                <DialogHeader>
+                    <DialogTitle>Reset Construction Status</DialogTitle>
+                </DialogHeader>
+                <p class="px-6 pb-2 text-sm text-muted-foreground">
+                    Are you sure you want to reset the construction status for
+                    <strong class="text-foreground">{{ confirmingStatusDelete?.name }}</strong>?
+                    This clears its status, time progress, quality score and budget figures back to defaults. The project itself is not deleted.
+                </p>
+                <DialogFooter class="px-6 pb-4">
+                    <button type="button" @click="confirmingStatusDelete = null" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
+                    <button
+                        type="button" @click="submitDeleteStatus" :disabled="deleteStatusForm.processing"
+                        class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-60"
+                    >
+                        <svg v-if="deleteStatusForm.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                        Reset
+                    </button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     </AdminLayout>

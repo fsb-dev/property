@@ -40,8 +40,9 @@ class ConstructionService
         $milestonesCompleted = ConstructionMilestone::where('status', 'completed')->count();
         $milestonesPending   = ConstructionMilestone::where('status', '!=', 'completed')->count();
 
-        $budgetTotal = (float) ProjectConstruction::sum('budget_total');
-        $budgetUsed  = (float) ProjectConstruction::sum('budget_used');
+        $constructedProjects = Project::has('construction')->with('construction')->get(['id', 'estimated_value']);
+        $budgetTotal = (float) $constructedProjects->sum(fn (Project $p) => $p->estimated_value ?? $p->construction->budget_total ?? 0);
+        $budgetUsed  = (float) $constructedProjects->sum(fn (Project $p) => $p->construction->budget_used ?? 0);
 
         return [
             'active_projects'  => $activeCount,
@@ -177,7 +178,7 @@ class ConstructionService
                     ->orderBy('estimated_date')
                     ->first();
 
-                $budgetTotal = (float) ($c?->budget_total ?? 0);
+                $budgetTotal = (float) ($project->estimated_value ?? $c?->budget_total ?? 0);
                 $budgetUsed  = (float) ($c?->budget_used ?? 0);
 
                 return [
@@ -218,15 +219,67 @@ class ConstructionService
         return Project::whereIn('status', self::ACTIVE_STATUSES)
             ->with('construction')
             ->orderBy('name')
-            ->get(['id', 'name', 'overall_progress'])
+            ->get(['id', 'name', 'overall_progress', 'estimated_value'])
             ->map(fn (Project $p) => [
                 'id'               => $p->id,
                 'name'             => $p->name,
                 'overall_progress' => (float) $p->overall_progress,
                 'time_progress'    => (float) ($p->construction?->time_progress ?? 0),
-                'budget_total'     => (float) ($p->construction?->budget_total ?? 0),
+                'budget_total'     => (float) ($p->estimated_value ?? $p->construction?->budget_total ?? 0),
                 'budget_used'      => (float) ($p->construction?->budget_used ?? 0),
             ])->all();
+    }
+
+    // ── Construction status options (for the status select) ─────────
+
+    public function statusOptions(): array
+    {
+        return array_map(fn (ConstructionStatus $s) => [
+            'value' => $s->value,
+            'label' => $s->label(),
+        ], ConstructionStatus::cases());
+    }
+
+    // ── All non-draft projects (for the "Add Status" project picker) ─
+
+    public function allProjects(): array
+    {
+        return Project::whereNotIn('status', [ProjectStatus::Draft])
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn (Project $p) => ['id' => $p->id, 'name' => $p->name])
+            ->all();
+    }
+
+    // ── Create/update a project's construction status row ────────────
+
+    public function upsertConstructionStatus(array $data): ProjectConstruction
+    {
+        $tenant = Tenant::firstOrCreate(
+            ['slug' => 'homeverse'],
+            ['name' => 'HomeVerse Real Estate', 'status' => 'active']
+        );
+
+        $construction = ProjectConstruction::updateOrCreate(
+            ['project_id' => $data['project_id']],
+            [
+                'tenant_id'     => $tenant->id,
+                'status'        => $data['status'],
+                'time_progress' => $data['time_progress'],
+                'quality_score' => $data['quality_score'],
+                'budget_total'  => $data['budget_total'],
+                'budget_used'   => $data['budget_used'],
+            ]
+        );
+
+        return $construction;
+    }
+
+    // ── Delete a project's construction status row (resets to defaults) ─
+
+    public function deleteConstructionStatus(int $projectId): void
+    {
+        ProjectConstruction::where('project_id', $projectId)->delete();
     }
 
     // ── Create a site update (with optional photo) ──────────────────
