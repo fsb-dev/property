@@ -133,6 +133,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Support Tickets — static JSON fixture, no DB; tab/search filtering is client-side.
     Route::get('/support-tickets', fn () => inertia('Admin/SupportTickets/Index', json_decode(file_get_contents(resource_path('data/support-tickets.json')), true)))->name('support-tickets.index');
 
+    // Sera AI Knowledge — static JSON fixture, no DB; all "create" actions
+    // (articles, categories, training data, uploads, settings) are client-side only (localStorage).
+    Route::get('/ai-agent', fn () => inertia('Admin/AiAgent/Index', json_decode(file_get_contents(resource_path('data/ai-agent.json')), true)))->name('ai-agent.index');
+
     // Documents
     Route::middleware('permission:view documents')->group(function () {
         Route::get('/documents', fn () => inertia('Admin/Documents/Index'))->name('documents.index');

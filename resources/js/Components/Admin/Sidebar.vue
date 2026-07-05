@@ -65,6 +65,11 @@ const navLinks = [
         href: () => route('admin.support-tickets.index'),
         icon: `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M4.9 4.9l3.5 3.5M15.6 15.6l3.5 3.5M19.1 4.9l-3.5 3.5M8.4 15.6l-3.5 3.5"/>`,
     },
+    {
+        label: 'Sera AI Knowledge', routeName: 'admin.ai-agent.index', activePattern: 'admin.ai-agent.*',
+        href: () => route('admin.ai-agent.index'),
+        icon: `<path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/>`,
+    },
 ];
 
 const profileMenuItems = [
