@@ -1,0 +1,96 @@
+{
+    "kpis": [
+        { "key": "communities",     "label": "Communities Impacted",        "value": "24",         "change": 20, "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "communities" },
+        { "key": "residents",       "label": "Residents",                   "value": "12,540",     "change": 18, "bg": "#E8F0FF", "color": "#3B82F6", "icon": "residents" },
+        { "key": "green_spaces",    "label": "Green Spaces (sq.ft.)",       "value": "1.25M",      "change": 15, "bg": "#E6F7EE", "color": "#22C55E", "icon": "green" },
+        { "key": "csr_projects",    "label": "CSR Projects",                "value": "32",         "change": 28, "bg": "#FFF3E0", "color": "#F59E0B", "icon": "csr" },
+        { "key": "future_projects", "label": "Future Projects",             "value": "14",         "change": 27, "bg": "#EDE9FE", "color": "#7C3AED", "icon": "future" },
+        { "key": "investment",      "label": "Investment in Community",     "value": "BDT 85.6M",  "change": 22, "bg": "#CCFBF1", "color": "#0D9488", "icon": "wallet" }
+    ],
+
+    "vision": {
+        "text": "To create sustainable, inclusive and vibrant communities where people can live, work and thrive together. We build spaces that improve quality of life, support local growth and contribute to a better future.",
+        "points": [
+            { "title": "Sustainable Development",  "desc": "Eco-friendly buildings and green initiatives", "bg": "#E6F7EE", "color": "#22C55E", "icon": "green" },
+            { "title": "Inclusive Communities",     "desc": "Accessible spaces for everyone",               "bg": "#E8F0FF", "color": "#3B82F6", "icon": "residents" },
+            { "title": "Economic Growth",           "desc": "Job creation and local business support",     "bg": "#FFF3E0", "color": "#F59E0B", "icon": "growth" },
+            { "title": "Smart & Future Ready",      "desc": "Innovation, technology and better living",    "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "spark" }
+        ]
+    },
+
+    "upcoming_projects": [
+        { "year": "2026", "quarter": "Q3", "title": "Community Park",           "sub": "Green recreation space",   "status": "In Progress", "status_bg": "#E8F0FF", "status_color": "#3B82F6", "pct": 45, "dot_color": "#3B82F6" },
+        { "year": "2026", "quarter": "Q4", "title": "Smart Community Center",   "sub": "Multi-purpose hub",        "status": "Planning",    "status_bg": "#FFF3E0", "status_color": "#F59E0B", "pct": 15, "dot_color": "#F59E0B" },
+        { "year": "2027", "quarter": "Q1", "title": "Green Walkways",           "sub": "Pedestrian network",       "status": "Upcoming",    "status_bg": "#EEF1F6", "status_color": "#697386", "pct": 0,  "dot_color": "#CBD2DE" },
+        { "year": "2027", "quarter": "Q2", "title": "Health & Wellness Hub",    "sub": "Clinic & fitness",         "status": "Upcoming",    "status_bg": "#EEF1F6", "status_color": "#697386", "pct": 0,  "dot_color": "#CBD2DE" },
+        { "year": "2027", "quarter": "Q3", "title": "Community Garden",        "sub": "Urban farming",            "status": "Upcoming",    "status_bg": "#EEF1F6", "status_color": "#697386", "pct": 0,  "dot_color": "#CBD2DE" }
+    ],
+
+    "engagement_stats": [
+        { "label": "Community Events", "value": "48",    "change": 16, "bg": "#E8F0FF", "color": "#3B82F6", "icon": "calendar" },
+        { "label": "Participants",     "value": "5,230", "change": 22, "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "residents" },
+        { "label": "Volunteer Hours",  "value": "1,820", "change": 35, "bg": "#E6F7EE", "color": "#22C55E", "icon": "clock" }
+    ],
+
+    "activities": [
+        { "title": "Tree Plantation Drive",   "desc": "500 trees planted across 3 sites", "date": "12 May", "likes": 128, "bg": "#E6F7EE" },
+        { "title": "Free Health Camp",        "desc": "Check-ups for 320 residents",      "date": "08 May", "likes": 94,  "bg": "#FDE8E8" },
+        { "title": "Clean Environment Day",   "desc": "Neighborhood-wide cleanup",        "date": "02 May", "likes": 76,  "bg": "#E8F0FF" },
+        { "title": "Skill Workshop",          "desc": "Vocational training for youth",    "date": "28 Apr", "likes": 112, "bg": "#F1ECFF" }
+    ],
+
+    "feedback": {
+        "average": 4.6,
+        "review_count": 2140,
+        "breakdown": [
+            { "star": "5 Star", "pct": 78, "color": "#22C55E" },
+            { "star": "4 Star", "pct": 15, "color": "#84CC16" },
+            { "star": "3 Star", "pct": 4,  "color": "#F59E0B" },
+            { "star": "2 Star", "pct": 2,  "color": "#F97316" },
+            { "star": "1 Star", "pct": 1,  "color": "#EF4444" }
+        ]
+    },
+
+    "roadmap": [
+        { "title": "Affordable Housing",     "desc": "Quality homes for middle income families.",     "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "housing" },
+        { "title": "Green Building",         "desc": "LEED certified eco-friendly construction.",      "bg": "#E6F7EE", "color": "#22C55E", "icon": "green" },
+        { "title": "Smart Infrastructure",   "desc": "Technology for safer, smarter communities.",     "bg": "#E8F0FF", "color": "#3B82F6", "icon": "smart" },
+        { "title": "Education Support",      "desc": "Scholarships and learning for youth.",           "bg": "#FFF3E0", "color": "#F59E0B", "icon": "education" },
+        { "title": "Healthcare Access",      "desc": "Community clinics and wellness programs.",       "bg": "#FDE8E8", "color": "#EF4444", "icon": "heart" },
+        { "title": "Women Empowerment",      "desc": "Skill training and entrepreneurship.",           "bg": "#FCE7F3", "color": "#EC4899", "icon": "women" },
+        { "title": "Youth Development",      "desc": "Sports, innovation and leadership.",             "bg": "#CCFBF1", "color": "#0D9488", "icon": "lightning" },
+        { "title": "Social Inclusion",       "desc": "Accessible, inclusive neighborhoods.",           "bg": "#E0E7FF", "color": "#6366F1", "icon": "inclusion" }
+    ],
+
+    "growth": {
+        "population": { "value": "12,540", "change": 18.5, "points": [70, 60, 64, 46, 50, 32, 24, 12] },
+        "happiness":  { "value": "92%",     "change": 5.2,  "points": [56, 48, 54, 40, 44, 30, 34, 20] }
+    },
+
+    "sustainability": {
+        "overall_pct": 68,
+        "goals": [
+            { "label": "Carbon Reduction",    "pct": 75, "color": "#22C55E" },
+            { "label": "Green Spaces",        "pct": 62, "color": "#16A34A" },
+            { "label": "Water Conservation",  "pct": 55, "color": "#3B82F6" },
+            { "label": "Renewable Energy",    "pct": 70, "color": "#F59E0B" },
+            { "label": "Waste Management",    "pct": 60, "color": "#5B3DF5" }
+        ]
+    },
+
+    "impact": [
+        { "label": "Jobs Created",         "value": "1,250",  "change": 18, "bg": "#E8F0FF", "color": "#3B82F6", "icon": "jobs" },
+        { "label": "Local Businesses",     "value": "85",     "change": 15, "bg": "#FFF3E0", "color": "#F59E0B", "icon": "business" },
+        { "label": "Students Benefited",   "value": "620",    "change": 12, "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "education" },
+        { "label": "Homes Delivered",      "value": "1,050",  "change": 22, "bg": "#E6F7EE", "color": "#22C55E", "icon": "housing" },
+        { "label": "Roads Improved",       "value": "12.5km", "change": 17, "bg": "#CCFBF1", "color": "#0D9488", "icon": "roads" },
+        { "label": "Families Supported",   "value": "350",    "change": 20, "bg": "#FDE8E8", "color": "#EF4444", "icon": "residents" }
+    ],
+
+    "future_highlights": [
+        { "title": "Smart City Integration",       "desc": "IoT-enabled community infrastructure", "year": "2026", "bg": "#E8F0FF", "color": "#3B82F6", "icon": "smart" },
+        { "title": "Renewable Energy Projects",     "desc": "Solar grids across all communities",   "year": "2027", "bg": "#E6F7EE", "color": "#22C55E", "icon": "lightning" },
+        { "title": "AI Powered Living",             "desc": "Smart homes and predictive services",  "year": "2028", "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "spark" },
+        { "title": "Zero Waste Community",          "desc": "Full recycling and circular economy",  "year": "2028", "bg": "#FFF3E0", "color": "#F59E0B", "icon": "waste" }
+    ]
+}
