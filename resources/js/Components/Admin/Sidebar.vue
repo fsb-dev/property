@@ -60,6 +60,11 @@ const navLinks = [
         label: 'Documents', routeName: null,
         icon: `<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 16.5h6"/>`,
     },
+    {
+        label: 'Support Tickets', routeName: 'admin.support-tickets.index', activePattern: 'admin.support-tickets.*',
+        href: () => route('admin.support-tickets.index'),
+        icon: `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M4.9 4.9l3.5 3.5M15.6 15.6l3.5 3.5M19.1 4.9l-3.5 3.5M8.4 15.6l-3.5 3.5"/>`,
+    },
 ];
 
 const profileMenuItems = [

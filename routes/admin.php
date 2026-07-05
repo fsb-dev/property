@@ -130,6 +130,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // in the UI are stored client-side only (local state / localStorage).
     Route::get('/community', fn () => inertia('Admin/Community/Index', json_decode(file_get_contents(resource_path('data/community.json')), true)))->name('community.index');
 
+    // Support Tickets — static JSON fixture, no DB; tab/search filtering is client-side.
+    Route::get('/support-tickets', fn () => inertia('Admin/SupportTickets/Index', json_decode(file_get_contents(resource_path('data/support-tickets.json')), true)))->name('support-tickets.index');
+
     // Documents
     Route::middleware('permission:view documents')->group(function () {
         Route::get('/documents', fn () => inertia('Admin/Documents/Index'))->name('documents.index');

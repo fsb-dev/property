@@ -483,7 +483,6 @@ function submitInitiative() {
                 </DialogHeader>
 
                 <form @submit.prevent="submitInitiative" class="space-y-4 px-6 pb-2">
-                    <p class="-mt-1 text-xs text-muted-foreground">Saved to this browser only (local storage) — not sent to the server.</p>
 
                     <div class="space-y-1.5">
                         <Label class="text-xs font-medium text-muted-foreground">Title</Label>

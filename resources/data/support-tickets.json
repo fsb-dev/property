@@ -1,0 +1,93 @@
+{
+    "kpis": [
+        { "key": "total",         "label": "Total Tickets",       "value": "1,248", "sub": "All Time",        "change": 18, "dir": "up",   "changeColor": "#22C55E", "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "doc" },
+        { "key": "open",          "label": "Open Tickets",        "value": "156",   "sub": "Currently Open",  "change": 8,  "dir": "down", "changeColor": "#EF4444", "bg": "#E8F0FF", "color": "#3B82F6", "icon": "mail" },
+        { "key": "in_progress",   "label": "In Progress",         "value": "245",   "sub": "Assigned",        "change": 12, "dir": "up",   "changeColor": "#22C55E", "bg": "#E6F7EE", "color": "#22C55E", "icon": "spinner" },
+        { "key": "resolved",      "label": "Resolved Tickets",    "value": "812",   "sub": "This Month",      "change": 24, "dir": "up",   "changeColor": "#22C55E", "bg": "#E6F7EE", "color": "#16A34A", "icon": "check" },
+        { "key": "closed",        "label": "Closed Tickets",      "value": "6,245", "sub": "All Time",        "change": 16, "dir": "up",   "changeColor": "#22C55E", "bg": "#FFF3E0", "color": "#F59E0B", "icon": "archive" },
+        { "key": "avg_response",  "label": "Avg. Response Time",  "value": "2.4 hrs", "sub": "This Month",    "change": 18, "dir": "down", "changeColor": "#22C55E", "bg": "#FFF3E0", "color": "#F59E0B", "icon": "clock" },
+        { "key": "satisfaction",  "label": "Satisfaction Rate",   "value": "96%",   "sub": "This Month",      "change": 5,  "dir": "up",   "changeColor": "#22C55E", "bg": "#E6F7EE", "color": "#22C55E", "icon": "spark" }
+    ],
+
+    "overview": {
+        "total": "1,248",
+        "segments": [
+            { "key": "open",        "label": "Open",        "count": "156", "pct": 12, "color": "#3B82F6" },
+            { "key": "in_progress", "label": "In Progress", "count": "245", "pct": 20, "color": "#22C55E" },
+            { "key": "pending",     "label": "Pending",     "count": "187", "pct": 15, "color": "#F59E0B" },
+            { "key": "resolved",    "label": "Resolved",    "count": "812", "pct": 65, "color": "#16A34A" }
+        ],
+        "extra": [
+            { "key": "closed", "label": "Closed", "count": "6,245", "pct_label": "All", "color": "#94A3B8" }
+        ]
+    },
+
+    "priority": {
+        "total": "1,248",
+        "segments": [
+            { "key": "high",   "label": "High",   "count": "245", "pct": 20, "color": "#EF4444" },
+            { "key": "medium", "label": "Medium", "count": "512", "pct": 41, "color": "#F59E0B" },
+            { "key": "low",    "label": "Low",    "count": "491", "pct": 39, "color": "#22C55E" }
+        ]
+    },
+
+    "trend": [
+        { "label": "Dec", "opened": 150, "resolved": 108 },
+        { "label": "Jan", "opened": 220, "resolved": 150 },
+        { "label": "Feb", "opened": 260, "resolved": 172 },
+        { "label": "Mar", "opened": 300, "resolved": 182 },
+        { "label": "Apr", "opened": 372, "resolved": 190 },
+        { "label": "May", "opened": 388, "resolved": 224 },
+        { "label": "Jun", "opened": 432, "resolved": 260 }
+    ],
+
+    "tabs": [
+        { "key": "All",         "label": "All",         "count": "1,248" },
+        { "key": "Open",        "label": "Open",        "count": "156" },
+        { "key": "In Progress", "label": "In Progress", "count": "245" },
+        { "key": "Pending",     "label": "Pending",     "count": "187" },
+        { "key": "Resolved",    "label": "Resolved",    "count": "812" },
+        { "key": "Closed",      "label": "Closed",      "count": "6,245" }
+    ],
+
+    "tickets": [
+        { "id": "TKT-2501", "subject": "Payment not reflected in account",  "dept": "Payment & Billing",   "cust": "Rahim Uddin",       "phone": "+880 1712-345678", "av": "RU", "avBg": "#5B3DF5", "cat": "Payments",     "prio": "High",   "prioBg": "#FDE8E8", "prioColor": "#EF4444", "status": "Open",        "statusBg": "#E8F0FF", "statusColor": "#3B82F6", "agent": "Jannatul Islam",   "role": "Support Agent", "agAv": "JI", "agBg": "#EC4899", "date": "15 May 2026", "time": "10:30 AM" },
+        { "id": "TKT-2502", "subject": "Unit document download issue",      "dept": "Documents",           "cust": "Nusrat Jahan",      "phone": "+880 1719-876543", "av": "NJ", "avBg": "#0D9488", "cat": "Documents",    "prio": "Medium", "prioBg": "#FFF3E0", "prioColor": "#F59E0B", "status": "In Progress", "statusBg": "#EEF0FF", "statusColor": "#5B3DF5", "agent": "Fahim Ahmed",      "role": "Support Lead",  "agAv": "FA", "agBg": "#5B3DF5", "date": "15 May 2026", "time": "09:15 AM" },
+        { "id": "TKT-2503", "subject": "Site visit reschedule request",     "dept": "Site Visit",          "cust": "Aminul Islam",      "phone": "+880 1612-112233", "av": "AI", "avBg": "#F59E0B", "cat": "Site Visit",   "prio": "Low",    "prioBg": "#E6F7EE", "prioColor": "#16A34A", "status": "Pending",     "statusBg": "#FFF3E0", "statusColor": "#F59E0B", "agent": "Tanvir Hasan",     "role": "Support Agent", "agAv": "TH", "agBg": "#3B82F6", "date": "14 May 2026", "time": "04:20 PM" },
+        { "id": "TKT-2504", "subject": "Loan pre-approval help needed",     "dept": "Mortgage & Financing","cust": "Fatema Akter",      "phone": "+880 1833-445566", "av": "FA", "avBg": "#9333EA", "cat": "Financing",    "prio": "High",   "prioBg": "#FDE8E8", "prioColor": "#EF4444", "status": "In Progress", "statusBg": "#EEF0FF", "statusColor": "#5B3DF5", "agent": "Rasel Hossain",    "role": "Support Agent", "agAv": "RH", "agBg": "#0D9488", "date": "14 May 2026", "time": "02:10 PM" },
+        { "id": "TKT-2505", "subject": "Project price information",        "dept": "General Inquiry",     "cust": "Sakib Ahmed",       "phone": "+880 1733-778899", "av": "SA", "avBg": "#3B82F6", "cat": "General",      "prio": "Medium", "prioBg": "#FFF3E0", "prioColor": "#F59E0B", "status": "Resolved",    "statusBg": "#E6F7EE", "statusColor": "#16A34A", "agent": "Nusrat Jahan",     "role": "Support Lead",  "agAv": "NJ", "agBg": "#EC4899", "date": "14 May 2026", "time": "11:30 AM" },
+        { "id": "TKT-2506", "subject": "Booking confirmation not received","dept": "Reservations",        "cust": "Jannatul Ferdous",  "phone": "+880 1911-223344", "av": "JF", "avBg": "#6366F1", "cat": "Reservations", "prio": "High",   "prioBg": "#FDE8E8", "prioColor": "#EF4444", "status": "Open",        "statusBg": "#E8F0FF", "statusColor": "#3B82F6", "agent": "Jannatul Islam",   "role": "Support Agent", "agAv": "JI", "agBg": "#EC4899", "date": "13 May 2026", "time": "06:45 PM" },
+        { "id": "TKT-2507", "subject": "Change in unit floor plan",        "dept": "Projects",            "cust": "Imran Hossain",     "phone": "+880 1711-556677", "av": "IH", "avBg": "#0EA5E9", "cat": "Projects",     "prio": "Low",    "prioBg": "#E6F7EE", "prioColor": "#16A34A", "status": "In Progress", "statusBg": "#EEF0FF", "statusColor": "#5B3DF5", "agent": "Fahim Ahmed",      "role": "Support Lead",  "agAv": "FA", "agBg": "#5B3DF5", "date": "13 May 2026", "time": "03:20 PM" }
+    ],
+
+    "statusOverview": [
+        { "name": "Open",        "count": "156",   "color": "#3B82F6", "bg": "#E8F0FF" },
+        { "name": "In Progress", "count": "245",   "color": "#5B3DF5", "bg": "#EEF0FF" },
+        { "name": "Pending",     "count": "187",   "color": "#F59E0B", "bg": "#FFF3E0" },
+        { "name": "Resolved",    "count": "812",   "color": "#16A34A", "bg": "#E6F7EE" },
+        { "name": "Closed",      "count": "6,245", "color": "#64748B", "bg": "#EEF1F6" }
+    ],
+
+    "responsePerformance": [
+        { "label": "Avg. Response Time",   "value": "2.4 hrs",  "change": 18, "barPct": 72, "bg": "#FFF3E0", "color": "#F59E0B", "icon": "clock" },
+        { "label": "First Response Time",  "value": "1.2 hrs",  "change": 16, "barPct": 86, "bg": "#E8F0FF", "color": "#3B82F6", "icon": "bolt" },
+        { "label": "Resolution Time",      "value": "18.6 hrs", "change": 12, "barPct": 64, "bg": "#E6F7EE", "color": "#22C55E", "icon": "check" }
+    ],
+
+    "activity": [
+        { "txt": "Ticket TKT-2501 created by Rahim Uddin",           "time": "10:30 AM",    "color": "#22C55E", "bg": "#E6F7EE" },
+        { "txt": "Ticket TKT-2502 updated by Fahim Ahmed",           "time": "09:15 AM",    "color": "#3B82F6", "bg": "#E8F0FF" },
+        { "txt": "Ticket TKT-2505 resolved by Nusrat Jahan",         "time": "Yesterday",   "color": "#16A34A", "bg": "#E6F7EE" },
+        { "txt": "Ticket TKT-2506 assigned to Jannatul Islam",       "time": "Yesterday",   "color": "#5B3DF5", "bg": "#F1ECFF" },
+        { "txt": "Ticket TKT-2503 status changed to Pending",        "time": "14 May 2026", "color": "#F59E0B", "bg": "#FFF3E0" }
+    ],
+
+    "quickActions": [
+        { "label": "New Ticket",          "bg": "#F1ECFF", "color": "#5B3DF5", "icon": "plus_ticket" },
+        { "label": "Knowledge Base",      "bg": "#E6F7EE", "color": "#22C55E", "icon": "book" },
+        { "label": "FAQ",                 "bg": "#E8F0FF", "color": "#3B82F6", "icon": "help" },
+        { "label": "View Tickets",        "bg": "#EDE9FE", "color": "#7C3AED", "icon": "list" },
+        { "label": "Reports",             "bg": "#FFF3E0", "color": "#F59E0B", "icon": "bar" },
+        { "label": "Customer Feedback",   "bg": "#FCE7F3", "color": "#EC4899", "icon": "feedback" }
+    ]
+}
