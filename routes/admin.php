@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\UnitController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'verified'])->group(function () {
 
     // Dashboard — any authenticated admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

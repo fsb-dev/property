@@ -31,7 +31,10 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            'auth'  => ['user' => $request->user()],
+            'auth' => [
+                'user'   => $request->user('web'),
+                'client' => $request->user('client'),
+            ],
             'flash' => fn() => ['toast' => $request->session()->get('toast')],
         ];
     }
