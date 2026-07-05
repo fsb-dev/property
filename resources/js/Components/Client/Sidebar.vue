@@ -23,27 +23,27 @@ const navLinks = [
     },
     {
         label: 'My Properties',
-        routeName: null,
+        routeName: 'client.properties',
         icon: `<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><rect x="9.5" y="13" width="5" height="8"/>`,
     },
     {
         label: 'Payments & Installments',
-        routeName: null,
+        routeName: 'client.payments',
         icon: `<rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/>`,
     },
     {
         label: 'Mortgage & Financing',
-        routeName: null,
+        routeName: 'client.mortgage',
         icon: `<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-5h6v5"/>`,
     },
     {
         label: 'Investment Analyzer',
-        routeName: null,
+        routeName: 'client.investment',
         icon: `<path d="M4 19h16"/><path d="M5 19V9l5-3 5 3v10"/><path d="M9 19v-4h2v4"/><path d="M17 19v-7l3-2v9"/>`,
     },
     {
         label: 'Construction Progress',
-        routeName: null,
+        routeName: 'client.construction',
         icon: `<circle cx="8" cy="8" r="2.5"/><circle cx="17" cy="9" r="2"/><path d="M3 19c0-3 2.2-5 5-5s5 2 5 5"/><path d="M15 19c0-2.5 1-4 3.5-4s2.5 1.5 2.5 4"/>`,
     },
     {
