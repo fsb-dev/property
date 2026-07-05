@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class UseClientSession
+{
+    public function handle(Request $request, Closure $next)
+    {
+        config(['session.cookie' => 'client-session']);
+
+        return $next($request);
+    }
+}
