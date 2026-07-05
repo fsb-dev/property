@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import ClientLayout from '@/Layouts/ClientLayout.vue';
 
 const props = defineProps({
@@ -141,8 +141,9 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                     <!-- Purchased -->
                     <template v-if="purchasedProperties.length">
                         <h2 class="text-base font-bold text-foreground">Purchased Properties</h2>
-                        <div v-for="p in purchasedProperties" :key="p.id"
-                            class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] overflow-hidden shadow-sm flex"
+                        <Link v-for="p in purchasedProperties" :key="p.id"
+                            :href="p.project_id ? route('client.projects.show', p.project_id) : '#'"
+                            class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] overflow-hidden shadow-sm flex hover:shadow-md hover:border-client-accent/30 transition-all"
                         >
                             <!-- Cover image -->
                             <div class="w-[260px] flex-none relative hidden sm:block" style="min-height:220px;">
@@ -215,21 +216,22 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                                     </div>
                                 </div>
 
-                                <button class="mt-4 self-start inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl text-white"
+                                <span class="mt-4 self-start inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl text-white"
                                     style="background:linear-gradient(100deg,#6a4dff,#5132e0); box-shadow:0 10px 22px -8px rgba(81,50,224,.5);">
-                                    Enter Property
+                                    View Project Details
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-                                </button>
+                                </span>
                             </div>
-                        </div>
+                        </Link>
                     </template>
 
                     <!-- Reserved -->
                     <template v-if="reservedProperties.length">
                         <h2 class="text-base font-bold text-foreground mt-2">Reserved Properties</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div v-for="p in reservedProperties" :key="p.id"
-                                class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-4 shadow-sm"
+                            <Link v-for="p in reservedProperties" :key="p.id"
+                                :href="p.project_id ? route('client.projects.show', p.project_id) : '#'"
+                                class="block rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-4 shadow-sm hover:shadow-md hover:border-client-accent/30 transition-all"
                             >
                                 <div class="flex gap-4">
                                     <!-- Thumbnail -->
@@ -277,12 +279,13 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                                         style="border-color:#e6e1fb; background:#f6f3ff; color:#5132e0;"
                                         @mouseenter="$event.currentTarget.style.background='#efeafc'"
                                         @mouseleave="$event.currentTarget.style.background='#f6f3ff'"
+                                        @click.stop.prevent
                                     >Convert to Purchase</button>
-                                    <button class="px-4 text-xs font-bold py-2.5 rounded-xl border border-[#ededf3] dark:border-white/[0.06] bg-client-surface-card text-muted-foreground hover:bg-[#faf9fd] dark:hover:bg-white/[0.04] transition-colors">
-                                        Details
-                                    </button>
+                                    <span class="px-4 text-xs font-bold py-2.5 rounded-xl border border-[#ededf3] dark:border-white/[0.06] bg-client-surface-card text-muted-foreground text-center">
+                                        View Details
+                                    </span>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                     </template>
 
@@ -292,8 +295,9 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                         <a href="#" class="text-sm font-bold text-client-accent hover:underline">View All</a>
                     </div>
                     <div v-if="favouriteUnits.length" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        <div v-for="u in favouriteUnits" :key="u.id"
-                            class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] overflow-hidden shadow-sm hover:border-client-accent/30 transition-colors cursor-pointer"
+                        <Link v-for="u in favouriteUnits" :key="u.id"
+                            :href="u.project_id ? route('client.projects.show', u.project_id) : '#'"
+                            class="block rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] overflow-hidden shadow-sm hover:shadow-md hover:border-client-accent/30 transition-all"
                         >
                             <!-- Image area -->
                             <div class="relative h-[120px] overflow-hidden">
@@ -303,7 +307,7 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c4bce8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
                                 </div>
                                 <!-- Heart icon (dummy favourite) -->
-                                <button class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
+                                <button class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform" @click.stop.prevent>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="#ec4f73"><path d="M12 21s-7-4.6-9.3-9C1.2 9 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 3.4 0 4.8 3.5 3.3 6.5C19 16.4 12 21 12 21Z"/></svg>
                                 </button>
                             </div>
@@ -318,12 +322,12 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                                 </div>
                                 <div class="flex items-center justify-between mt-3">
                                     <span class="text-sm font-extrabold text-client-accent">{{ fmtBDT(u.price) }}</span>
-                                    <button class="w-8 h-8 rounded-lg border border-[#ededf3] dark:border-white/[0.06] bg-client-surface-card flex items-center justify-center hover:bg-[#f6f3ff] hover:border-[#e6e1fb] transition-colors">
+                                    <span class="w-8 h-8 rounded-lg border border-[#ededf3] dark:border-white/[0.06] bg-client-surface-card flex items-center justify-center">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-client-accent"><path d="M12 4v16M5 8 3 12h4zM19 8l-2 4h4z"/><path d="M3 12c.7 1.3 2 2 4 2s3.3-.7 4-2M13 12c.7 1.3 2 2 4 2s3.3-.7 4-2"/></svg>
-                                    </button>
+                                    </span>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
 
                     <!-- Empty state -->
@@ -356,7 +360,8 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                         </div>
 
                         <!-- Rows -->
-                        <div v-for="(p, i) in tableProperties" :key="p.id"
+                        <Link v-for="(p, i) in tableProperties" :key="p.id"
+                            :href="p.project_id ? route('client.projects.show', p.project_id) : '#'"
                             class="grid items-center gap-3 px-5 py-3.5 transition-colors hover:bg-[#faf9fd] dark:hover:bg-white/[0.02]"
                             :class="i < tableProperties.length - 1 ? 'border-b border-[#f4f4f8] dark:border-white/[0.04]' : ''"
                             style="grid-template-columns:2.2fr 1.2fr 1fr 1.3fr 1.2fr auto;"
@@ -413,7 +418,7 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                             <span class="inline-flex text-xs font-bold px-2.5 py-1 rounded-lg justify-self-end" :class="statusCls(p.status)">
                                 {{ statusLabel(p.status) }}
                             </span>
-                        </div>
+                        </Link>
                     </div>
 
                     <!-- Empty state for filtered tab -->
@@ -431,8 +436,9 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                 <!-- ── FAVOURITES TAB ─────────────────────────────────── -->
                 <template v-else>
                     <div v-if="favouriteUnits.length" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                        <div v-for="u in favouriteUnits" :key="u.id"
-                            class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] overflow-hidden shadow-sm hover:border-client-accent/30 transition-colors cursor-pointer"
+                        <Link v-for="u in favouriteUnits" :key="u.id"
+                            :href="u.project_id ? route('client.projects.show', u.project_id) : '#'"
+                            class="block rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] overflow-hidden shadow-sm hover:shadow-md hover:border-client-accent/30 transition-all"
                         >
                             <div class="relative h-[130px] overflow-hidden">
                                 <img v-if="u.cover_image" :src="u.cover_image" :alt="u.project_name"
@@ -440,7 +446,7 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                                 <div v-else class="absolute inset-0 flex items-center justify-center" style="background:linear-gradient(135deg,#f0eef9,#e8e4f5);">
                                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c4bce8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
                                 </div>
-                                <button class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform">
+                                <button class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform" @click.stop.prevent>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="#ec4f73"><path d="M12 21s-7-4.6-9.3-9C1.2 9 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 3.4 0 4.8 3.5 3.3 6.5C19 16.4 12 21 12 21Z"/></svg>
                                 </button>
                                 <span class="absolute bottom-2 left-2 text-xs font-bold px-2 py-0.5 rounded-md bg-green-100 text-green-700">Available</span>
@@ -458,12 +464,12 @@ const handoverData = computed(() => props.upcomingHandover ?? dummyHandover);
                                 </div>
                                 <div class="flex items-center justify-between mt-3">
                                     <span class="text-sm font-extrabold text-client-accent">{{ fmtBDT(u.price) }}</span>
-                                    <button class="w-8 h-8 rounded-lg border border-[#ededf3] dark:border-white/[0.06] flex items-center justify-center hover:bg-[#f6f3ff] hover:border-[#e6e1fb] transition-colors">
+                                    <span class="w-8 h-8 rounded-lg border border-[#ededf3] dark:border-white/[0.06] flex items-center justify-center">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-client-accent"><path d="M12 4v16M5 8 3 12h4zM19 8l-2 4h4z"/><path d="M3 12c.7 1.3 2 2 4 2s3.3-.7 4-2M13 12c.7 1.3 2 2 4 2s3.3-.7 4-2"/></svg>
-                                    </button>
+                                    </span>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                     <div v-else class="rounded-2xl border border-dashed border-border bg-client-surface-card p-10 text-center">
                         <div class="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-400">
