@@ -23,6 +23,7 @@
         "@googlemaps/js-api-loader": "^2.1.1",
         "@lucide/vue": "^1.21.0",
         "@vueuse/core": "^14.3.0",
+        "apexcharts": "^5.16.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "leaflet": "^1.9.4",
@@ -30,6 +31,8 @@
         "radix-vue": "^1.9.17",
         "reka-ui": "^2.10.0",
         "tailwind-merge": "^3.6.0",
-        "tailwindcss-animate": "^1.0.7"
+        "tailwindcss-animate": "^1.0.7",
+        "vue-sonner": "^2.0.9",
+        "vue3-apexcharts": "^1.11.1"
     }
 }
