@@ -2,6 +2,7 @@
 import { reactive, computed } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import ClientLayout from '@/Layouts/ClientLayout.vue';
+import VueApexCharts from 'vue3-apexcharts';
 
 const props = defineProps({
     property: { type: Object, default: null },
@@ -40,9 +41,6 @@ const calcPrincipalPct = computed(() =>
     calcTotalPay.value > 0 ? Math.round(calcLoan.value / calcTotalPay.value * 100) : 0
 );
 const calcInterestPct = computed(() => 100 - calcPrincipalPct.value);
-const donutBg = computed(() =>
-    `conic-gradient(#5b3fe8 0% ${calcPrincipalPct.value}%, #16a34a ${calcPrincipalPct.value}% 100%)`
-);
 
 // Affordability
 const ASSUMED_INCOME = 500000;
@@ -70,62 +68,93 @@ const completionStr = computed(() => {
     return end.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 });
 
-// ── SVG projection chart ──────────────────────────────────────────
-// viewBox = 0 0 1000 310  — bottom 20px reserved for x-axis labels
-const PADL = 70, PADR = 970, TOP = 20, BOT = 260;
-
-const chartData = computed(() => {
+// ── ApexCharts configs ────────────────────────────────────────────
+const projectionData = computed(() => {
     const loan = calcLoan.value;
     const r = calc.ratePct / 100 / 12;
     const years = calc.years;
     const monthly = calcMonthly.value;
     const n = years * 12;
     const pow = r > 0 ? Math.pow(1 + r, n) : 1;
-
-    const raw = Math.max(calcTotalPay.value, loan, 1);
-    const MAXY = Math.ceil(raw / 5000000) * 5000000 || 20000000;
-
-    const xFor = (i) => PADL + (i / years) * (PADR - PADL);
-    const yFor = (v) => BOT - (Math.min(Math.max(v, 0), MAXY) / MAXY) * (BOT - TOP);
-
     const balances = [], cumInts = [], cumPays = [];
     for (let i = 0; i <= years; i++) {
-        let b;
-        if (r === 0) {
-            b = loan * (1 - i / years);
-        } else if (i >= years) {
-            b = 0;
-        } else {
-            b = loan * ((pow - Math.pow(1 + r, 12 * i)) / (pow - 1));
-        }
+        let b = r === 0
+            ? loan * (1 - i / years)
+            : i >= years ? 0 : loan * ((pow - Math.pow(1 + r, 12 * i)) / (pow - 1));
         const cp = monthly * 12 * i;
         const ci = Math.max(0, cp - (loan - b));
-        balances.push(b); cumInts.push(ci); cumPays.push(cp);
+        balances.push(Math.round(b));
+        cumInts.push(Math.round(ci));
+        cumPays.push(Math.round(cp));
     }
-
-    const ptStr = (arr) => arr.map((v, i) => `${xFor(i).toFixed(1)},${yFor(v).toFixed(1)}`).join(' ');
-    const areaStr = (arr) => {
-        let d = `M ${xFor(0).toFixed(1)} ${yFor(arr[0]).toFixed(1)}`;
-        for (let i = 1; i < arr.length; i++) d += ` L ${xFor(i).toFixed(1)} ${yFor(arr[i]).toFixed(1)}`;
-        d += ` L ${xFor(arr.length - 1).toFixed(1)} ${BOT} L ${xFor(0).toFixed(1)} ${BOT} Z`;
-        return d;
-    };
-
-    const yLabels = [MAXY, MAXY * 0.75, MAXY * 0.5, MAXY * 0.25, 0].map(v => ({
-        v, y: yFor(v),
-        label: v >= 1000000 ? (v / 1000000).toFixed(0) + 'M' : (v / 1000).toFixed(0) + 'K',
-        isBase: v === 0,
-    }));
-
-    const step = years <= 10 ? 1 : years <= 20 ? 2 : 5;
-    const xLabels = [];
-    for (let i = step; i <= years; i += step) xLabels.push({ label: 'Yr ' + i, x: xFor(i) });
-
-    return {
-        principalLine: ptStr(balances), interestLine: ptStr(cumInts), payLine: ptStr(cumPays),
-        principalArea: areaStr(balances), interestArea: areaStr(cumInts), yLabels, xLabels
-    };
+    return { balances, cumInts, cumPays };
 });
+
+const projectionSeries = computed(() => [
+    { name: 'Principal Balance', type: 'area', data: projectionData.value.balances },
+    { name: 'Total Interest',    type: 'area', data: projectionData.value.cumInts  },
+    { name: 'Total Payment',     type: 'line', data: projectionData.value.cumPays  },
+]);
+
+const projectionOptions = computed(() => ({
+    chart: {
+        type: 'line',
+        toolbar: { show: false },
+        zoom: { enabled: false },
+        background: 'transparent',
+        animations: { enabled: true, speed: 300, dynamicAnimation: { enabled: true, speed: 150 } },
+    },
+    stroke: { curve: 'smooth', width: [2.5, 2.5, 2], dashArray: [0, 0, 6] },
+    fill: {
+        type: ['gradient', 'gradient', 'solid'],
+        gradient: { type: 'vertical', opacityFrom: 0.12, opacityTo: 0.01 },
+        opacity: [1, 1, 0],
+    },
+    colors: ['#5b3fe8', '#16a34a', '#c2c2cf'],
+    dataLabels: { enabled: false },
+    markers: { size: 0 },
+    xaxis: {
+        categories: Array.from({ length: calc.years + 1 }, (_, i) => i === 0 ? 'Start' : 'Yr ' + i),
+        tickAmount: Math.min(calc.years, 10),
+        labels: {
+            style: { colors: '#b0b0c0', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+        },
+        axisBorder: { show: false },
+        axisTicks:  { show: false },
+    },
+    yaxis: {
+        labels: {
+            formatter: (val) => val >= 1000000 ? (val / 1000000).toFixed(0) + 'M' : val >= 1000 ? (val / 1000).toFixed(0) + 'K' : '0',
+            style: { colors: '#b0b0c0', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+        },
+    },
+    grid: {
+        borderColor: '#f1f1f6',
+        xaxis: { lines: { show: false } },
+        yaxis: { lines: { show: true } },
+        padding: { top: 0, right: 4, bottom: 0, left: 4 },
+    },
+    legend: { show: false },
+    tooltip: { theme: 'light', y: { formatter: (val) => fmtBDT(val) } },
+}));
+
+const amortizationDonutSeries  = computed(() => [calcLoan.value, calcTotalInterest.value]);
+const amortizationDonutOptions = {
+    chart: { type: 'donut', toolbar: { show: false }, background: 'transparent', sparkline: { enabled: true } },
+    plotOptions: {
+        pie: { donut: { size: '68%', labels: { show: false } } },
+    },
+    colors: ['#5b3fe8', '#16a34a'],
+    labels: ['Principal', 'Total Interest'],
+    legend: { show: false },
+    dataLabels: { enabled: false },
+    stroke: { width: 2, colors: ['transparent'] },
+    tooltip: { y: { formatter: (val) => fmtBDT(val) } },
+    states: {
+        hover:  { filter: { type: 'darken', value: 0.08 } },
+        active: { filter: { type: 'none' } },
+    },
+};
 
 // ── Helpers ───────────────────────────────────────────────────────
 function fmt(n) { return Math.round(n).toLocaleString('en-US'); }

@@ -21,12 +21,12 @@ class PropertiesController extends Controller
                 'unit.project.media',
                 'unit.project.construction',
                 'unit.media',
-                'payments' => fn ($q) => $q->whereNotNull('paid_at'),
+                'payments' => fn($q) => $q->whereNotNull('paid_at'),
             ])
             ->latest('booking_date')
             ->get();
 
-        $properties = $bookings->map(fn ($b) => [
+        $properties = $bookings->map(fn($b) => [
             'id'                  => $b->id,
             'status'              => $b->status instanceof BookingStatus ? $b->status->value : (string) $b->status,
             'status_label'        => $b->status instanceof BookingStatus ? $b->status->label() : ucfirst((string) $b->status),
@@ -64,7 +64,7 @@ class PropertiesController extends Controller
             ->inRandomOrder()
             ->take(4)
             ->get()
-            ->map(fn ($u) => [
+            ->map(fn($u) => [
                 'id'           => $u->id,
                 'project_name' => $u->project?->name ?? '—',
                 'location'     => $u->project?->location ?? '—',
@@ -83,11 +83,12 @@ class PropertiesController extends Controller
 
         // Upcoming handover — nearest booking that has a future handover date
         $upcoming = $bookings
-            ->filter(fn ($b) => $b->status instanceof BookingStatus &&
-                in_array($b->status, [BookingStatus::Purchased, BookingStatus::Reserved]) &&
-                $b->unit?->project?->handover_date
+            ->filter(
+                fn($b) => $b->status instanceof BookingStatus &&
+                    in_array($b->status, [BookingStatus::Purchased, BookingStatus::Reserved]) &&
+                    $b->unit?->project?->handover_date
             )
-            ->sortBy(fn ($b) => $b->unit->project->handover_date)
+            ->sortBy(fn($b) => $b->unit->project->handover_date)
             ->first();
 
         $upcomingHandover = null;
@@ -112,7 +113,7 @@ class PropertiesController extends Controller
             'reservedCount'   => $reservedCount,
             'handedOverCount' => $handedOverCount,
             'favouriteUnits'  => $favouriteUnits,
-            'upcomingHandover'=> $upcomingHandover,
+            'upcomingHandover' => $upcomingHandover,
         ]);
     }
 }

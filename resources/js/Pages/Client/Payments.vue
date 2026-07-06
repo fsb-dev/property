@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import ClientLayout from '@/Layouts/ClientLayout.vue';
+import VueApexCharts from 'vue3-apexcharts';
 
 const props = defineProps({
     bookingsList:      { type: Array,  default: () => [] },
@@ -125,6 +126,72 @@ const timelineLineWidth = computed(() => {
     return 100;
 });
 
+// ── ApexCharts donut ──────────────────────────────────────────────
+const paymentDonutSeries = computed(() => [viewKpi.value.totalPaid, viewKpi.value.outstanding]);
+
+const paymentDonutOptions = computed(() => ({
+    chart: {
+        type: 'donut',
+        toolbar: { show: false },
+        background: 'transparent',
+        animations: { enabled: true, speed: 400 },
+    },
+    plotOptions: {
+        pie: {
+            donut: {
+                size: '70%',
+                labels: {
+                    show: true,
+                    name: {
+                        show: true,
+                        fontSize: '12px',
+                        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                        fontWeight: '600',
+                        color: '#9a9ab0',
+                        offsetY: 18,
+                    },
+                    value: {
+                        show: true,
+                        fontSize: '13px',
+                        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                        fontWeight: '800',
+                        color: '#16162a',
+                        offsetY: -4,
+                        formatter: (val) => {
+                            const n = Number(val);
+                            if (n >= 10000000) return (n / 10000000).toFixed(1) + ' Cr';
+                            if (n >= 100000)   return (n / 100000).toFixed(1) + ' Lac';
+                            return Number(n).toLocaleString('en-US');
+                        },
+                    },
+                    total: {
+                        show: true,
+                        showAlways: false,
+                        label: 'Paid',
+                        fontSize: '12px',
+                        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                        fontWeight: '600',
+                        color: '#9a9ab0',
+                        formatter: () => viewKpi.value.paidPct + '%',
+                    },
+                },
+            },
+        },
+    },
+    colors: ['#16a34a', '#f59e0b'],
+    labels: ['Paid Amount', 'Outstanding'],
+    legend: { show: false },
+    dataLabels: { enabled: false },
+    stroke: { width: 2, colors: ['transparent'] },
+    tooltip: {
+        y: { formatter: (val) => 'BDT ' + Number(val).toLocaleString('en-US') },
+    },
+    states: {
+        hover:  { filter: { type: 'darken', value: 0.08 } },
+        active: { filter: { type: 'none' } },
+    },
+}));
+
 // ── Helpers ───────────────────────────────────────────────────────
 function fmtBDT(n) {
     if (!n) return 'BDT 0';
@@ -243,14 +310,16 @@ function absRem(n) {
                     <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
                         <h3 class="text-base font-bold text-foreground">Payment Progress</h3>
                         <div class="flex items-center gap-5 mt-5">
-                            <!-- Conic donut -->
-                            <div class="relative rounded-full flex-none" style="width:148px; height:148px;"
-                                :style="`background: conic-gradient(#16a34a 0% ${viewKpi.paidPct}%, #f59e0b ${viewKpi.paidPct}% 100%);`"
-                            >
-                                <div class="absolute rounded-full bg-client-surface-card flex flex-col items-center justify-center" style="inset:18px;">
-                                    <div class="text-2xl font-extrabold text-foreground" style="letter-spacing:-0.02em;">{{ viewKpi.paidPct }}%</div>
-                                    <div class="text-xs font-semibold text-muted-foreground">Paid</div>
-                                </div>
+                            <!-- ApexCharts donut -->
+                            <div class="flex-none" style="width:170px; height:170px; margin:-8px;">
+                                <VueApexCharts
+                                    type="donut"
+                                    height="170"
+                                    width="170"
+                                    :key="viewKpi.paidPct + '-' + (selectedBookingId ?? 'all')"
+                                    :options="paymentDonutOptions"
+                                    :series="paymentDonutSeries"
+                                />
                             </div>
                             <!-- Legend -->
                             <div class="flex-1 flex flex-col gap-4">

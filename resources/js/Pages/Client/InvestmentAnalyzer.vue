@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import ClientLayout from '@/Layouts/ClientLayout.vue';
+import VueApexCharts from 'vue3-apexcharts';
 
 // ─── Static dummy data ───────────────────────────────────────────────────────
 const DUMMY_PROPERTIES = [
@@ -133,37 +134,6 @@ const projectionYears = computed(() => {
     });
 });
 
-const chartData = computed(() => {
-    const pts  = projectionYears.value;
-    const PADL = 68, PADR = 970, TOP = 20, BOT = 260;
-    const W    = PADR - PADL;
-    const maxV = Math.ceil(Math.max(...pts.map(p => p.value)) / 5000000) * 5000000;
-    const minV = Math.floor(Math.min(...pts.map(p => p.value)) / 5000000) * 5000000;
-    const rangeV = maxV - minV;
-
-    function px(i) { return PADL + (i / (pts.length - 1)) * W; }
-    function py(v) { return BOT - ((v - minV) / rangeV) * (BOT - TOP); }
-
-    const linePoints = pts.map((p, i) => `${px(i)},${py(p.value)}`).join(' ');
-    const areaPoints = `${PADL},${BOT} ` + pts.map((p, i) => `${px(i)},${py(p.value)}`).join(' ') + ` ${PADR},${BOT}`;
-
-    const nowIdx  = yearsOwned.value;
-    const nowX    = px(Math.min(nowIdx, pts.length - 1));
-    const nowY    = py(pts[Math.min(nowIdx, pts.length - 1)].value);
-
-    const yLabels = [];
-    const steps   = 5;
-    for (let s = 0; s <= steps; s++) {
-        const v = minV + (rangeV / steps) * s;
-        yLabels.push({ y: py(v), label: fmtM(v) });
-    }
-
-    const xLabels = pts
-        .filter((_, i) => i % 2 === 0)
-        .map((p, i) => ({ x: px(i * 2), label: String(p.year) }));
-
-    return { linePoints, areaPoints, nowX, nowY, yLabels, xLabels, pts, px, py };
-});
 
 // ─── ROI timeline table ───────────────────────────────────────────────────────
 const roiTimeline = computed(() => {
@@ -213,11 +183,118 @@ function statusStyle(c) {
     return map[c] || map.blue;
 }
 
-// ─── Donut arc helper ─────────────────────────────────────────────────────────
-function donutDash(pct, r) {
-    const circ = 2 * Math.PI * r;
-    return `${(pct / 100) * circ} ${circ}`;
-}
+// ─── ApexCharts configs ───────────────────────────────────────────────────────
+const capitalGrowthSeries = computed(() => [{
+    name: 'Property Value',
+    data: projectionYears.value.map(p => p.value),
+}]);
+
+const capitalGrowthOptions = computed(() => ({
+    chart: {
+        type: 'area',
+        toolbar: { show: false },
+        zoom: { enabled: false },
+        animations: { enabled: true, speed: 400 },
+        background: 'transparent',
+    },
+    stroke: { curve: 'smooth', width: 2.5, colors: ['#6a4dff'] },
+    fill: {
+        type: 'gradient',
+        gradient: {
+            type: 'vertical',
+            colorStops: [
+                { offset: 0,   color: '#6a4dff', opacity: 0.18 },
+                { offset: 100, color: '#6a4dff', opacity: 0.01 },
+            ],
+        },
+    },
+    colors: ['#6a4dff'],
+    dataLabels: { enabled: false },
+    markers: { size: 0, hover: { size: 5 } },
+    xaxis: {
+        categories: projectionYears.value.map(p => String(p.year)),
+        tickAmount: 6,
+        labels: {
+            style: { colors: '#b0b0c0', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+        },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+    },
+    yaxis: {
+        labels: {
+            formatter: (val) => fmtM(val),
+            style: { colors: '#b0b0c0', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+        },
+    },
+    grid: {
+        borderColor: '#f0eff7',
+        xaxis: { lines: { show: false } },
+        yaxis: { lines: { show: true } },
+        padding: { top: 0, right: 4, bottom: 0, left: 4 },
+    },
+    annotations: {
+        xaxis: [{
+            x: String(property.value.purchase_year + yearsOwned.value),
+            borderColor: '#f59e0b',
+            strokeDashArray: 5,
+            borderWidth: 1.5,
+            label: {
+                text: 'Today',
+                position: 'top',
+                offsetY: -2,
+                style: {
+                    color: '#fff',
+                    background: '#f59e0b',
+                    fontSize: '10px',
+                    fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                    padding: { left: 5, right: 5, top: 2, bottom: 2 },
+                },
+            },
+        }],
+    },
+    tooltip: {
+        theme: 'light',
+        y: { formatter: (val) => fmtBDT(val) },
+        x: { formatter: (val) => 'Year ' + val },
+    },
+}));
+
+const investmentScoreSeries = computed(() => [investmentScore.value]);
+
+const investmentScoreOptions = computed(() => ({
+    chart: {
+        type: 'radialBar',
+        sparkline: { enabled: true },
+        animations: { enabled: true, speed: 500 },
+    },
+    plotOptions: {
+        radialBar: {
+            hollow: { size: '56%' },
+            track: { background: '#f0eff7', strokeWidth: '100%' },
+            dataLabels: {
+                name: {
+                    show: true,
+                    fontSize: '11px',
+                    fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                    fontWeight: '600',
+                    color: scoreColor(investmentScore.value),
+                    offsetY: 20,
+                },
+                value: {
+                    show: true,
+                    fontSize: '26px',
+                    fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                    fontWeight: '900',
+                    color: '#16162a',
+                    offsetY: -8,
+                    formatter: (val) => String(Math.round(val)),
+                },
+            },
+        },
+    },
+    colors: [scoreColor(investmentScore.value)],
+    labels: [scoreLabel(investmentScore.value)],
+}));
 </script>
 
 <template>
@@ -329,36 +406,14 @@ function donutDash(pct, r) {
                                 </span>
                             </div>
                         </div>
-                        <div style="padding:16px 20px 12px;">
-                            <svg viewBox="0 0 1000 310" class="w-full" style="height:220px; display:block;">
-                                <defs>
-                                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#6a4dff" stop-opacity="0.18"/>
-                                        <stop offset="100%" stop-color="#6a4dff" stop-opacity="0.01"/>
-                                    </linearGradient>
-                                </defs>
-                                <!-- grid lines -->
-                                <line v-for="yl in chartData.yLabels" :key="'g'+yl.label"
-                                    x1="68" :y1="yl.y" x2="970" :y2="yl.y"
-                                    stroke="#f0eff7" stroke-width="1"/>
-                                <!-- y-axis labels -->
-                                <text v-for="yl in chartData.yLabels" :key="'y'+yl.label"
-                                    x="62" :y="yl.y+4" text-anchor="end" font-size="11" fill="#b0b0c0"
-                                    font-family="Plus Jakarta Sans,system-ui,sans-serif">{{ yl.label }}</text>
-                                <!-- area fill -->
-                                <polygon :points="chartData.areaPoints" fill="url(#areaGrad)"/>
-                                <!-- value line -->
-                                <polyline :points="chartData.linePoints" fill="none" stroke="#6a4dff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <!-- "today" dashed vertical line -->
-                                <line :x1="chartData.nowX" y1="20" :x2="chartData.nowX" y2="260"
-                                    stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 4"/>
-                                <!-- today dot -->
-                                <circle :cx="chartData.nowX" :cy="chartData.nowY" r="5" fill="#fff" stroke="#6a4dff" stroke-width="2.5"/>
-                                <!-- x-axis labels -->
-                                <text v-for="xl in chartData.xLabels" :key="'xl'+xl.label"
-                                    :x="xl.x" y="292" text-anchor="middle" font-size="11" fill="#b0b0c0"
-                                    font-family="Plus Jakarta Sans,system-ui,sans-serif">{{ xl.label }}</text>
-                            </svg>
+                        <div style="padding:4px 4px 0;">
+                            <VueApexCharts
+                                type="area"
+                                height="220"
+                                :key="'growth-' + selectedId"
+                                :options="capitalGrowthOptions"
+                                :series="capitalGrowthSeries"
+                            />
                         </div>
                     </div>
 
@@ -505,20 +560,15 @@ function donutDash(pct, r) {
                     <!-- Investment Score donut -->
                     <div style="background:#fff; border:1px solid #ededf3; border-radius:16px; padding:20px; text-align:center;">
                         <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:16px;">Investment Score</div>
-                        <div style="position:relative; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">
-                            <svg width="110" height="110" viewBox="0 0 110 110">
-                                <circle cx="55" cy="55" r="44" fill="none" stroke="#f0eff7" stroke-width="10"/>
-                                <circle cx="55" cy="55" r="44" fill="none"
-                                    :stroke="scoreColor(investmentScore)" stroke-width="10"
-                                    :stroke-dasharray="donutDash(investmentScore, 44)"
-                                    stroke-dashoffset="69.1"
-                                    stroke-linecap="round"
-                                    transform="rotate(-90 55 55)"/>
-                            </svg>
-                            <div style="position:absolute; text-align:center;">
-                                <div style="font-size:26px; font-weight:900; color:#16162a; line-height:1;">{{ investmentScore }}</div>
-                                <div style="font-size:11px; font-weight:600;" :style="{ color: scoreColor(investmentScore) }">{{ scoreLabel(investmentScore) }}</div>
-                            </div>
+                        <div style="margin:0 auto 12px; width:140px; height:140px;">
+                            <VueApexCharts
+                                type="radialBar"
+                                height="140"
+                                width="140"
+                                :key="'score-' + selectedId"
+                                :options="investmentScoreOptions"
+                                :series="investmentScoreSeries"
+                            />
                         </div>
                         <!-- Risk indicators -->
                         <div style="display:flex; flex-direction:column; gap:8px; text-align:left;">

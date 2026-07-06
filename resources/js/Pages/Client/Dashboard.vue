@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import ClientLayout from '@/Layouts/ClientLayout.vue';
+import VueApexCharts from 'vue3-apexcharts';
 
 const props = defineProps({
     client: { type: Object, default: () => ({}) },
@@ -74,6 +75,35 @@ const statusBadge = computed(() => {
     };
     return map[props.latestBooking?.status] ?? { label: props.latestBooking?.status ?? '—', cls: 'bg-slate-100 text-slate-600' };
 });
+
+// ── ApexCharts radialBar helpers ──────────────────────────────────────
+function radialBarBase(color, trackColor) {
+    return {
+        chart: { type: 'radialBar', sparkline: { enabled: true } },
+        plotOptions: {
+            radialBar: {
+                hollow: { size: '52%' },
+                track: { background: trackColor, strokeWidth: '100%' },
+                dataLabels: {
+                    name: { show: false },
+                    value: {
+                        show: true,
+                        fontSize: '11px',
+                        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                        fontWeight: 900,
+                        color: '#16162a',
+                        offsetY: 4,
+                        formatter: (val) => Math.round(val) + '%',
+                    },
+                },
+            },
+        },
+        colors: [color],
+        states: { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
+    };
+}
+const paymentChartOpts      = () => radialBarBase('#16a34a', 'rgba(22,163,74,0.1)');
+const constructionChartOpts = () => radialBarBase('#7b63ff', 'rgba(123,99,255,0.1)');
 
 // ── Dummy data ────────────────────────────────────────────────────────
 const latestUpdates = [
@@ -259,15 +289,13 @@ const latestUpdates = [
                 <div v-for="card in paymentCards" :key="card.id"
                     class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-4 shadow-sm flex flex-col items-center text-center gap-3">
                     <!-- Mini donut -->
-                    <div class="relative rounded-full flex-none" style="width:60px; height:60px;"
-                        :style="`background: conic-gradient(#16a34a 0% ${paidPct(card.total_paid, card.price_agreed)}%, rgba(91,63,232,0.12) ${paidPct(card.total_paid, card.price_agreed)}% 100%);`">
-                        <div class="absolute rounded-full bg-client-surface-card flex flex-col items-center justify-center"
-                            style="inset:7px;">
-                            <span class="text-xs font-extrabold text-foreground leading-none">{{
-                                paidPct(card.total_paid,
-                                    card.price_agreed) }}%</span>
-                        </div>
-                    </div>
+                    <VueApexCharts
+                        type="radialBar"
+                        height="80"
+                        width="80"
+                        :options="paymentChartOpts()"
+                        :series="[paidPct(card.total_paid, card.price_agreed)]"
+                    />
                     <!-- Labels -->
                     <div class="w-full min-w-0">
                         <div class="text-sm font-bold text-foreground truncate">{{ card.project_name }}</div>
@@ -376,15 +404,13 @@ const latestUpdates = [
                 <div v-for="card in constructionCards" :key="card.project_name"
                     class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-4 shadow-sm flex flex-col items-center text-center gap-3">
                     <!-- Mini progress ring -->
-                    <div class="relative rounded-full flex-none" style="width:60px; height:60px;"
-                        :style="`background: conic-gradient(#7b63ff 0% ${Math.round(card.time_progress)}%, rgba(91,63,232,0.12) ${Math.round(card.time_progress)}% 100%);`">
-                        <div class="absolute rounded-full bg-client-surface-card flex flex-col items-center justify-center"
-                            style="inset:7px;">
-                            <span class="text-xs font-extrabold text-foreground leading-none">{{
-                                Math.round(card.time_progress)
-                            }}%</span>
-                        </div>
-                    </div>
+                    <VueApexCharts
+                        type="radialBar"
+                        height="80"
+                        width="80"
+                        :options="constructionChartOpts()"
+                        :series="[Math.round(card.time_progress)]"
+                    />
                     <!-- Labels -->
                     <div class="w-full min-w-0">
                         <div class="text-sm font-bold text-foreground truncate">{{ card.project_name }}</div>
