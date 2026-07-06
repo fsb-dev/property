@@ -72,10 +72,19 @@ const submit = () => {
                     <!-- Logo mark -->
                     <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
                         style="background: linear-gradient(145deg,#5B3DF5,#7C5CFF); box-shadow: 0 8px 24px rgba(91,61,245,0.45);">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 11l9-7 9 7" />
-                            <path d="M5 10v9h5v-5h4v5h5v-9" />
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                            <!-- Building body -->
+                            <rect x="5" y="9" width="18" height="17" rx="1" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.6)" stroke-width="1.3"/>
+                            <!-- Roof cap -->
+                            <rect x="3" y="7.5" width="22" height="2" rx="0.9" fill="white" fill-opacity="0.92"/>
+                            <!-- Windows row 1 -->
+                            <rect x="7.5" y="13" width="4.5" height="3" rx="0.5" fill="white" fill-opacity="0.95"/>
+                            <rect x="16" y="13" width="4.5" height="3" rx="0.5" fill="white" fill-opacity="0.95"/>
+                            <!-- Windows row 2 -->
+                            <rect x="7.5" y="18" width="4.5" height="3" rx="0.5" fill="white" fill-opacity="0.4"/>
+                            <rect x="16" y="18" width="4.5" height="3" rx="0.5" fill="white" fill-opacity="0.95"/>
+                            <!-- Door -->
+                            <rect x="12" y="22" width="4" height="4" rx="0.6" fill="white" fill-opacity="0.85"/>
                         </svg>
                     </div>
 
@@ -86,8 +95,12 @@ const submit = () => {
                     <div class="mt-4 mb-1">
                         <div class="flex items-center justify-center gap-2 mb-2">
                             <div class="h-px w-8" style="background:linear-gradient(to right,transparent,#5B3DF5);"></div>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5B3DF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 11l9-7 9 7"/><path d="M5 10v9h5v-5h4v5h5v-9"/>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <rect x="2" y="5" width="10" height="8" rx="0.6" stroke="#5B3DF5" stroke-width="1.2"/>
+                                <rect x="1" y="4.2" width="12" height="1.4" rx="0.5" fill="#5B3DF5"/>
+                                <rect x="3.5" y="7" width="2.5" height="1.8" rx="0.3" fill="#5B3DF5"/>
+                                <rect x="8" y="7" width="2.5" height="1.8" rx="0.3" fill="#5B3DF5"/>
+                                <rect x="5.5" y="9.5" width="3" height="3.5" rx="0.4" fill="#5B3DF5"/>
                             </svg>
                             <div class="h-px w-8" style="background:linear-gradient(to left,transparent,#5B3DF5);"></div>
                         </div>
