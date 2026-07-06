@@ -513,7 +513,13 @@ const statusCls = {
                             </span>
                         </div>
                     </div>
-                    <VueApexCharts type="line" height="260" :options="projectionOptions" :series="projectionSeries" />
+                    <VueApexCharts
+                        type="line"
+                        height="230"
+                        :key="calc.years"
+                        :options="projectionOptions"
+                        :series="projectionSeries"
+                    />
                 </div>
 
                 <!-- Tips banner -->
@@ -553,18 +559,19 @@ const statusCls = {
                     class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-4">Amortization Overview</h3>
                     <div class="flex items-center gap-4">
+                        <!-- ApexCharts donut with Vue-reactive center label overlaid -->
                         <div class="relative flex-none" style="width:130px; height:130px;">
-                            <VueApexCharts type="donut" width="130" height="130"
-                                :options="amortizationDonutOptions" :series="amortizationDonutSeries" />
-                            <div class="absolute rounded-full bg-client-surface-card flex flex-col items-center justify-center pointer-events-none"
-                                style="inset:26px;">
-                                <div class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">BDT
-                                </div>
-                                <div class="text-lg font-extrabold text-foreground leading-none"
-                                    style="letter-spacing:-0.025em;">{{ (calcTotalPay / 1000000).toFixed(1) }}M</div>
-                                <div
-                                    class="text-[10px] font-semibold text-muted-foreground text-center leading-tight mt-1">
-                                    Total<br>Payment</div>
+                            <VueApexCharts
+                                type="donut"
+                                height="130"
+                                width="130"
+                                :options="amortizationDonutOptions"
+                                :series="amortizationDonutSeries"
+                            />
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <div class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">BDT</div>
+                                <div class="text-lg font-extrabold text-foreground leading-none" style="letter-spacing:-0.025em;">{{ (calcTotalPay / 1000000).toFixed(1) }}M</div>
+                                <div class="text-[10px] font-semibold text-muted-foreground text-center leading-tight mt-1">Total<br>Payment</div>
                             </div>
                         </div>
                         <div class="flex flex-col gap-4">
