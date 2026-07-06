@@ -38,6 +38,9 @@ class RolesAndPermissionsSeeder extends Seeder
             // Reports
             'view reports',
 
+            // Users & Roles
+            'view users',      'create users',      'edit users',      'delete users',      'manage roles',
+
             // Settings (admin-level config)
             'manage settings',
         ];

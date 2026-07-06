@@ -9,13 +9,18 @@ use App\Http\Controllers\Admin\InvestmentController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'verified'])->group(function () {
 
     // Dashboard — any authenticated admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Profile
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 
     // Projects
     Route::middleware('permission:view projects')->group(function () {
@@ -133,6 +138,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'verified'])->gr
     // Support Tickets — static JSON fixture, no DB; tab/search filtering is client-side.
     Route::get('/support-tickets', fn () => inertia('Admin/SupportTickets/Index', json_decode(file_get_contents(resource_path('data/support-tickets.json')), true)))->name('support-tickets.index');
 
+    // Sera AI Knowledge — static JSON fixture, no DB; all "create" actions
+    // (articles, categories, training data, uploads, settings) are client-side only (localStorage).
+    Route::get('/ai-agent', fn () => inertia('Admin/AiAgent/Index', json_decode(file_get_contents(resource_path('data/ai-agent.json')), true)))->name('ai-agent.index');
+
+    // Analytics & Reports — static JSON fixture, no DB; report creation/settings
+    // are client-side only (local state).
+    Route::get('/analysis', fn () => inertia('Admin/Analysis/Index', json_decode(file_get_contents(resource_path('data/analysis.json')), true)))->name('analysis.index');
+
     // Documents
     Route::middleware('permission:view documents')->group(function () {
         Route::get('/documents', fn () => inertia('Admin/Documents/Index'))->name('documents.index');
@@ -143,9 +156,36 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:web', 'verified'])->gr
         Route::get('/reports', fn () => inertia('Admin/Reports/Index'))->name('reports.index');
     });
 
-    // Settings — super_admin / company_admin only
+    // Settings — super_admin / company_admin only; static JSON fixture, no DB;
+    // all "save" actions (general settings, security, backup, integrations) are client-side only.
     Route::middleware('permission:manage settings')->group(function () {
-        Route::get('/settings', fn () => inertia('Admin/Settings/Index'))->name('settings.index');
+        Route::get('/settings', fn () => inertia('Admin/Settings/Index', json_decode(file_get_contents(resource_path('data/settings.json')), true)))->name('settings.index');
+    });
+
+    // Users & Roles — static segments (/create, /export, /import, /access-report) must come before wildcard ({user})
+    Route::middleware('permission:view users')->group(function () {
+        Route::get('/users',              [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/export',       [UserController::class, 'export'])->name('users.export');
+        Route::get('/users/access-report', [UserController::class, 'accessReport'])->name('users.access-report');
+        Route::middleware('permission:create users')->group(function () {
+            Route::get('/users/create',  [UserController::class, 'create'])->name('users.create');
+            Route::post('/users',        [UserController::class, 'store'])->name('users.store');
+            Route::post('/users/import', [UserController::class, 'import'])->name('users.import');
+        });
+        Route::middleware('permission:edit users')->group(function () {
+            Route::get('/users/{user}/edit',       [UserController::class, 'edit'])->name('users.edit');
+            Route::match(['put', 'post'], '/users/{user}', [UserController::class, 'update'])->name('users.update');
+            Route::put('/users/{user}/permissions', [UserController::class, 'updatePermissions'])->name('users.permissions.update');
+        });
+        Route::middleware('permission:delete users')->group(function () {
+            Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        });
+    });
+
+    // Roles & Permissions management (invoked from the Users & Roles quick actions)
+    Route::middleware('permission:manage roles')->group(function () {
+        Route::post('/roles',                    [RoleController::class, 'store'])->name('roles.store');
+        Route::put('/roles/{role}/permissions',  [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
     });
 
     // Media — admin manages all project/unit/client media

@@ -56,20 +56,37 @@ const navLinks = [
         href: () => route('admin.community.index'),
         icon: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>`,
     },
-    {
-        label: 'Documents', routeName: null,
-        icon: `<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 16.5h6"/>`,
-    },
+
     {
         label: 'Support Tickets', routeName: 'admin.support-tickets.index', activePattern: 'admin.support-tickets.*',
         href: () => route('admin.support-tickets.index'),
         icon: `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M4.9 4.9l3.5 3.5M15.6 15.6l3.5 3.5M19.1 4.9l-3.5 3.5M8.4 15.6l-3.5 3.5"/>`,
     },
+    {
+        label: 'Sera AI Knowledge', routeName: 'admin.ai-agent.index', activePattern: 'admin.ai-agent.*',
+        href: () => route('admin.ai-agent.index'),
+        icon: `<path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/>`,
+    },
+    {
+        label: 'Analytics & Reports', routeName: 'admin.analysis.index', activePattern: 'admin.analysis.*',
+        href: () => route('admin.analysis.index'),
+        icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>`,
+    },
+    {
+        label: 'Users & Roles', routeName: 'admin.users.index', activePattern: 'admin.users.*',
+        href: () => route('admin.users.index'),
+        icon: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+    },
+    {
+        label: 'Settings', routeName: 'admin.settings.index', activePattern: 'admin.settings.*',
+        href: () => route('admin.settings.index'),
+        icon: `<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M5 5l2 2M17 17l2 2M2 12h3M19 12h3M5 19l2-2M17 7l2-2"/>`,
+    },
 ];
 
 const profileMenuItems = [
-    { label: 'View Profile', icon: `<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>` },
-    { label: 'Account Settings', icon: `<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>` },
+    { label: 'View Profile', href: () => route('admin.profile'), icon: `<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>` },
+    { label: 'Account Settings', href: () => route('admin.settings.index'), icon: `<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>` },
 ];
 
 function isActive(link) {
@@ -91,7 +108,7 @@ function initials(name) {
     <aside class="flex flex-col h-full"
         style="width:260px; padding:22px 16px 18px; background:linear-gradient(178deg,#0A1B36 0%,#07162D 60%,#061224 100%); color:#fff;">
         <!-- Logo -->
-        <div class="flex items-center gap-3 px-2 mb-6">
+        <Link :href="route('admin.dashboard')" class="flex items-center gap-3 px-2 mb-6">
             <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl"
                 style="background:linear-gradient(145deg,#5B3DF5,#7C5CFF); box-shadow:0 6px 18px rgba(91,61,245,0.45);">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
@@ -104,9 +121,7 @@ function initials(name) {
                 <div style="font-size:19px; font-weight:800; letter-spacing:-0.3px;">Property</div>
                 <div style="font-size:10px; font-weight:600; letter-spacing:2px; color:#6E7C95;">ADMIN PANEL</div>
             </div>
-        </div>
-
-        <!-- Nav -->
+        </Link>
         <nav class="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0" style="scrollbar-width:none;">
             <template v-for="link in navLinks" :key="link.label">
 
@@ -148,12 +163,20 @@ function initials(name) {
                         <div class="text-xs text-slate-500 truncate">{{ user?.email ?? '' }}</div>
                     </div>
 
-                    <button v-for="item in profileMenuItems" :key="item.label"
-                        class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="item.icon" />
-                        {{ item.label }}
-                    </button>
+                    <template v-for="item in profileMenuItems" :key="item.label">
+                        <Link v-if="item.href" :href="item.href()"
+                            class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="item.icon" />
+                            {{ item.label }}
+                        </Link>
+                        <button v-else
+                            class="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-50">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="item.icon" />
+                            {{ item.label }}
+                        </button>
+                    </template>
 
                     <div class="mx-3 my-1 h-px bg-slate-100" />
 
