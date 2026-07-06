@@ -36,7 +36,7 @@ function submit() {
                             <Input
                                 v-model="form.email"
                                 type="email"
-                                placeholder="your@email.com"
+                                placeholder="your@email.com"  
                                 autocomplete="email"
                                 required
                             />
