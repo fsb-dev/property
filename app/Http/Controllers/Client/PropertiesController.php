@@ -28,6 +28,7 @@ class PropertiesController extends Controller
 
         $properties = $bookings->map(fn($b) => [
             'id'                  => $b->id,
+            'project_id'          => $b->unit?->project?->id,
             'status'              => $b->status instanceof BookingStatus ? $b->status->value : (string) $b->status,
             'status_label'        => $b->status instanceof BookingStatus ? $b->status->label() : ucfirst((string) $b->status),
             'booking_date'        => $b->booking_date?->format('d M Y'),
@@ -66,6 +67,7 @@ class PropertiesController extends Controller
             ->get()
             ->map(fn($u) => [
                 'id'           => $u->id,
+                'project_id'   => $u->project?->id,
                 'project_name' => $u->project?->name ?? '—',
                 'location'     => $u->project?->location ?? '—',
                 'unit_number'  => $u->unit_number ?? '—',

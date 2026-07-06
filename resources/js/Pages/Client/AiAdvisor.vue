@@ -2,6 +2,7 @@
 import { ref, nextTick } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import ClientLayout from '@/Layouts/ClientLayout.vue';
+import VueApexCharts from 'vue3-apexcharts';
 
 // ─── Static property context ──────────────────────────────────────────────────
 const PROPERTY = {
@@ -18,6 +19,18 @@ const PROPERTY = {
     outstanding:      11840000,
     paid_pct:         36,
     construction_pct: 72,
+};
+
+const paymentDonutOpts = {
+    chart:       { type: 'donut', sparkline: { enabled: true } },
+    colors:      ['#16a34a', '#f59e0b'],
+    labels:      ['Paid', 'Outstanding'],
+    stroke:      { width: 0 },
+    dataLabels:  { enabled: false },
+    legend:      { show: false },
+    tooltip:     { enabled: false },
+    states:      { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
+    plotOptions: { pie: { donut: { size: '62%' } } },
 };
 
 // ─── Quick questions ──────────────────────────────────────────────────────────
@@ -348,10 +361,11 @@ const STEPS = [
                             <Link :href="route('client.payments')" style="font-size:12px; font-weight:700; color:#6a4dff; text-decoration:none;">Details</Link>
                         </div>
                         <div style="display:flex; align-items:center; gap:14px;">
-                            <!-- Conic donut -->
-                            <div :style="`position:relative; width:96px; height:96px; flex-shrink:0; border-radius:50%; background:conic-gradient(#16a34a 0% ${PROPERTY.paid_pct}%, #f59e0b ${PROPERTY.paid_pct}% 100%);`">
-                                <div style="position:absolute; inset:14px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                                    <div style="font-size:18px; font-weight:900; color:#16162a; line-height:1;">{{ PROPERTY.paid_pct }}%</div>
+                            <!-- Payment donut -->
+                            <div style="position:relative; width:96px; height:96px; flex-shrink:0;">
+                                <VueApexCharts type="donut" :height="96" :width="96" :options="paymentDonutOpts" :series="[PROPERTY.total_paid, PROPERTY.outstanding]" />
+                                <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
+                                    <div style="font-size:17px; font-weight:900; color:#16162a; line-height:1;">{{ PROPERTY.paid_pct }}%</div>
                                     <div style="font-size:9.5px; font-weight:600; color:#9a9ab0; margin-top:1px;">Paid</div>
                                 </div>
                             </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\Client\DocumentsController;
 use App\Http\Controllers\Client\InvestmentAnalyzerController;
 use App\Http\Controllers\Client\MortgageController;
 use App\Http\Controllers\Client\PaymentsController;
+use App\Http\Controllers\Client\ProjectController;
 use App\Http\Controllers\Client\PropertiesController;
 use App\Http\Controllers\Client\SupportController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,7 @@ Route::prefix('client')->name('client.')->group(function () {
         Route::put('/password',   [ProfileController::class, 'updatePassword'])->name('password.update');
         Route::get('/dashboard',    [DashboardController::class,    'index'])->name('dashboard');
         Route::get('/properties',         [PropertiesController::class, 'index'])->name('properties');
+        Route::get('/projects/{project}',   [ProjectController::class,   'show'])->name('projects.show');
         Route::get('/payments',           [PaymentsController::class,   'index'])->name('payments');
         Route::get('/mortgage',           [MortgageController::class,   'index'])->name('mortgage');
         Route::get('/mortgage/explore',   [MortgageController::class,   'explore'])->name('mortgage.explore');
