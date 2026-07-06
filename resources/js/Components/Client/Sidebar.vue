@@ -159,10 +159,14 @@ function initials(name) {
                     <div style="font-size:12px; line-height:1.5; color:#6a5fae; margin:7px 0 12px; font-weight:500;">
                         Chat with
                         your AI Property Advisor.</div>
-                    <button
+                    <!-- <button
                         style="border:none; cursor:pointer; background:linear-gradient(100deg,#6a4dff,#5132e0); color:#fff; font-size:12.5px; font-weight:700; padding:9px 18px; border-radius:10px; box-shadow:0 6px 14px -4px rgba(81,50,224,.55); font-family:inherit;">
                         Chat Now
-                    </button>
+                    </button> -->
+                    <Link :href="route('client.ai.advisor')"
+                        style="border:none; cursor:pointer; background:linear-gradient(100deg,#6a4dff,#5132e0); color:#fff; font-size:12.5px; font-weight:700; padding:9px 18px; border-radius:10px; box-shadow:0 6px 14px -4px rgba(81,50,224,.55); font-family:inherit;">
+                        Chat Now
+                    </Link>
                 </div>
                 <!-- Robot icon -->
                 <div
@@ -197,7 +201,7 @@ function initials(name) {
                             <div class="truncate text-sm font-bold text-foreground">{{ client?.name ?? 'Buyer' }}</div>
                             <div class="truncate text-xs text-muted-foreground">{{ client?.email ?? '' }}</div>
                         </div>
-                        <button
+                        <Link :href="route('client.profile.show')" @click="profileOpen = false"
                             class="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-muted">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -205,7 +209,7 @@ function initials(name) {
                                 <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                             </svg>
                             My Profile
-                        </button>
+                        </Link>
                         <div class="mx-3 my-1 h-px bg-border" />
                         <button
                             class="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
@@ -235,7 +239,7 @@ function initials(name) {
                         </div>
                         <div class="text-muted-foreground truncate"
                             style="font-size:11.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{
-                            client?.email ?? '' }}</div>
+                                client?.email ?? '' }}</div>
                     </div>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b6b6c4" stroke-width="2.2"
                         stroke-linecap="round" stroke-linejoin="round" class="flex-none">
