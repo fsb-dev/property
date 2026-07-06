@@ -9,7 +9,9 @@ use App\Http\Controllers\Admin\InvestmentController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -154,6 +156,32 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Settings — super_admin / company_admin only
     Route::middleware('permission:manage settings')->group(function () {
         Route::get('/settings', fn () => inertia('Admin/Settings/Index'))->name('settings.index');
+    });
+
+    // Users & Roles — static segments (/create, /export, /import, /access-report) must come before wildcard ({user})
+    Route::middleware('permission:view users')->group(function () {
+        Route::get('/users',              [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/export',       [UserController::class, 'export'])->name('users.export');
+        Route::get('/users/access-report', [UserController::class, 'accessReport'])->name('users.access-report');
+        Route::middleware('permission:create users')->group(function () {
+            Route::get('/users/create',  [UserController::class, 'create'])->name('users.create');
+            Route::post('/users',        [UserController::class, 'store'])->name('users.store');
+            Route::post('/users/import', [UserController::class, 'import'])->name('users.import');
+        });
+        Route::middleware('permission:edit users')->group(function () {
+            Route::get('/users/{user}/edit',       [UserController::class, 'edit'])->name('users.edit');
+            Route::put('/users/{user}',            [UserController::class, 'update'])->name('users.update');
+            Route::put('/users/{user}/permissions', [UserController::class, 'updatePermissions'])->name('users.permissions.update');
+        });
+        Route::middleware('permission:delete users')->group(function () {
+            Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        });
+    });
+
+    // Roles & Permissions management (invoked from the Users & Roles quick actions)
+    Route::middleware('permission:manage roles')->group(function () {
+        Route::post('/roles',                    [RoleController::class, 'store'])->name('roles.store');
+        Route::put('/roles/{role}/permissions',  [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
     });
 
     // Media — admin manages all project/unit/client media
