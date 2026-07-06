@@ -80,6 +80,11 @@ const navLinks = [
         href: () => route('admin.users.index'),
         icon: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
     },
+    {
+        label: 'Settings', routeName: 'admin.settings.index', activePattern: 'admin.settings.*',
+        href: () => route('admin.settings.index'),
+        icon: `<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M5 5l2 2M17 17l2 2M2 12h3M19 12h3M5 19l2-2M17 7l2-2"/>`,
+    },
 ];
 
 const profileMenuItems = [

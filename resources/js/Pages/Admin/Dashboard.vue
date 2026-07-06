@@ -153,7 +153,7 @@ const progressColors = ['#5B3DF5', '#22C55E', '#3B82F6', '#F59E0B', '#7C5CFF', '
         <!-- ── Page Header ─────────────────────────────────────────── -->
         <div class="mb-6">
             <h1 style="font-size:28px; font-weight:800; letter-spacing:-0.5px; color:#151B2E; line-height:1.1;">
-                Dashboard Overview <span style="font-size:24px;">👋</span>
+                Dashboard Overview <span style="font-size:24px;"></span>
             </h1>
             <p style="font-size:14px; color:#697386; margin-top:5px;">
                 Welcome back, {{ userName }}! Here's what's happening with your projects today.

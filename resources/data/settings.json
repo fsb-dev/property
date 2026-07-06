@@ -1,0 +1,149 @@
+{
+    "navItems": [
+        { "key": "general",      "label": "General Settings",          "icon": "general",  "hasCard": true },
+        { "key": "security",     "label": "Security & Authentication", "icon": "security", "hasCard": true },
+        { "key": "notifications","label": "Notifications",             "icon": "bell",     "hasCard": true },
+        { "key": "email",        "label": "Email Settings",             "icon": "mail",     "hasCard": true },
+        { "key": "system",       "label": "System Preferences",        "icon": "sliders",  "hasCard": true },
+        { "key": "appearance",   "label": "Appearance",                 "icon": "palette",  "hasCard": false },
+        { "key": "localization", "label": "Localization",               "icon": "globe",    "hasCard": false },
+        { "key": "integrations", "label": "Integrations",               "icon": "plug",     "hasCard": true },
+        { "key": "backup",       "label": "Backup & Restore",           "icon": "backup",   "hasCard": true },
+        { "key": "data",         "label": "Data Management",            "icon": "database",  "hasCard": false },
+        { "key": "billing",      "label": "Billing & Subscription",     "icon": "billing",  "hasCard": false },
+        { "key": "audit",        "label": "Audit Logs",                 "icon": "logs",     "hasCard": true }
+    ],
+
+    "generalSettings": {
+        "platformName": "HomeVerse",
+        "adminEmail": "admin@homeverse.com",
+        "tagline": "Building better communities, together.",
+        "companyName": "HomeVerse Development Ltd.",
+        "timezone": "Asia/Dhaka",
+        "timezoneOptions": [
+            { "value": "Asia/Dhaka",    "label": "(GMT+06:00) Dhaka, Bangladesh" },
+            { "value": "Asia/Kolkata",  "label": "(GMT+05:30) Kolkata, India" },
+            { "value": "Asia/Dubai",    "label": "(GMT+04:00) Dubai, UAE" },
+            { "value": "Europe/London", "label": "(GMT+00:00) London, UK" },
+            { "value": "America/New_York", "label": "(GMT-05:00) New York, USA" }
+        ],
+        "currency": "BDT",
+        "currencyOptions": [
+            { "value": "BDT", "label": "BDT (Bangladeshi Taka)" },
+            { "value": "USD", "label": "USD (US Dollar)" },
+            { "value": "EUR", "label": "EUR (Euro)" },
+            { "value": "GBP", "label": "GBP (British Pound)" }
+        ],
+        "dateFormat": "DD_MMM_YYYY",
+        "dateFormatOptions": [
+            { "value": "DD_MMM_YYYY", "label": "15 May 2026 (DD MMM YYYY)" },
+            { "value": "MM_DD_YYYY",  "label": "05/15/2026 (MM/DD/YYYY)" },
+            { "value": "YYYY_MM_DD",  "label": "2026-05-15 (YYYY-MM-DD)" }
+        ],
+        "timeFormat": "12H",
+        "timeFormatOptions": [
+            { "value": "12H", "label": "12-Hour (02:30 PM)" },
+            { "value": "24H", "label": "24-Hour (14:30)" }
+        ]
+    },
+
+    "systemPreferences": [
+        { "key": "maintenance",   "title": "Maintenance Mode",             "desc": "Enable maintenance mode for the platform",  "type": "toggle",   "value": false },
+        { "key": "registration",  "title": "Allow User Registration",      "desc": "Allow new users to register",               "type": "toggle",   "value": true },
+        { "key": "emailVerify",   "title": "Email Verification",           "desc": "Require email verification for new users",  "type": "toggle",   "value": true },
+        { "key": "twofa",         "title": "Two-Factor Authentication",    "desc": "Enforce 2FA for admin users",                "type": "toggle",   "value": true },
+        { "key": "sessionTimeout","title": "Session Timeout",              "desc": "Automatically logout inactive users",       "type": "dropdown", "value": "30 min", "options": ["15 min", "30 min", "1 hour", "2 hours", "Never"] },
+        { "key": "encryption",    "title": "Data Encryption",              "desc": "Encrypt sensitive platform data",            "type": "toggle",   "value": true }
+    ],
+
+    "security": [
+        {
+            "key": "password", "title": "Password Policy", "desc": "Strong password required", "icon": "lock", "bg": "#F1ECFF", "color": "#5B3DF5",
+            "detail": "Enforce complexity rules for every account password.",
+            "rules": [
+                { "key": "uppercase", "label": "Require at least one uppercase letter", "value": true },
+                { "key": "number",    "label": "Require at least one number",          "value": true },
+                { "key": "symbol",    "label": "Require at least one special symbol",  "value": false }
+            ],
+            "minLength": 8
+        },
+        {
+            "key": "twofa", "title": "Two-Factor Authentication", "desc": "Enabled for admin users", "icon": "shield", "bg": "#E6F7EE", "color": "#22C55E",
+            "detail": "Require a one-time code from an authenticator app in addition to a password.",
+            "value": true
+        },
+        {
+            "key": "sessions", "title": "Login Session Management", "desc": "Manage active user sessions", "icon": "users", "bg": "#E8F0FF", "color": "#3B82F6",
+            "detail": "Sessions currently signed in across the platform.",
+            "activeSessions": [
+                { "key": "s1", "device": "Chrome on Windows", "location": "Dhaka, Bangladesh", "lastActive": "Active now", "current": true },
+                { "key": "s2", "device": "Safari on iPhone",  "location": "Dhaka, Bangladesh", "lastActive": "2 hours ago", "current": false },
+                { "key": "s3", "device": "Chrome on macOS",   "location": "Chattogram, Bangladesh", "lastActive": "1 day ago", "current": false }
+            ]
+        },
+        {
+            "key": "ipWhitelist", "title": "IP Whitelist", "desc": "Restrict access by IP address", "icon": "globe", "bg": "#FFF3E0", "color": "#F59E0B",
+            "detail": "Only requests from these IP addresses will be able to reach the admin panel.",
+            "value": false,
+            "ips": ["103.106.226.10", "202.4.96.15"]
+        },
+        {
+            "key": "lockout", "title": "Account Lockout Policy", "desc": "5 failed attempts • 15 min lockout", "icon": "lockAlert", "bg": "#FDE8E8", "color": "#EF4444",
+            "detail": "Temporarily lock an account after repeated failed sign-in attempts.",
+            "maxAttempts": 5,
+            "lockoutMinutes": 15
+        }
+    ],
+
+    "notifications": [
+        { "key": "emailNotif",   "title": "Email Notifications",   "desc": "Receive email notifications",        "icon": "mail",     "iconBg": "#F1ECFF", "iconColor": "#5B3DF5", "value": true },
+        { "key": "browserNotif", "title": "Browser Notifications", "desc": "Receive browser push notifications", "icon": "bell",     "iconBg": "#E8F0FF", "iconColor": "#3B82F6", "value": true },
+        { "key": "smsNotif",     "title": "SMS Notifications",     "desc": "Receive SMS notifications",          "icon": "sms",      "iconBg": "#E6F7EE", "iconColor": "#22C55E", "value": false },
+        { "key": "marketing",    "title": "Marketing Updates",     "desc": "Receive product updates and tips",   "icon": "megaphone","iconBg": "#FFF3E0", "iconColor": "#F59E0B", "value": false }
+    ],
+
+    "emailSettings": {
+        "smtpServer": "smtp.homeverse.com",
+        "smtpPort": "587",
+        "senderEmail": "noreply@homeverse.com",
+        "encryption": "STARTTLS"
+    },
+
+    "backup": {
+        "lastBackupStatus": "Last Backup Successful",
+        "lastBackupTime": "15 May 2026, 02:30 AM",
+        "automaticEnabled": true,
+        "automaticSchedule": "Daily at 02:30 AM",
+        "retentionDays": "30 days",
+        "retentionOptions": ["7 days", "14 days", "30 days", "60 days", "90 days"]
+    },
+
+    "integrations": [
+        { "key": "payment",   "title": "Payment Gateway",   "provider": "SSLCommerz", "connected": true, "icon": "card",     "bg": "#F1ECFF", "color": "#5B3DF5" },
+        { "key": "sms",       "title": "SMS Gateway",       "provider": "Twilio",     "connected": true, "icon": "sms",      "bg": "#FFF3E0", "color": "#F59E0B" },
+        { "key": "storage",   "title": "Cloud Storage",     "provider": "AWS S3",     "connected": true, "icon": "cloud",    "bg": "#E8F0FF", "color": "#3B82F6" },
+        { "key": "analytics", "title": "Google Analytics",  "provider": "UA-123456789-1", "connected": true, "icon": "bar", "bg": "#FFF3E0", "color": "#F59E0B" }
+    ],
+
+    "apiKeys": [
+        { "key": "public", "label": "Public Key",  "value": "pk_live_51H8x…aQ2m" },
+        { "key": "secret", "label": "Secret Key",  "value": "sk_live_51H8x… 7fZ9" },
+        { "key": "webhook","label": "Webhook Secret", "value": "whsec_8f2… kd31" }
+    ],
+
+    "systemInfo": {
+        "version": "v2.4.1",
+        "environment": "Production",
+        "serverTime": "15 May 2026, 10:30 AM",
+        "database": "MySQL 8.0.33",
+        "server": "cloud-homeverse-01"
+    },
+
+    "systemLogs": [
+        { "key": "l1", "level": "info",    "message": "Automatic backup completed successfully.", "time": "15 May 2026, 02:30 AM" },
+        { "key": "l2", "level": "success",  "message": "Admin user Faisal Ahmed signed in.",       "time": "15 May 2026, 09:02 AM" },
+        { "key": "l3", "level": "warning",  "message": "Payment gateway response time elevated.",  "time": "14 May 2026, 06:41 PM" },
+        { "key": "l4", "level": "info",     "message": "Scheduled maintenance window completed.",  "time": "13 May 2026, 01:00 AM" },
+        { "key": "l5", "level": "success",  "message": "SSL certificate renewed automatically.",   "time": "10 May 2026, 04:15 AM" }
+    ]
+}

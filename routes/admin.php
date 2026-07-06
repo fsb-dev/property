@@ -153,9 +153,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/reports', fn () => inertia('Admin/Reports/Index'))->name('reports.index');
     });
 
-    // Settings — super_admin / company_admin only
+    // Settings — super_admin / company_admin only; static JSON fixture, no DB;
+    // all "save" actions (general settings, security, backup, integrations) are client-side only.
     Route::middleware('permission:manage settings')->group(function () {
-        Route::get('/settings', fn () => inertia('Admin/Settings/Index'))->name('settings.index');
+        Route::get('/settings', fn () => inertia('Admin/Settings/Index', json_decode(file_get_contents(resource_path('data/settings.json')), true)))->name('settings.index');
     });
 
     // Users & Roles — static segments (/create, /export, /import, /access-report) must come before wildcard ({user})
