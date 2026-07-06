@@ -122,4 +122,50 @@ class UserController extends Controller
             'Content-Disposition' => 'attachment; filename="users-'.now()->format('Y-m-d').'.csv"',
         ]);
     }
+
+    public function profile(Request $request)
+    {
+        $user = $request->user()->load('roles.permissions');
+
+        $recentActivity = \App\Models\ActivityLog::where('causer_id', $user->id)
+            ->latest()
+            ->limit(8)
+            ->get()
+            ->map(fn ($log) => [
+                'description' => $log->description,
+                'time'        => $log->created_at->diffForHumans(),
+                'date'        => $log->created_at->format('d M Y, H:i'),
+            ])
+            ->toArray();
+
+        $permissions = $user->getAllPermissions()->pluck('name')->sort()->values();
+
+        // Group permissions by prefix (e.g. "view projects" → "projects")
+        $permissionGroups = $permissions->groupBy(fn ($p) => explode(' ', $p)[1] ?? $p)
+            ->map(fn ($perms, $group) => [
+                'group'  => ucfirst($group),
+                'items'  => $perms->map(fn ($p) => ucfirst(explode(' ', $p)[0] ?? $p))->values(),
+            ])
+            ->values();
+
+        return Inertia::render('Admin/Profile/Show', [
+            'profileUser' => [
+                'id'                 => $user->id,
+                'name'               => $user->name,
+                'email'              => $user->email,
+                'phone'              => $user->phone,
+                'department'         => $user->department,
+                'role'               => $user->roles->first()?->name ?? $user->role,
+                'avatar_url'         => $user->avatar_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($user->avatar_path) : null,
+                'email_verified_at'  => $user->email_verified_at,
+                'created_at'         => $user->created_at,
+                'updated_at'         => $user->updated_at,
+                'tenant_id'          => $user->tenant_id,
+                'permissions_count'  => $permissions->count(),
+                'permission_groups'  => $permissionGroups,
+                'recent_activity'    => $recentActivity,
+                'activity_count'     => \App\Models\ActivityLog::where('causer_id', $user->id)->count(),
+            ],
+        ]);
+    }
 }

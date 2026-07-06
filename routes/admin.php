@@ -19,6 +19,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Dashboard — any authenticated admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Profile
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+
     // Projects
     Route::middleware('permission:view projects')->group(function () {
         Route::get('/projects',                        [ProjectController::class, 'index'])->name('projects.index');
@@ -171,7 +174,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         });
         Route::middleware('permission:edit users')->group(function () {
             Route::get('/users/{user}/edit',       [UserController::class, 'edit'])->name('users.edit');
-            Route::put('/users/{user}',            [UserController::class, 'update'])->name('users.update');
+            Route::match(['put', 'post'], '/users/{user}', [UserController::class, 'update'])->name('users.update');
             Route::put('/users/{user}/permissions', [UserController::class, 'updatePermissions'])->name('users.permissions.update');
         });
         Route::middleware('permission:delete users')->group(function () {
