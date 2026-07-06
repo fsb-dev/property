@@ -513,30 +513,7 @@ const statusCls = {
                             </span>
                         </div>
                     </div>
-                    <!-- SVG: viewBox 0 0 1000 310 — last 50px is x-axis area -->
-                    <svg viewBox="0 0 1000 310" class="w-full" style="height:230px; display:block;">
-                        <!-- Grid lines -->
-                        <line v-for="yl in chartData.yLabels" :key="'gl' + yl.v" x1="70" x2="970" :y1="yl.y" :y2="yl.y"
-                            :stroke="yl.isBase ? '#dddde8' : '#f1f1f6'" stroke-width="1" />
-                        <!-- Y labels -->
-                        <text v-for="yl in chartData.yLabels" :key="'yl' + yl.v" x="58" :y="yl.y + 4" text-anchor="end"
-                            font-size="11" fill="#b6b6c4" font-family="Plus Jakarta Sans,system-ui,sans-serif">{{
-                                yl.label }}</text>
-                        <!-- Filled areas -->
-                        <path :d="chartData.interestArea" fill="rgba(22,163,74,0.10)" stroke="none" />
-                        <path :d="chartData.principalArea" fill="rgba(91,63,232,0.09)" stroke="none" />
-                        <!-- Lines -->
-                        <polyline :points="chartData.payLine" fill="none" stroke="#c2c2cf" stroke-width="2.5"
-                            stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round" />
-                        <polyline :points="chartData.interestLine" fill="none" stroke="#16a34a" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        <polyline :points="chartData.principalLine" fill="none" stroke="#5b3fe8" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        <!-- X-axis labels (y=292, inside SVG viewBox 310) -->
-                        <text v-for="xl in chartData.xLabels" :key="'xl' + xl.label" :x="xl.x" y="292"
-                            text-anchor="middle" font-size="11" fill="#a4a4b4"
-                            font-family="Plus Jakarta Sans,system-ui,sans-serif">{{ xl.label }}</text>
-                    </svg>
+                    <VueApexCharts type="line" height="260" :options="projectionOptions" :series="projectionSeries" />
                 </div>
 
                 <!-- Tips banner -->
@@ -576,10 +553,11 @@ const statusCls = {
                     class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-4">Amortization Overview</h3>
                     <div class="flex items-center gap-4">
-                        <div class="relative rounded-full flex-none" style="width:130px; height:130px;"
-                            :style="`background:${donutBg};`">
-                            <div class="absolute rounded-full bg-client-surface-card flex flex-col items-center justify-center"
-                                style="inset:15px;">
+                        <div class="relative flex-none" style="width:130px; height:130px;">
+                            <VueApexCharts type="donut" width="130" height="130"
+                                :options="amortizationDonutOptions" :series="amortizationDonutSeries" />
+                            <div class="absolute rounded-full bg-client-surface-card flex flex-col items-center justify-center pointer-events-none"
+                                style="inset:26px;">
                                 <div class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">BDT
                                 </div>
                                 <div class="text-lg font-extrabold text-foreground leading-none"
