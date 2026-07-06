@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
 
         // Demo super admin
         $admin = User::firstOrCreate(
-            ['email' => 'admin@property.com'],
+            ['email' => 'admin@homeverse.com'],
             [
                 'name'     => 'Super Admin',
                 'password' => bcrypt('password'),
