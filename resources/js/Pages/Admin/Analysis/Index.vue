@@ -390,9 +390,10 @@ function saveReportSettings() {
             </div>
         </div>
 
-        <!-- Body grid -->
-        <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-            <div class="flex min-w-0 flex-col gap-6">
+        <!-- Row 1: Performance Overview + Top Projects, paired with Report Shortcuts
+             so the two stretch to match height, with Report Shortcuts scrolling if
+             it has more items than that height allows. -->
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-stretch">
 
                 <!-- Performance Overview + Top Projects -->
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
@@ -436,21 +437,45 @@ function saveReportSettings() {
                         <div class="grid grid-cols-[1.7fr_1.1fr_0.8fr_0.9fr] gap-2 border-b border-border pb-2 text-[11px] font-bold text-muted-foreground">
                             <div>Project</div><div>Sales (BDT)</div><div>Units</div><div>Growth</div>
                         </div>
-                        <div v-for="p in topProjects" :key="p.key" class="grid grid-cols-[1.7fr_1.1fr_0.8fr_0.9fr] items-center gap-2 border-b border-border/60 py-[11px] last:border-b-0">
-                            <div class="flex min-w-0 items-center gap-2.5">
-                                <div class="h-7 w-7 flex-none rounded-[7px] opacity-90" :style="{ background: p.bg }"></div>
-                                <div class="truncate text-xs font-semibold text-foreground">{{ p.name }}</div>
-                            </div>
-                            <div class="text-xs font-semibold text-foreground">{{ p.sales }}</div>
-                            <div class="text-xs font-semibold text-foreground">{{ p.units }}</div>
-                            <div class="flex items-center gap-0.5 text-[11.5px] font-bold text-green-500">
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
-                                {{ p.growth }}%
+                        <div class="flex-1 min-h-0 overflow-y-auto">
+                            <div v-for="p in topProjects" :key="p.key" class="grid grid-cols-[1.7fr_1.1fr_0.8fr_0.9fr] items-center gap-2 border-b border-border/60 py-[11px] last:border-b-0">
+                                <div class="flex min-w-0 items-center gap-2.5">
+                                    <div class="h-7 w-7 flex-none rounded-[7px] opacity-90" :style="{ background: p.bg }"></div>
+                                    <div class="truncate text-xs font-semibold text-foreground">{{ p.name }}</div>
+                                </div>
+                                <div class="text-xs font-semibold text-foreground">{{ p.sales }}</div>
+                                <div class="text-xs font-semibold text-foreground">{{ p.units }}</div>
+                                <div class="flex items-center gap-0.5 text-[11.5px] font-bold text-green-500">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+                                    {{ p.growth }}%
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Report Shortcuts -->
+                <div class="flex min-h-0 flex-col rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
+                    <div class="mb-2 text-base font-bold text-foreground">Report Shortcuts</div>
+                    <div class="flex flex-1 min-h-0 flex-col overflow-y-auto">
+                        <button
+                            v-for="s in reportShortcuts" :key="s.key" type="button" @click="openShortcut(s)"
+                            class="relative flex items-center gap-3 border-b border-border/60 py-[11px] text-left transition-colors last:border-b-0 hover:bg-muted/40"
+                        >
+                            <div class="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-foreground" style="margin-left:1px;">
+                                <span class="mr-3 inline-flex h-8 w-8 items-center justify-center rounded-[9px] align-middle" :style="{ background: s.bg, color: s.color }">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons.doc" />
+                                </span>
+                                {{ s.name }}
+                            </div>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C7CDDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="flex-none"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Row 2: Funnel + Demographics + Monthly, paired with Recent Reports (unchanged layout) -->
+        <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
                 <!-- Funnel + Demographics + Monthly -->
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
@@ -565,29 +590,6 @@ function saveReportSettings() {
                         </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Right rail -->
-            <div class="flex min-w-0 flex-col gap-6">
-
-                <!-- Report Shortcuts -->
-                <div class="rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
-                    <div class="mb-2 text-base font-bold text-foreground">Report Shortcuts</div>
-                    <div class="flex flex-col">
-                        <button
-                            v-for="s in reportShortcuts" :key="s.key" type="button" @click="openShortcut(s)"
-                            class="relative flex items-center gap-3 border-b border-border/60 py-[11px] text-left transition-colors last:border-b-0 hover:bg-muted/40"
-                        >
-                            <div class="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-foreground" style="margin-left:1px;">
-                                <span class="mr-3 inline-flex h-8 w-8 items-center justify-center rounded-[9px] align-middle" :style="{ background: s.bg, color: s.color }">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons.doc" />
-                                </span>
-                                {{ s.name }}
-                            </div>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C7CDDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="flex-none"><path d="M9 18l6-6-6-6"/></svg>
-                        </button>
-                    </div>
-                </div>
 
                 <!-- Recent Reports -->
                 <div class="rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
@@ -607,7 +609,6 @@ function saveReportSettings() {
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
 
         <div class="mt-6 flex items-center gap-1.5 px-0.5 text-xs text-muted-foreground">
