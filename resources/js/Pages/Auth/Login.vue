@@ -19,6 +19,12 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const quickLogin = () => {
+    form.email = 'admin@homeverse.com';
+    form.password = 'password';
+    submit();
+};
 </script>
 
 <template>
@@ -199,29 +205,44 @@ const submit = () => {
                         </div>
 
                         <!-- Submit -->
-                        <button
-                            type="submit"
-                            :disabled="form.processing"
-                            class="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all duration-200 mt-1"
-                            style="background: linear-gradient(135deg,#5B3DF5,#7C5CFF); box-shadow: 0 8px 24px rgba(91,61,245,0.35);"
-                            @mouseover="e => !form.processing && (e.currentTarget.style.boxShadow='0 12px 32px rgba(91,61,245,0.5)')"
-                            @mouseleave="e => e.currentTarget.style.boxShadow='0 8px 24px rgba(91,61,245,0.35)'"
-                            :style="form.processing ? 'opacity:0.65; cursor:not-allowed;' : ''">
-                            <svg v-if="form.processing" class="animate-spin" width="16" height="16"
-                                viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" stroke-width="4" />
-                                <path d="M4 12a8 8 0 018-8" stroke="#fff" stroke-width="4"
-                                    stroke-linecap="round" />
-                            </svg>
-                            <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                                <polyline points="10 17 15 12 10 7" />
-                                <line x1="15" y1="12" x2="3" y2="12" />
-                            </svg>
-                            {{ form.processing ? 'Signing in…' : 'Sign In to Admin Panel' }}
-                        </button>
+                        <div class="flex items-center gap-2 mt-1">
+                            <button
+                                type="submit"
+                                :disabled="form.processing"
+                                class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all duration-200"
+                                style="background: linear-gradient(135deg,#5B3DF5,#7C5CFF); box-shadow: 0 8px 24px rgba(91,61,245,0.35);"
+                                @mouseover="e => !form.processing && (e.currentTarget.style.boxShadow='0 12px 32px rgba(91,61,245,0.5)')"
+                                @mouseleave="e => e.currentTarget.style.boxShadow='0 8px 24px rgba(91,61,245,0.35)'"
+                                :style="form.processing ? 'opacity:0.65; cursor:not-allowed;' : ''">
+                                <svg v-if="form.processing" class="animate-spin" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" stroke-width="4" />
+                                    <path d="M4 12a8 8 0 018-8" stroke="#fff" stroke-width="4"
+                                        stroke-linecap="round" />
+                                </svg>
+                                <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                    <polyline points="10 17 15 12 10 7" />
+                                    <line x1="15" y1="12" x2="3" y2="12" />
+                                </svg>
+                                {{ form.processing ? 'Signing in…' : 'Sign In to Admin Panel' }}
+                            </button>
+
+                            <!-- Demo quick login -->
+                            <button
+                                type="button"
+                                :disabled="form.processing"
+                                title="Quick demo login"
+                                class="flex-none flex items-center justify-center px-4 h-11 rounded-xl border text-sm font-semibold whitespace-nowrap transition-all duration-150"
+                                style="border-color:#DDE2EF; background:#F7F8FC; color:#5B3DF5;"
+                                @click="quickLogin"
+                                @mouseover="e => e.currentTarget.style.background='#EEF0FA'"
+                                @mouseleave="e => e.currentTarget.style.background='#F7F8FC'">
+                                Quick Login
+                            </button>
+                        </div>
 
                     </form>
                 </div>

@@ -67,7 +67,7 @@ class ClientSeeder extends Seeder
         Client::query()->delete();
 
         $profiles = [
-            ['name' => 'Rahim Uddin Ahmed',  'gender' => 'male',   'nationality' => 'Bangladeshi'],
+            ['name' => 'Client',  'gender' => 'male',   'nationality' => 'Bangladeshi'],
             ['name' => 'Fatema Begum',       'gender' => 'female', 'nationality' => 'Bangladeshi'],
             ['name' => 'Karim Hossain',      'gender' => 'male',   'nationality' => 'Bangladeshi'],
             ['name' => 'Salma Khatun',       'gender' => 'female', 'nationality' => 'Bangladeshi'],
@@ -117,7 +117,7 @@ class ClientSeeder extends Seeder
             'date_of_birth'  => fake()->dateTimeBetween('-58 years', '-26 years')->format('Y-m-d'),
             'nationality'    => $profile['nationality'],
 
-            'email'                   => $slug . '@' . collect(['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'])->random(),
+            'email'                   => $slug . '@' . collect(['gmail.com'])->random(),
             'password'                => bcrypt('password'),
             'phone'                   => '01' . fake()->numberBetween(3, 9) . fake()->numerify('##-######'),
             'alternate_phone'         => fake()->boolean(40) ? '01' . fake()->numberBetween(3, 9) . fake()->numerify('##-######') : null,
