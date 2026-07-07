@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
@@ -87,15 +87,64 @@ const dueRows = [
     { label: 'Due in Next 30 Days',    inst: 45, buyers: 32, amount: '6,250,000', color: 'text-slate-800' },
 ];
 
+// ── Collection Trend chart ───────────────────────────────────────────────────
+const trendYears = ['2026', '2025', '2024', '2023'];
+const selectedTrendYear = ref('2026');
+const showTrendYearMenu = ref(false);
+const trendYearBtn = ref(null);
+
+const TREND_DATA = {
+    '2026': { months: ['Dec 2025', 'Jan 2026', 'Feb 2026', 'Mar 2026', 'Apr 2026', 'May 2026'], values: [10, 13.75, 17, 20, 22.5, 25] },
+    '2025': { months: ['Jul 2025', 'Aug 2025', 'Sep 2025', 'Oct 2025', 'Nov 2025', 'Dec 2025'], values: [14, 16, 15, 18, 20, 22] },
+    '2024': { months: ['Jul 2024', 'Aug 2024', 'Sep 2024', 'Oct 2024', 'Nov 2024', 'Dec 2024'], values: [9, 11, 13, 12, 15, 17] },
+    '2023': { months: ['Jul 2023', 'Aug 2023', 'Sep 2023', 'Oct 2023', 'Nov 2023', 'Dec 2023'], values: [6, 7, 8, 9, 10, 12] },
+};
+
+const TREND_X = [60, 166, 272, 378, 484, 590];
+const TREND_Y_MAX = 40;   // matches the BDT 40M axis ceiling
+const TREND_Y_TOP = 20;
+const TREND_Y_BASE = 180;
+
+const trendMonths = computed(() => TREND_DATA[selectedTrendYear.value].months);
+
+const trendPoints = computed(() => TREND_DATA[selectedTrendYear.value].values.map((v, i) => ({
+    x: TREND_X[i],
+    y: TREND_Y_BASE - (v / TREND_Y_MAX) * (TREND_Y_BASE - TREND_Y_TOP),
+})));
+
+const trendPolylinePoints = computed(() => trendPoints.value.map(p => `${p.x},${p.y}`).join(' '));
+const trendAreaPoints = computed(() => `${trendPolylinePoints.value} 590,180 60,180`);
+
+function selectTrendYear(year) {
+    selectedTrendYear.value = year;
+    showTrendYearMenu.value = false;
+}
+
+function onDocClick(e) {
+    if (trendYearBtn.value && !trendYearBtn.value.contains(e.target)) {
+        showTrendYearMenu.value = false;
+    }
+}
+onMounted(() => document.addEventListener('click', onDocClick));
+onUnmounted(() => document.removeEventListener('click', onDocClick));
+
 // ── Quick actions ────────────────────────────────────────────────────────────
 const quickActions = [
-    { label: 'Record Payment',         color: 'border-admin-accent/30 hover:border-admin-accent hover:bg-[#F1ECFF]', iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M12 14h0"/>`, href: 'admin.payments.record' },
-    { label: 'Create Payment Plan',    color: 'border-blue-200 hover:border-blue-400 hover:bg-blue-50',  iconBg: 'bg-blue-50',  iconColor: 'text-blue-500',  icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4M12 13v4M10 15h4"/>`, href: null },
-    { label: 'Send Reminder',          color: 'border-amber-200 hover:border-amber-400 hover:bg-amber-50', iconBg: 'bg-amber-50', iconColor: 'text-amber-500', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>`, href: null },
-    { label: 'Upload Receipt',         color: 'border-green-200 hover:border-green-400 hover:bg-green-50', iconBg: 'bg-green-50', iconColor: 'text-green-500', icon: `<path d="M12 15V3M8 7l4-4 4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>`, href: null },
-    { label: 'Generate Statement',     color: 'border-sky-200 hover:border-sky-400 hover:bg-sky-50',   iconBg: 'bg-sky-50',   iconColor: 'text-sky-500',   icon: `<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>`, href: null },
-    { label: 'Payment Reports',        color: 'border-red-200 hover:border-red-400 hover:bg-red-50',   iconBg: 'bg-red-50',   iconColor: 'text-red-500',   icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>`, href: null },
+    { label: 'Record Payment',         color: 'border-admin-accent/30 hover:border-admin-accent hover:bg-[#F1ECFF]', iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M12 14h0"/>`, view: null },
+    { label: 'Create Payment Plan',    color: 'border-blue-200 hover:border-blue-400 hover:bg-blue-50',  iconBg: 'bg-blue-50',  iconColor: 'text-blue-500',  icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4M12 13v4M10 15h4"/>`, view: 'plans' },
+    { label: 'Send Reminder',          color: 'border-amber-200 hover:border-amber-400 hover:bg-amber-50', iconBg: 'bg-amber-50', iconColor: 'text-amber-500', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>`, view: 'reminders' },
+    { label: 'Upload Receipt',         color: 'border-green-200 hover:border-green-400 hover:bg-green-50', iconBg: 'bg-green-50', iconColor: 'text-green-500', icon: `<path d="M12 15V3M8 7l4-4 4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>`, view: 'receipts' },
+    { label: 'Generate Statement',     color: 'border-sky-200 hover:border-sky-400 hover:bg-sky-50',   iconBg: 'bg-sky-50',   iconColor: 'text-sky-500',   icon: `<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>`, view: 'invoices' },
+    { label: 'Payment Reports',        color: 'border-red-200 hover:border-red-400 hover:bg-red-50',   iconBg: 'bg-red-50',   iconColor: 'text-red-500',   icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>`, view: 'reports' },
 ];
+
+function goToQuickAction(qa) {
+    if (!qa.view) {
+        router.visit(route('admin.payments.record'));
+        return;
+    }
+    router.visit(route('admin.payments.records') + '?view=' + qa.view);
+}
 </script>
 
 <template>
@@ -165,7 +214,8 @@ const quickActions = [
             <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm p-6">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-base font-bold text-foreground">Collection Overview</h3>
-                    <span class="text-xs font-bold text-admin-accent cursor-pointer hover:opacity-80">Analytics →</span>
+                    <span @click="router.visit(route('admin.payments.records') + '?view=collections')"
+                        class="text-xs font-bold text-admin-accent cursor-pointer hover:opacity-80">Analytics →</span>
                 </div>
                 <div class="flex items-center gap-5">
                     <div class="relative h-36 w-36 flex-shrink-0">
@@ -195,16 +245,29 @@ const quickActions = [
                         </div>
                     </div>
                 </div>
-                <div class="mt-4 border-t border-border pt-3 text-center text-sm font-semibold text-admin-accent cursor-pointer">View Collection Report →</div>
+                <div @click="router.visit(route('admin.payments.records') + '?view=collections')"
+                    class="mt-4 border-t border-border pt-3 text-center text-sm font-semibold text-admin-accent cursor-pointer hover:opacity-80">View Collection Report →</div>
             </div>
 
             <!-- Collection Trend chart -->
             <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm p-6">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-base font-bold text-foreground">Collection Trend</h3>
-                    <div class="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground cursor-pointer">
-                        This Year
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    <div class="relative" ref="trendYearBtn">
+                        <button @click="showTrendYearMenu = !showTrendYearMenu"
+                            class="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800">
+                            {{ selectedTrendYear === '2026' ? 'This Year' : selectedTrendYear }}
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div v-if="showTrendYearMenu"
+                            class="absolute right-0 z-10 mt-1.5 w-28 overflow-hidden rounded-xl border border-border bg-white dark:bg-slate-800 shadow-lg">
+                            <button v-for="y in trendYears" :key="y"
+                                @click="selectTrendYear(y)"
+                                :class="['block w-full px-3 py-2 text-left text-xs font-semibold transition-colors',
+                                    selectedTrendYear === y ? 'bg-admin-accent text-white' : 'text-foreground hover:bg-slate-50 dark:hover:bg-slate-700']">
+                                {{ y === '2026' ? 'This Year' : y }}
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <svg width="100%" viewBox="0 0 600 220" preserveAspectRatio="none" style="display:block;">
@@ -224,20 +287,18 @@ const quickActions = [
                         <text x="52" y="104">BDT 20M</text><text x="52" y="144">BDT 10M</text>
                         <text x="52" y="184">BDT 0</text>
                     </g>
-                    <polygon points="60,140 166,125 272,112 378,100 484,90 590,80 590,180 60,180" fill="url(#areaGrad)"/>
-                    <polyline points="60,140 166,125 272,112 378,100 484,90 590,80" fill="none" stroke="#5B3DF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polygon :points="trendAreaPoints" fill="url(#areaGrad)"/>
+                    <polyline :points="trendPolylinePoints" fill="none" stroke="#5B3DF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                     <g fill="#fff" stroke="#5B3DF5" stroke-width="2.5">
-                        <circle cx="60" cy="140" r="4"/><circle cx="166" cy="125" r="4"/>
-                        <circle cx="272" cy="112" r="4"/><circle cx="378" cy="100" r="4"/><circle cx="484" cy="90" r="4"/>
+                        <circle v-for="(p, i) in trendPoints.slice(0, -1)" :key="'pt' + i" :cx="p.x" :cy="p.y" r="4"/>
                     </g>
-                    <circle cx="590" cy="80" r="6" fill="#5B3DF5" stroke="#fff" stroke-width="2.5"/>
+                    <circle :cx="trendPoints[trendPoints.length - 1].x" :cy="trendPoints[trendPoints.length - 1].y" r="6" fill="#5B3DF5" stroke="#fff" stroke-width="2.5"/>
                     <g fill="#A0A8B8" font-size="10" font-family="Inter" text-anchor="middle">
-                        <text x="60" y="200">Dec 2025</text><text x="166" y="200">Jan 2026</text>
-                        <text x="272" y="200">Feb 2026</text><text x="378" y="200">Mar 2026</text>
-                        <text x="484" y="200">Apr 2026</text><text x="590" y="200">May 2026</text>
+                        <text v-for="(m, i) in trendMonths" :key="m" :x="trendPoints[i].x" y="200">{{ m }}</text>
                     </g>
                 </svg>
-                <div class="mt-3 text-center text-sm font-semibold text-admin-accent cursor-pointer">View Financial Report →</div>
+                <div @click="router.visit(route('admin.payments.records') + '?view=reports')"
+                    class="mt-3 text-center text-sm font-semibold text-admin-accent cursor-pointer hover:opacity-80">View Financial Report →</div>
             </div>
         </div>
 
@@ -344,7 +405,8 @@ const quickActions = [
             <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm p-5">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-base font-bold text-foreground">Payment Plan Summary</h3>
-                    <span class="text-xs font-bold text-admin-accent cursor-pointer">View All</span>
+                    <span @click="router.visit(route('admin.payments.records') + '?view=plans')"
+                        class="text-xs font-bold text-admin-accent cursor-pointer hover:opacity-80">View All</span>
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="flex flex-1 flex-col gap-3">
@@ -378,7 +440,8 @@ const quickActions = [
             <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm p-5">
                 <div class="mb-3 flex items-center justify-between">
                     <h3 class="text-base font-bold text-foreground">Installments Due Overview</h3>
-                    <span class="text-xs font-bold text-admin-accent cursor-pointer">View All</span>
+                    <span @click="router.visit(route('admin.payments.records') + '?view=installments')"
+                        class="text-xs font-bold text-admin-accent cursor-pointer hover:opacity-80">View All</span>
                 </div>
                 <table class="w-full border-collapse">
                     <thead>
@@ -404,15 +467,15 @@ const quickActions = [
             <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm p-5">
                 <h3 class="mb-4 text-base font-bold text-foreground">Quick Actions</h3>
                 <div class="grid grid-cols-3 gap-2.5">
-                    <component :is="qa.href ? Link : 'button'"
-                        v-for="qa in quickActions" :key="qa.label"
-                        :href="qa.href ? route(qa.href) : undefined"
+                    <button v-for="qa in quickActions" :key="qa.label"
+                        type="button"
+                        @click="goToQuickAction(qa)"
                         :class="['flex flex-col items-center gap-2 rounded-2xl border p-3.5 text-center transition-all cursor-pointer', qa.color]">
                         <div :class="['flex h-9 w-9 items-center justify-center rounded-xl', qa.iconBg, qa.iconColor]">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" v-html="qa.icon" />
                         </div>
                         <span class="text-[11px] font-semibold text-foreground leading-tight">{{ qa.label }}</span>
-                    </component>
+                    </button>
                 </div>
             </div>
 
@@ -420,7 +483,8 @@ const quickActions = [
             <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm p-5 lg:col-span-3">
                 <div class="mb-3 flex items-center justify-between">
                     <h3 class="text-base font-bold text-foreground">Recent Payments</h3>
-                    <span class="text-xs font-bold text-admin-accent cursor-pointer">View All</span>
+                    <span @click="router.visit(route('admin.payments.records') + '?view=installments')"
+                        class="text-xs font-bold text-admin-accent cursor-pointer hover:opacity-80">View All</span>
                 </div>
                 <div class="divide-y divide-border">
                     <div v-for="p in recentPayments" :key="p.text"

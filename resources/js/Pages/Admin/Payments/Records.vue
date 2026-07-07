@@ -17,6 +17,8 @@ const views = [
     { key: 'collections',   label: 'Collections' },
     { key: 'refunds',       label: 'Refunds' },
     { key: 'adjustments',   label: 'Adjustments' },
+    { key: 'plans',         label: 'Payment Plans' },
+    { key: 'reports',       label: 'Financial Reports' },
 ];
 
 const activeView = ref(props.initialView);
@@ -107,6 +109,30 @@ const META = {
             { label: 'Total Value',      value: 'BDT 1.4M',  sub: 'Net adjustments',        iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>` },
         ],
     },
+    plans: {
+        title: 'Payment Plans',
+        subtitle: 'Installment plans set up for buyers across all projects',
+        prefix: 'PLN',
+        statuses: ['All', 'Active', 'Completed', 'Paused', 'Cancelled'],
+        kpis: [
+            { label: 'Active Plans',     value: '780',        sub: '78% of all plans',       iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/>` },
+            { label: 'Completed Plans',  value: '210',        sub: 'Fully paid off',          iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'Paused Plans',     value: '18',         sub: 'On hold',                 iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
+            { label: 'Cancelled Plans',  value: '12',         sub: 'Terminated',              iconBg: 'bg-red-50',   iconColor: 'text-red-600',   icon: `<circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/>` },
+        ],
+    },
+    reports: {
+        title: 'Financial Reports',
+        subtitle: 'Monthly collection statements and financial summaries across projects',
+        prefix: 'RPT',
+        statuses: ['All', 'Generated', 'Pending'],
+        kpis: [
+            { label: 'Total Collected',  value: 'BDT 325.75M', sub: 'All time',              iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/>` },
+            { label: 'This Month',       value: 'BDT 24.75M', sub: '▲ 22% from last month',  iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'Outstanding',      value: 'BDT 8.45M',  sub: '23 installments pending', iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
+            { label: 'Reports Generated','value': '48',        sub: 'This year',              iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5"/>` },
+        ],
+    },
 };
 
 // ── Dummy row data (shared pool, adapted per view) ────────────────────────────
@@ -131,6 +157,8 @@ const STATUS_POOL = {
     collections:  ['Paid','Pending','Escalated','Pending','Paid','Overdue','Overdue','Pending','Paid','Escalated'],
     refunds:      ['Approved','Pending','Paid','Rejected','Pending','Approved','Paid','Pending','Approved','Rejected'],
     adjustments:  ['Approved','Pending','Approved','Approved','Pending','Rejected','Approved','Approved','Pending','Approved'],
+    reports:      ['Generated','Generated','Pending','Generated','Generated','Generated','Pending','Generated','Generated','Generated'],
+    plans:        ['Active','Active','Completed','Active','Paused','Active','Completed','Cancelled','Active','Completed'],
 };
 
 const METHODS = ['Bank Transfer','bKash','Nagad','Cash','Cheque','Credit Card','Online Banking'];
@@ -178,14 +206,19 @@ const STATUS_STYLE = {
     Paid:      { bg: 'bg-green-50',   text: 'text-green-700' },
     Approved:  { bg: 'bg-green-50',   text: 'text-green-700' },
     Issued:    { bg: 'bg-green-50',   text: 'text-green-700' },
+    Generated: { bg: 'bg-green-50',   text: 'text-green-700' },
+    Active:    { bg: 'bg-green-50',   text: 'text-green-700' },
     Upcoming:  { bg: 'bg-blue-50',    text: 'text-blue-700' },
     Sent:      { bg: 'bg-blue-50',    text: 'text-blue-700' },
+    Completed: { bg: 'bg-blue-50',    text: 'text-blue-700' },
     Partial:   { bg: 'bg-amber-50',   text: 'text-amber-700' },
     Pending:   { bg: 'bg-yellow-50',  text: 'text-yellow-700' },
+    Paused:    { bg: 'bg-amber-50',   text: 'text-amber-700' },
     Overdue:   { bg: 'bg-red-50',     text: 'text-red-700' },
     Escalated: { bg: 'bg-red-100',    text: 'text-red-800' },
     Failed:    { bg: 'bg-slate-100',  text: 'text-slate-500' },
     Rejected:  { bg: 'bg-rose-50',    text: 'text-rose-700' },
+    Cancelled: { bg: 'bg-rose-50',    text: 'text-rose-700' },
 };
 
 // ── Search + filter ───────────────────────────────────────────────────────────
