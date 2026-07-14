@@ -424,8 +424,8 @@ function csvCell(value) {
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 function exportArticlesCsv() {
-    const headers = ['Article', 'Category', 'Views', 'Helpful', 'Rating', 'Last Updated'];
-    const rows = filteredArticles.value.map(a => [a.name, a.cat, a.views, a.helpful, a.rating, a.date]);
+    const headers = ['Article', 'Category', 'Rating', 'Last Updated'];
+    const rows = filteredArticles.value.map(a => [a.name, a.cat, a.rating, a.date]);
     const csv = [headers, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n');
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -581,11 +581,14 @@ const showAllSuggestions = ref(false);
             </div>
         </div>
 
-        <!-- Row B -->
-        <div class="mb-6 grid grid-cols-1 items-start gap-6 xl:grid-cols-[2fr_1.05fr_1.05fr]">
+        <!-- Row B — Popular Knowledge Articles spans both sub-rows (row-span-2) so
+             Top Search Queries / Recent AI Interactions can sit as true grid siblings
+             in row 1 (matching height, scrolling if needed), while AI Performance
+             Insights / Quick Actions keep their existing spot in row 2, untouched. -->
+        <div class="mb-6 grid grid-cols-1 items-start gap-6 xl:grid-cols-[2fr_1.05fr_1.05fr] xl:grid-rows-[auto_auto]">
 
             <!-- Popular Knowledge Articles -->
-            <div ref="articlesTableEl" class="min-w-0 rounded-2xl border border-border bg-admin-surface-card shadow-card">
+            <div ref="articlesTableEl" class="min-w-0 rounded-2xl border border-border bg-admin-surface-card shadow-card xl:row-span-2">
                 <div class="flex flex-wrap items-center justify-between gap-3 p-[22px] pb-3.5">
                     <div class="text-base font-bold text-foreground">Popular Knowledge Articles</div>
                     <div class="flex items-center gap-2.5">
@@ -606,18 +609,16 @@ const showAllSuggestions = ref(false);
                             <TableRow>
                                 <TableHead class="pl-[22px]">Article</TableHead>
                                 <TableHead>Category</TableHead>
-                                <TableHead>Views</TableHead>
-                                <TableHead>Helpful</TableHead>
                                 <TableHead>Rating</TableHead>
                                 <TableHead class="pr-[22px]">Last Updated</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             <TableRow v-if="filteredArticles.length === 0">
-                                <TableCell colspan="6" class="py-14 text-center text-muted-foreground">No articles found</TableCell>
+                                <TableCell colspan="4" class="py-14 text-center text-muted-foreground">No articles found</TableCell>
                             </TableRow>
                             <TableRow v-for="a in paginatedArticles" :key="a.name">
-                                <TableCell class="min-w-[200px] pl-[22px]">
+                                <TableCell class="min-w-[200px] py-5 pl-[22px]">
                                     <div class="flex items-center gap-2.5">
                                         <div class="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-lg bg-admin-accent/10 text-admin-accent">
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons.doc" />
@@ -627,14 +628,14 @@ const showAllSuggestions = ref(false);
                                 </TableCell>
                                 <TableCell class="whitespace-nowrap text-xs text-foreground/80">{{ a.cat }}</TableCell>
                                 <TableCell class="text-[12.5px] font-semibold text-foreground">{{ a.views }}</TableCell>
-                                <TableCell class="text-[12.5px] font-bold text-success">{{ a.helpful }}</TableCell>
+                                <TableCell class="text-[12.5px] font-bold text-green-600">{{ a.helpful }}</TableCell>
                                 <TableCell>
                                     <span class="flex items-center gap-1">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#F5B100"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.8L12 17.3 5.8 20.7l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>
                                         <span class="text-[12.5px] font-bold text-foreground">{{ a.rating }}</span>
                                     </span>
                                 </TableCell>
-                                <TableCell class="whitespace-nowrap pr-[22px] text-xs text-foreground/80">{{ a.date }}</TableCell>
+                                <TableCell class="whitespace-nowrap py-5 pr-[22px] text-xs text-foreground/80">{{ a.date }}</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
@@ -668,29 +669,28 @@ const showAllSuggestions = ref(false);
                 </div>
             </div>
 
-            <!-- MIDDLE: Top Search Queries + AI Performance -->
-            <div class="flex min-w-0 flex-col gap-6">
-                <div class="rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
-                    <div class="mb-2 flex items-center justify-between">
-                        <div class="text-base font-bold text-foreground">Top Search Queries</div>
-                        <button type="button" @click="showAllSearches = true" class="cursor-pointer text-xs font-semibold text-admin-accent">View All</button>
-                    </div>
-                    <div class="flex items-center justify-between border-b border-border pb-1.5 text-[11.5px] font-bold text-muted-foreground">
-                        <span>Query</span><span>Searches</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <div v-for="s in searches.slice(0, 5)" :key="s.q" class="flex items-center justify-between gap-3 border-b border-border/60 py-[11px] last:border-b-0">
-                            <span class="min-w-0 truncate text-[12.5px] text-foreground/80">{{ s.q }}</span>
-                            <span class="flex-none text-[12.5px] font-bold text-foreground">{{ s.n }}</span>
-                        </div>
+            <!-- Top Search Queries -->
+            <div class="flex min-h-0 flex-col self-stretch rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
+                <div class="mb-2 flex items-center justify-between">
+                    <div class="text-base font-bold text-foreground">Top Search Queries</div>
+                    <button type="button" @click="showAllSearches = true" class="cursor-pointer text-xs font-semibold text-admin-accent">View All</button>
+                </div>
+                <div class="flex items-center justify-between border-b border-border pb-1.5 text-[11.5px] font-bold text-muted-foreground">
+                    <span>Query</span><span>Searches</span>
+                </div>
+                <div class="flex flex-1 min-h-0 flex-col overflow-y-auto">
+                    <div v-for="s in searches.slice(0, 5)" :key="s.q" class="flex items-center justify-between gap-3 border-b border-border/60 py-[11px] last:border-b-0">
+                        <span class="min-w-0 truncate text-[12.5px] text-foreground/80">{{ s.q }}</span>
+                        <span class="flex-none text-[12.5px] font-bold text-foreground">{{ s.n }}</span>
                     </div>
                 </div>
+            </div>
 
                 <div class="rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
                     <div class="mb-3.5 flex items-center justify-between">
                         <div class="text-base font-bold text-foreground">AI Performance Insights</div>
                         <span class="flex items-center gap-1.5 rounded-[9px] border border-border px-2.5 py-[5px] text-[11px] font-semibold text-foreground/80">This Month
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="stroke-muted-foreground" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.chevron_down" />
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA3B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.chevron_down" />
                         </span>
                     </div>
                     <div class="flex flex-col gap-3.5">
@@ -700,50 +700,30 @@ const showAllSuggestions = ref(false);
                             </div>
                             <div class="min-w-0 flex-1 text-xs font-semibold text-foreground">{{ p.label }}</div>
                             <div class="text-right text-sm font-extrabold text-foreground">{{ p.value }}</div>
-                            <span class="flex flex-none items-center gap-0.5 text-[11px] font-bold text-success">
+                            <span class="flex flex-none items-center gap-0.5 text-[11px] font-bold text-green-500">
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9l-6 6-6-6"/></svg>
                                 {{ p.change }}%
                             </span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- RIGHT: Recent AI Interactions + Quick Actions -->
-            <div class="flex min-w-0 flex-col gap-6">
-                <div class="rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
-                    <div class="mb-2 flex items-center justify-between">
-                        <div class="text-base font-bold text-foreground">Recent AI Interactions</div>
-                        <button type="button" @click="showAllInteractions = true" class="cursor-pointer text-xs font-semibold text-admin-accent">View All</button>
-                    </div>
-                    <div class="flex flex-col">
-                        <div v-for="i in combinedInteractions.slice(0, 5)" :key="i.q + i.time" class="flex items-start gap-[11px] border-b border-border/60 py-[11px] last:border-b-0">
-                            <div class="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-lg bg-admin-accent/10 text-[11px] font-extrabold text-admin-accent">Q</div>
-                            <div class="min-w-0 flex-1">
-                                <div class="text-[12.5px] font-semibold leading-snug text-foreground">{{ i.q }}</div>
-                                <div class="mt-0.5 text-[11px] text-muted-foreground">{{ i.time }}</div>
-                            </div>
-                            <span class="flex-none whitespace-nowrap rounded-md px-2 py-[3px] text-[10px] font-bold" :style="{ background: i.tagBg, color: i.tagColor }">{{ i.tag }}</span>
+            <!-- Quick Actions -->
+            <div class="rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
+                <div class="mb-3.5 text-base font-bold text-foreground">Quick Actions</div>
+                <div class="grid grid-cols-2 gap-[11px]">
+                    <button
+                        v-for="a in quickActions" :key="a.key" type="button" @click="runQuickAction(a)"
+                        class="flex items-center gap-2.5 rounded-xl border border-border p-[11px] text-left transition-all"
+                        :style="{ '--hbg': a.hoverBg, '--hborder': a.hoverBorder }"
+                        @mouseenter="$event.currentTarget.style.background = 'var(--hbg)'; $event.currentTarget.style.borderColor = 'var(--hborder)'"
+                        @mouseleave="$event.currentTarget.style.background = ''; $event.currentTarget.style.borderColor = ''"
+                    >
+                        <div class="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-lg" :style="{ background: a.bg, color: a.color }">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[a.icon]" />
                         </div>
-                    </div>
-                </div>
-
-                <div class="rounded-2xl border border-border bg-admin-surface-card p-[22px] shadow-card">
-                    <div class="mb-3.5 text-base font-bold text-foreground">Quick Actions</div>
-                    <div class="grid grid-cols-2 gap-[11px]">
-                        <button
-                            v-for="a in quickActions" :key="a.key" type="button" @click="runQuickAction(a)"
-                            class="flex items-center gap-2.5 rounded-xl border border-border p-[11px] text-left transition-all"
-                            :style="{ '--hbg': a.hoverBg, '--hborder': a.hoverBorder }"
-                            @mouseenter="$event.currentTarget.style.background = 'var(--hbg)'; $event.currentTarget.style.borderColor = 'var(--hborder)'"
-                            @mouseleave="$event.currentTarget.style.background = ''; $event.currentTarget.style.borderColor = ''"
-                        >
-                            <div class="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-lg" :style="{ background: a.bg, color: a.color }">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[a.icon]" />
-                            </div>
-                            <span class="text-[11.5px] font-semibold text-foreground/80">{{ a.label }}</span>
-                        </button>
-                    </div>
+                        <span class="text-[11.5px] font-semibold text-foreground/80">{{ a.label }}</span>
+                    </button>
                 </div>
             </div>
         </div>

@@ -227,39 +227,69 @@ const accessChartOptions = computed(() => donutChartOptions(
         </div>
 
         <!-- KPIs -->
-        <div class="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            <div class="rounded-2xl border border-border bg-admin-surface-card px-4 py-3">
-                <p class="text-xs text-muted-foreground">Total Users</p>
-                <p class="mt-1 text-2xl font-bold text-foreground">{{ stats.total }}</p>
+        <div class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            <div class="rounded-2xl border border-border bg-admin-surface-card p-5 transition-transform hover:-translate-y-0.5">
+                <div class="mb-2.5 flex items-center gap-2.5">
+                    <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-admin-accent/10 text-admin-accent">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <p class="text-xs font-medium text-muted-foreground">Total Users</p>
+                </div>
+                <p class="text-2xl font-bold text-foreground">{{ stats.total }}</p>
             </div>
-            <div class="rounded-2xl border border-border bg-admin-surface-card px-4 py-3">
-                <p class="text-xs text-muted-foreground">Verified</p>
-                <p class="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ stats.verified }}</p>
+            <div class="rounded-2xl border border-border bg-admin-surface-card p-5 transition-transform hover:-translate-y-0.5">
+                <div class="mb-2.5 flex items-center gap-2.5">
+                    <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    </div>
+                    <p class="text-xs font-medium text-muted-foreground">Verified</p>
+                </div>
+                <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ stats.verified }}</p>
             </div>
-            <div class="rounded-2xl border border-border bg-admin-surface-card px-4 py-3">
-                <p class="text-xs text-muted-foreground">Total Roles</p>
-                <p class="mt-1 text-2xl font-bold text-foreground">{{ stats.total_roles }}</p>
+            <div class="rounded-2xl border border-border bg-admin-surface-card p-5 transition-transform hover:-translate-y-0.5">
+                <div class="mb-2.5 flex items-center gap-2.5">
+                    <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
+                    </div>
+                    <p class="text-xs font-medium text-muted-foreground">Total Roles</p>
+                </div>
+                <p class="text-2xl font-bold text-foreground">{{ stats.total_roles }}</p>
             </div>
-            <div class="rounded-2xl border border-border bg-admin-surface-card px-4 py-3">
-                <p class="text-xs text-muted-foreground">Admins</p>
-                <p class="mt-1 text-2xl font-bold text-foreground">{{ stats.admins }}</p>
+            <div class="rounded-2xl border border-border bg-admin-surface-card p-5 transition-transform hover:-translate-y-0.5">
+                <div class="mb-2.5 flex items-center gap-2.5">
+                    <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L19 4M16 7l3-3M14 9l2 2"/></svg>
+                    </div>
+                    <p class="text-xs font-medium text-muted-foreground">Admins</p>
+                </div>
+                <p class="text-2xl font-bold text-foreground">{{ stats.admins }}</p>
             </div>
-            <div class="rounded-2xl border border-border bg-admin-surface-card px-4 py-3">
-                <p class="text-xs text-muted-foreground">Departments</p>
-                <p class="mt-1 text-2xl font-bold text-foreground">{{ stats.departments }}</p>
+            <div class="rounded-2xl border border-border bg-admin-surface-card p-5 transition-transform hover:-translate-y-0.5">
+                <div class="mb-2.5 flex items-center gap-2.5">
+                    <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M14 9h1M14 13h1"/></svg>
+                    </div>
+                    <p class="text-xs font-medium text-muted-foreground">Departments</p>
+                </div>
+                <p class="text-2xl font-bold text-foreground">{{ stats.departments }}</p>
             </div>
-            <div class="rounded-2xl border border-border bg-admin-surface-card px-4 py-3">
-                <p class="text-xs text-muted-foreground">New This Month</p>
-                <p class="mt-1 text-2xl font-bold text-foreground">{{ stats.new_this_month }}</p>
+            <div class="rounded-2xl border border-border bg-admin-surface-card p-5 transition-transform hover:-translate-y-0.5">
+                <div class="mb-2.5 flex items-center gap-2.5">
+                    <div class="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-teal-100 text-teal-600 dark:bg-teal-500/15 dark:text-teal-400">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7M14 8h6v6"/></svg>
+                    </div>
+                    <p class="text-xs font-medium text-muted-foreground">New This Month</p>
+                </div>
+                <p class="text-2xl font-bold text-foreground">{{ stats.new_this_month }}</p>
             </div>
         </div>
 
         <!-- Body grid -->
-        <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px] items-start">
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-stretch">
             <div class="min-w-0 flex flex-col gap-6">
 
                 <!-- Table card -->
-                <div class="overflow-hidden rounded-2xl border border-border bg-admin-surface-card">
+                <div class="flex flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-admin-surface-card">
                     <!-- Tabs -->
                     <div class="flex items-center gap-6 overflow-x-auto border-b border-border px-5 pt-4">
                         <button
@@ -286,9 +316,13 @@ const accessChartOptions = computed(() => donutChartOptions(
                                 <SelectItem v-for="r in enums.roles" :key="r.value" :value="r.value">{{ r.label }}</SelectItem>
                             </SelectContent>
                         </Select>
-                        <button v-if="role" @click="role = ''" class="text-xs text-muted-foreground hover:text-foreground">✕ role</button>
+                        <button v-if="role" @click="role = ''" class="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:hover:border-red-500/30 dark:hover:bg-red-500/10 dark:hover:text-red-400">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                            Role
+                        </button>
                     </div>
 
+                    <div class="flex-1">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -312,7 +346,7 @@ const accessChartOptions = computed(() => donutChartOptions(
                             <TableRow v-for="user in users.data" :key="user.id" class="group">
                                 <TableCell class="pl-4 py-3">
                                     <div class="flex items-center gap-3">
-                                        <div class="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full bg-admin-accent/10">
+                                        <div class="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full bg-admin-accent/10 ring-2 ring-white transition-shadow group-hover:ring-admin-accent/20 dark:ring-admin-surface-card">
                                             <img v-if="user.avatar" :src="user.avatar" :alt="user.name" class="h-full w-full object-cover" />
                                             <div v-else class="flex h-full w-full items-center justify-center text-xs font-semibold text-admin-accent">
                                                 {{ avatarInitials(user.name) }}
@@ -365,13 +399,14 @@ const accessChartOptions = computed(() => donutChartOptions(
                             </TableRow>
                         </TableBody>
                     </Table>
+                    </div>
 
                     <!-- Pagination -->
-                    <div v-if="users.last_page > 1" class="flex items-center justify-between border-t border-border px-4 py-3">
+                    <div v-if="users.total > 0" class="flex items-center justify-between border-t border-border px-4 py-3">
                         <p class="text-xs text-muted-foreground">
                             Showing {{ users.from }}–{{ users.to }} of {{ users.total }}
                         </p>
-                        <div class="flex items-center gap-1">
+                        <div v-if="users.last_page > 1" class="flex items-center gap-1">
                             <template v-for="link in users.links" :key="link.label">
                                 <span v-if="!link.url" class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs pointer-events-none text-muted-foreground/40"><span v-html="link.label" /></span>
                                 <Link v-else :href="link.url" :preserve-state="true" :class="['inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs transition-colors', link.active ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:bg-muted']"><span v-html="link.label" /></Link>
@@ -495,7 +530,7 @@ const accessChartOptions = computed(() => donutChartOptions(
         <!-- Quick Actions -->
         <div class="mt-6 rounded-2xl border border-border bg-admin-surface-card p-5">
             <div class="mb-4 text-base font-bold text-foreground">Quick Actions</div>
-            <div class="grid grid-cols-4 gap-3.5 sm:grid-cols-8">
+            <div class="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
                 <Link :href="route('admin.users.create')" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5">
                     <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-admin-accent/10 text-admin-accent">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>

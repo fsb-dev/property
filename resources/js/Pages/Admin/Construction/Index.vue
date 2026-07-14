@@ -267,6 +267,20 @@ function submitDeleteStatus() {
         onSuccess: () => { confirmingStatusDelete.value = null; },
     });
 }
+
+// ── Quick Actions ──────────────────────────────────────────────
+// Cards route to whichever existing dialog covers that action; the rest
+// (no backing feature yet) surface a demo-only toast instead of doing nothing.
+const flashMsg = ref('');
+let flashTimer;
+function flash(message) {
+    flashMsg.value = message;
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => (flashMsg.value = ''), 1800);
+}
+function comingSoon(label) {
+    flash(`${label} is coming soon`);
+}
 </script>
 
 <template>
@@ -571,38 +585,62 @@ function submitDeleteStatus() {
                     <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(198,161,91,0.12); color:#C6A15B;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Add Site Update</span>
                 </button>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(96,165,250,0.15); color:#60A5FA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M3 17l5-4 4 3 3-2 6 5"/></svg></div>
+                <button
+                    @click="openAddUpdate"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#E8F0FF; color:#3B82F6;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M3 17l5-4 4 3 3-2 6 5"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Upload Photos</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(167,139,250,0.15); color:#A78BFA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l7-4 7 4V3z"/></svg></div>
+                </button>
+                <button
+                    @click="comingSoon('Milestone tracking')"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#EDE9FE; color:#7C3AED;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l7-4 7 4V3z"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Add Milestone</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(52,211,153,0.15); color:#34D399;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+                </button>
+                <button
+                    @click="openAddStatus"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#E6F7EE; color:#22C55E;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Inspect Quality</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(251,191,36,0.15); color:#FBBF24;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7M14 8h6v6"/></svg></div>
+                </button>
+                <button
+                    @click="openAddStatus"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#FFF3E0; color:#F59E0B;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7M14 8h6v6"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Update Progress</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(96,165,250,0.15); color:#60A5FA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
+                </button>
+                <button
+                    @click="comingSoon('Document management')"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#E6F4FB; color:#0EA5E9;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Manage Documents</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(34,211,238,0.15); color:#22D3EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/></svg></div>
+                </button>
+                <button
+                    @click="comingSoon('Report generation')"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#CCFBF1; color:#0D9488;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Create Report</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(248,113,113,0.15); color:#F87171;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                </button>
+                <button
+                    @click="comingSoon('Safety audits')"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#FDE8E8; color:#EF4444;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Safety Audit</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(198,161,91,0.12); color:#C6A15B;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/></svg></div>
+                </button>
+                <button
+                    @click="comingSoon('Resource planning')"
+                    class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
+                >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#F1ECFF; color:#5B3DF5;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Resource Planner</span>
-                </div>
+                </button>
             </div>
         </div>
 
@@ -916,5 +954,12 @@ function submitDeleteStatus() {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+
+        <!-- Demo toast (for Quick Action cards with no backing feature yet) -->
+        <Teleport to="body">
+            <div v-if="flashMsg" class="fixed bottom-6 left-1/2 z-[120] -translate-x-1/2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-2xl">
+                {{ flashMsg }}
+            </div>
+        </Teleport>
     </AdminLayout>
 </template>
