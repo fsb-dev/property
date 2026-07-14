@@ -1,12 +1,12 @@
 {
     "kpis": [
-        { "key": "total",        "icon": "book",   "label": "Total Knowledge",       "value": "2,456",  "sub": "All Topics",     "change": 18, "dir": "up", "bg": "#F1ECFF", "color": "#5B3DF5" },
-        { "key": "articles",     "icon": "doc",    "label": "Articles",              "value": "1,892",  "sub": "Published",      "change": 22, "dir": "up", "bg": "#E8F0FF", "color": "#3B82F6" },
-        { "key": "categories",   "icon": "grid",   "label": "Categories",            "value": "24",     "sub": "Active",         "change": 14, "dir": "up", "bg": "#F1ECFF", "color": "#5B3DF5" },
-        { "key": "answers",      "icon": "spark",  "label": "AI Answers Provided",   "value": "8,742",  "sub": "This Month",     "change": 32, "dir": "up", "bg": "#F1ECFF", "color": "#5B3DF5" },
-        { "key": "satisfaction", "icon": "star",   "label": "User Satisfaction",     "value": "96%",    "sub": "This Month",     "change": 8,  "dir": "up", "bg": "#E6F7EE", "color": "#22C55E" },
-        { "key": "searches",     "icon": "search", "label": "Searches This Month",   "value": "12,540", "sub": "All Searches",   "change": 28, "dir": "up", "bg": "#F1ECFF", "color": "#5B3DF5" },
-        { "key": "accuracy",     "icon": "target", "label": "AI Accuracy",           "value": "95.4%",  "sub": "This Month",     "change": 5,  "dir": "up", "bg": "#FDE8E8", "color": "#EF4444" }
+        { "key": "total",        "icon": "book",   "label": "Total Knowledge",       "value": "2,456",  "sub": "All Topics",     "change": 18, "dir": "up", "bg": "rgba(198,161,91,0.12)", "color": "#C6A15B" },
+        { "key": "articles",     "icon": "doc",    "label": "Articles",              "value": "1,892",  "sub": "Published",      "change": 22, "dir": "up", "bg": "rgba(96,165,250,0.15)", "color": "#60A5FA" },
+        { "key": "categories",   "icon": "grid",   "label": "Categories",            "value": "24",     "sub": "Active",         "change": 14, "dir": "up", "bg": "rgba(198,161,91,0.12)", "color": "#C6A15B" },
+        { "key": "answers",      "icon": "spark",  "label": "AI Answers Provided",   "value": "8,742",  "sub": "This Month",     "change": 32, "dir": "up", "bg": "rgba(198,161,91,0.12)", "color": "#C6A15B" },
+        { "key": "satisfaction", "icon": "star",   "label": "User Satisfaction",     "value": "96%",    "sub": "This Month",     "change": 8,  "dir": "up", "bg": "rgba(52,211,153,0.15)", "color": "#34D399" },
+        { "key": "searches",     "icon": "search", "label": "Searches This Month",   "value": "12,540", "sub": "All Searches",   "change": 28, "dir": "up", "bg": "rgba(198,161,91,0.12)", "color": "#C6A15B" },
+        { "key": "accuracy",     "icon": "target", "label": "AI Accuracy",           "value": "95.4%",  "sub": "This Month",     "change": 5,  "dir": "up", "bg": "rgba(248,113,113,0.15)", "color": "#F87171" }
     ],
 
     "chips": [
@@ -19,21 +19,21 @@
     ],
 
     "categories": [
-        { "name": "Projects & Inventory",     "count": "356 Articles", "color": "#5B3DF5", "bg": "#F1ECFF", "icon": "book"  },
-        { "name": "Sales & Reservations",      "count": "289 Articles", "color": "#22C55E", "bg": "#E6F7EE", "icon": "leaf"  },
-        { "name": "Payments & Finance",        "count": "402 Articles", "color": "#3B82F6", "bg": "#E8F0FF", "icon": "card"  },
-        { "name": "Construction & Updates",    "count": "321 Articles", "color": "#F59E0B", "bg": "#FFF3E0", "icon": "crane" },
-        { "name": "Documents & Legal",         "count": "276 Articles", "color": "#EF4444", "bg": "#FDE8E8", "icon": "doc"   },
-        { "name": "CRM & Buyers",              "count": "312 Articles", "color": "#EC4899", "bg": "#FCE7F3", "icon": "users" },
-        { "name": "Reports & Analytics",       "count": "198 Articles", "color": "#0D9488", "bg": "#CCFBF1", "icon": "chart" },
-        { "name": "System & Settings",         "count": "194 Articles", "color": "#64748B", "bg": "#EEF1F6", "icon": "gear"  }
+        { "name": "Projects & Inventory",     "count": "356 Articles", "color": "#C6A15B", "bg": "rgba(198,161,91,0.12)", "icon": "book"  },
+        { "name": "Sales & Reservations",      "count": "289 Articles", "color": "#34D399", "bg": "rgba(52,211,153,0.15)", "icon": "leaf"  },
+        { "name": "Payments & Finance",        "count": "402 Articles", "color": "#60A5FA", "bg": "rgba(96,165,250,0.15)", "icon": "card"  },
+        { "name": "Construction & Updates",    "count": "321 Articles", "color": "#FBBF24", "bg": "rgba(251,191,36,0.15)", "icon": "crane" },
+        { "name": "Documents & Legal",         "count": "276 Articles", "color": "#F87171", "bg": "rgba(248,113,113,0.15)", "icon": "doc"   },
+        { "name": "CRM & Buyers",              "count": "312 Articles", "color": "#F472B6", "bg": "rgba(244,114,182,0.15)", "icon": "users" },
+        { "name": "Reports & Analytics",       "count": "198 Articles", "color": "#22D3EE", "bg": "rgba(34,211,238,0.15)", "icon": "chart" },
+        { "name": "System & Settings",         "count": "194 Articles", "color": "#8A8780", "bg": "rgba(138,135,128,0.15)", "icon": "gear"  }
     ],
 
     "knowledgeHealth": {
         "segments": [
-            { "key": "accurate",     "label": "Accurate",     "count": 1795, "color": "#22C55E" },
-            { "key": "needs_update", "label": "Needs Update", "count": 78,   "color": "#F59E0B" },
-            { "key": "outdated",     "label": "Outdated",     "count": 23,   "color": "#EF4444" }
+            { "key": "accurate",     "label": "Accurate",     "count": 1795, "color": "#34D399" },
+            { "key": "needs_update", "label": "Needs Update", "count": 78,   "color": "#FBBF24" },
+            { "key": "outdated",     "label": "Outdated",     "count": 23,   "color": "#F87171" }
         ]
     },
 
@@ -68,34 +68,34 @@
     ],
 
     "interactions": [
-        { "q": "How to update construction progress?",   "time": "Answered 2 mins ago",  "tag": "Construction", "tagBg": "#E8F0FF", "tagColor": "#3B82F6" },
-        { "q": "What is the due amount for Unit A-1205?", "time": "Answered 5 mins ago",  "tag": "Payments",     "tagBg": "#F1ECFF", "tagColor": "#5B3DF5" },
-        { "q": "Show me all upcoming payments",           "time": "Answered 8 mins ago",  "tag": "Payments",     "tagBg": "#F1ECFF", "tagColor": "#5B3DF5" },
-        { "q": "How to download sales report?",           "time": "Answered 15 mins ago", "tag": "Reports",      "tagBg": "#FDE8E8", "tagColor": "#EF4444" },
-        { "q": "What documents are required for loan?",   "time": "Answered 20 mins ago", "tag": "Documents",    "tagBg": "#E8F0FF", "tagColor": "#3B82F6" }
+        { "q": "How to update construction progress?",   "time": "Answered 2 mins ago",  "tag": "Construction", "tagBg": "rgba(96,165,250,0.15)", "tagColor": "#60A5FA" },
+        { "q": "What is the due amount for Unit A-1205?", "time": "Answered 5 mins ago",  "tag": "Payments",     "tagBg": "rgba(198,161,91,0.12)", "tagColor": "#C6A15B" },
+        { "q": "Show me all upcoming payments",           "time": "Answered 8 mins ago",  "tag": "Payments",     "tagBg": "rgba(198,161,91,0.12)", "tagColor": "#C6A15B" },
+        { "q": "How to download sales report?",           "time": "Answered 15 mins ago", "tag": "Reports",      "tagBg": "rgba(248,113,113,0.15)", "tagColor": "#F87171" },
+        { "q": "What documents are required for loan?",   "time": "Answered 20 mins ago", "tag": "Documents",    "tagBg": "rgba(96,165,250,0.15)", "tagColor": "#60A5FA" }
     ],
 
     "aiPerformance": [
-        { "key": "response_time", "icon": "clock",  "label": "Average Response Time", "value": "1.2 sec", "change": 12, "dir": "up",   "bg": "#E6F7EE", "color": "#22C55E" },
-        { "key": "accuracy_rate", "icon": "target",  "label": "Answer Accuracy Rate",  "value": "95.4%",   "change": 5,  "dir": "up",   "bg": "#E8F0FF", "color": "#3B82F6" },
-        { "key": "satisfaction",  "icon": "star",    "label": "User Satisfaction Rate","value": "96%",     "change": 8,  "dir": "up",   "bg": "#FFF3E0", "color": "#F59E0B" },
-        { "key": "escalated",     "icon": "alert",   "label": "Escalated Queries",     "value": "45",      "change": 18, "dir": "up",   "bg": "#FDE8E8", "color": "#EF4444" }
+        { "key": "response_time", "icon": "clock",  "label": "Average Response Time", "value": "1.2 sec", "change": 12, "dir": "up",   "bg": "rgba(52,211,153,0.15)", "color": "#34D399" },
+        { "key": "accuracy_rate", "icon": "target",  "label": "Answer Accuracy Rate",  "value": "95.4%",   "change": 5,  "dir": "up",   "bg": "rgba(96,165,250,0.15)", "color": "#60A5FA" },
+        { "key": "satisfaction",  "icon": "star",    "label": "User Satisfaction Rate","value": "96%",     "change": 8,  "dir": "up",   "bg": "rgba(251,191,36,0.15)", "color": "#FBBF24" },
+        { "key": "escalated",     "icon": "alert",   "label": "Escalated Queries",     "value": "45",      "change": 18, "dir": "up",   "bg": "rgba(248,113,113,0.15)", "color": "#F87171" }
     ],
 
     "quickActions": [
-        { "key": "add_article",        "icon": "doc_plus", "label": "Add New Article",    "bg": "#F1ECFF", "color": "#5B3DF5", "hoverBg": "#F1ECFF", "hoverBorder": "#5B3DF5" },
-        { "key": "upload_docs",        "icon": "upload",   "label": "Upload Documents",   "bg": "#E8F0FF", "color": "#3B82F6", "hoverBg": "#EFF6FF", "hoverBorder": "#3B82F6" },
-        { "key": "manage_categories",  "icon": "grid",     "label": "Manage Categories",  "bg": "#E6F7EE", "color": "#22C55E", "hoverBg": "#F0FDF4", "hoverBorder": "#22C55E" },
-        { "key": "review_articles",    "icon": "review",   "label": "Review Articles",    "bg": "#FFF3E0", "color": "#F59E0B", "hoverBg": "#FFFBEB", "hoverBorder": "#F59E0B" },
-        { "key": "training_data",      "icon": "spark",    "label": "AI Training Data",   "bg": "#EDE9FE", "color": "#7C3AED", "hoverBg": "#F5F3FF", "hoverBorder": "#7C3AED" },
-        { "key": "analytics_report",   "icon": "chart",    "label": "Analytics Report",   "bg": "#CCFBF1", "color": "#0D9488", "hoverBg": "#F0FDFA", "hoverBorder": "#0D9488" }
+        { "key": "add_article",        "icon": "doc_plus", "label": "Add New Article",    "bg": "rgba(198,161,91,0.12)", "color": "#C6A15B", "hoverBg": "rgba(198,161,91,0.12)", "hoverBorder": "#C6A15B" },
+        { "key": "upload_docs",        "icon": "upload",   "label": "Upload Documents",   "bg": "rgba(96,165,250,0.15)", "color": "#60A5FA", "hoverBg": "rgba(96,165,250,0.15)", "hoverBorder": "#60A5FA" },
+        { "key": "manage_categories",  "icon": "grid",     "label": "Manage Categories",  "bg": "rgba(52,211,153,0.15)", "color": "#34D399", "hoverBg": "rgba(52,211,153,0.15)", "hoverBorder": "#34D399" },
+        { "key": "review_articles",    "icon": "review",   "label": "Review Articles",    "bg": "rgba(251,191,36,0.15)", "color": "#FBBF24", "hoverBg": "rgba(251,191,36,0.15)", "hoverBorder": "#FBBF24" },
+        { "key": "training_data",      "icon": "spark",    "label": "AI Training Data",   "bg": "rgba(167,139,250,0.15)", "color": "#A78BFA", "hoverBg": "rgba(167,139,250,0.15)", "hoverBorder": "#A78BFA" },
+        { "key": "analytics_report",   "icon": "chart",    "label": "Analytics Report",   "bg": "rgba(34,211,238,0.15)", "color": "#22D3EE", "hoverBg": "rgba(34,211,238,0.15)", "hoverBorder": "#22D3EE" }
     ],
 
     "suggestions": [
-        { "title": "Payment Gateway Integration Guide", "desc": "High searches, No article found", "cat": "Payments & Finance",     "color": "#5B3DF5", "bg": "#F1ECFF" },
-        { "title": "How to Process Refunds",            "desc": "Frequently asked by users",        "cat": "Payments & Finance",     "color": "#22C55E", "bg": "#E6F7EE" },
-        { "title": "Construction Delay Handling",       "desc": "High priority topic",               "cat": "Construction & Updates", "color": "#F59E0B", "bg": "#FFF3E0" },
-        { "title": "Document Verification Process",     "desc": "Users usually search this",         "cat": "Documents & Legal",      "color": "#3B82F6", "bg": "#E8F0FF" },
-        { "title": "Investor Reporting Guide",          "desc": "Important for stakeholders",        "cat": "Reports & Analytics",    "color": "#EF4444", "bg": "#FDE8E8" }
+        { "title": "Payment Gateway Integration Guide", "desc": "High searches, No article found", "cat": "Payments & Finance",     "color": "#C6A15B", "bg": "rgba(198,161,91,0.12)" },
+        { "title": "How to Process Refunds",            "desc": "Frequently asked by users",        "cat": "Payments & Finance",     "color": "#34D399", "bg": "rgba(52,211,153,0.15)" },
+        { "title": "Construction Delay Handling",       "desc": "High priority topic",               "cat": "Construction & Updates", "color": "#FBBF24", "bg": "rgba(251,191,36,0.15)" },
+        { "title": "Document Verification Process",     "desc": "Users usually search this",         "cat": "Documents & Legal",      "color": "#60A5FA", "bg": "rgba(96,165,250,0.15)" },
+        { "title": "Investor Reporting Guide",          "desc": "Important for stakeholders",        "cat": "Reports & Analytics",    "color": "#F87171", "bg": "rgba(248,113,113,0.15)" }
     ]
 }

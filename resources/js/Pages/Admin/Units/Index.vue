@@ -93,7 +93,7 @@ function formatPrice(price) {
                 <p class="mt-0.5 text-sm text-muted-foreground">All units across every project</p>
             </div>
             <Link :href="route('admin.units.blueprint-select')"
-                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-semibold text-white hover:bg-admin-accent/90 transition-colors">
+                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-semibold text-on-gold hover:bg-admin-accent/90 transition-colors">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
                 Create Unit
             </Link>
@@ -341,7 +341,7 @@ function formatPrice(price) {
                             v-html="link.label" />
                         <Link v-else :href="link.url" preserve-state
                             :class="['inline-flex h-7 min-w-[1.75rem] items-center justify-center rounded-lg px-2 text-xs transition-colors',
-                                link.active ? 'bg-admin-accent text-white' : 'text-muted-foreground hover:bg-muted']"
+                                link.active ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:bg-muted']"
                             v-html="link.label" />
                     </template>
                 </div>

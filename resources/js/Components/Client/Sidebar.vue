@@ -86,31 +86,29 @@ function initials(name) {
 
 <template>
     <aside
-        class="fixed inset-y-0 left-0 z-30 flex flex-col bg-client-surface-sidebar border-r border-[#ededf3] dark:border-white/[0.06] transition-transform duration-300 lg:sticky lg:top-0 lg:z-auto lg:translate-x-0"
+        class="fixed inset-y-0 left-0 z-30 flex flex-col bg-client-surface-sidebar border-r border-white/[0.06] transition-transform duration-300 lg:sticky lg:top-0 lg:z-auto lg:translate-x-0"
         :class="drawerOpen ? 'translate-x-0' : '-translate-x-full'"
         style="width:276px; padding:26px 18px 18px; height:100vh; overflow-y:auto; scrollbar-width:thin;">
         <!-- Logo row -->
         <div style="display:flex; align-items:center; gap:11px; padding:4px 8px 22px; flex-shrink:0;">
-            <!-- Three vertical bars -->
+            <!-- Three vertical bars, champagne gold -->
             <div style="display:flex; align-items:flex-end; gap:3px; height:34px; flex:none;">
-                <div style="width:7px; height:20px; border-radius:3px; background:#5b3fe8;"></div>
-                <div
-                    style="width:7px; height:34px; border-radius:3px; background:linear-gradient(180deg,#7b63ff,#4f33d6);">
-                </div>
-                <div style="width:7px; height:26px; border-radius:3px; background:#241a5c;"></div>
+                <div class="bg-gold-deep" style="width:7px; height:20px; border-radius:3px;"></div>
+                <div class="bg-gold-gradient" style="width:7px; height:34px; border-radius:3px;"></div>
+                <div class="bg-gold-bright/50" style="width:7px; height:26px; border-radius:3px;"></div>
             </div>
             <div style="line-height:1; flex:1;">
-                <div class="text-foreground" style="font-size:19px; font-weight:800; letter-spacing:-0.02em;">LakeView
+                <div class="text-white" style="font-size:19px; font-weight:800; letter-spacing:-0.02em;">LakeView
                 </div>
-                <div style="font-size:9.5px; font-weight:600; letter-spacing:0.32em; color:#9a9aac; margin-top:3px;">
+                <div class="text-white/40" style="font-size:9.5px; font-weight:600; letter-spacing:0.32em; margin-top:3px;">
                     RESIDENCES</div>
             </div>
             <!-- Close button (mobile/tablet only) -->
             <button
-                class="lg:hidden flex items-center justify-center border border-border rounded-xl cursor-pointer bg-client-surface-card hover:bg-muted transition-colors"
+                class="lg:hidden flex items-center justify-center border border-white/10 rounded-xl cursor-pointer bg-white/5 hover:bg-white/10 transition-colors"
                 style="width:38px; height:38px; flex:none;" @click="emit('close')">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground">
+                    stroke-linecap="round" stroke-linejoin="round" class="text-white/60">
                     <path d="M6 6l12 12M18 6 6 18" />
                 </svg>
             </button>
@@ -122,11 +120,9 @@ function initials(name) {
                 <Link v-if="link.routeName" :href="route(link.routeName)"
                     class="flex items-center transition-all duration-150"
                     :class="isActive(link)
-                        ? 'text-white'
-                        : 'text-[#5a5a6e] hover:bg-[#f5f4fb] hover:text-[#16162a] dark:text-muted-foreground dark:hover:bg-client-accent/10 dark:hover:text-foreground'"
-                    :style="isActive(link)
-                        ? 'background:linear-gradient(100deg,#6a4dff,#5132e0); box-shadow:0 8px 18px -6px rgba(81,50,224,.5); font-weight:600; gap:13px; padding:13px 14px; border-radius:12px; font-size:14px; text-decoration:none;'
-                        : 'gap:13px; padding:13px 14px; border-radius:12px; font-size:14px; font-weight:500; text-decoration:none;'"
+                        ? 'bg-gold/10 text-gold font-semibold shadow-[inset_2px_0_0_0_rgb(var(--hv-gold))]'
+                        : 'text-white/55 hover:bg-white/[0.06] hover:text-white'"
+                    style="gap:13px; padding:13px 14px; border-radius:12px; font-size:14px; text-decoration:none;"
                     @click="emit('close')">
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" style="flex:none;" v-html="link.icon" />
@@ -134,7 +130,7 @@ function initials(name) {
                 </Link>
 
                 <div v-else
-                    class="flex items-center select-none text-[#5a5a6e] hover:bg-[#f5f4fb] hover:text-[#16162a] dark:text-muted-foreground dark:hover:bg-client-accent/10 dark:hover:text-foreground transition-all duration-150 cursor-default"
+                    class="flex items-center select-none text-white/35 transition-all duration-150 cursor-default"
                     style="gap:13px; padding:13px 14px; border-radius:12px; font-size:14px; font-weight:500;">
                     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" style="flex:none;" v-html="link.icon" />
@@ -146,43 +142,39 @@ function initials(name) {
         <!-- Bottom section -->
         <div style="margin-top:auto; display:flex; flex-direction:column; gap:12px; padding-top:14px; flex-shrink:0;">
             <!-- AI help promo card -->
-            <div
-                style="position:relative; overflow:hidden; border-radius:18px; padding:16px; background:linear-gradient(135deg,#efeafc,#e7e0ff); border:1px solid #e3daff;">
+            <div class="bg-gold/10 border border-gold-deep/25"
+                style="position:relative; overflow:hidden; border-radius:18px; padding:16px;">
                 <div style="max-width:128px;">
-                    <div
-                        style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; color:#3a25b0;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#5b3fe8">
+                    <div class="text-gold-bright"
+                        style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2l1.8 5.6L19.5 9l-4.6 3.4L16.5 18 12 14.7 7.5 18l1.6-5.6L4.5 9l5.7-1.4z" />
                         </svg>
                         Need Help?
                     </div>
-                    <div style="font-size:12px; line-height:1.5; color:#6a5fae; margin:7px 0 12px; font-weight:500;">
+                    <div class="text-white/60" style="font-size:12px; line-height:1.5; margin:7px 0 12px; font-weight:500;">
                         Chat with
                         your AI Property Advisor.</div>
-                    <!-- <button
-                        style="border:none; cursor:pointer; background:linear-gradient(100deg,#6a4dff,#5132e0); color:#fff; font-size:12.5px; font-weight:700; padding:9px 18px; border-radius:10px; box-shadow:0 6px 14px -4px rgba(81,50,224,.55); font-family:inherit;">
-                        Chat Now
-                    </button> -->
-                    <Link :href="route('client.ai.advisor')"
-                        style="border:none; cursor:pointer; background:linear-gradient(100deg,#6a4dff,#5132e0); color:#fff; font-size:12.5px; font-weight:700; padding:9px 18px; border-radius:10px; box-shadow:0 6px 14px -4px rgba(81,50,224,.55); font-family:inherit;">
+                    <Link :href="route('client.ai.advisor')" class="bg-gold-gradient text-on-gold"
+                        style="border:none; cursor:pointer; font-size:12.5px; font-weight:700; padding:9px 18px; border-radius:10px; box-shadow:0 6px 14px -4px rgba(198,161,91,.45); font-family:inherit; display:inline-block;">
                         Chat Now
                     </Link>
                 </div>
                 <!-- Robot icon -->
-                <div
-                    style="position:absolute; right:-6px; bottom:-6px; width:88px; height:88px; border-radius:24px; background:linear-gradient(160deg,#7b63ff,#4f33d6); display:flex; align-items:center; justify-content:center; box-shadow:0 12px 24px -8px rgba(79,51,214,.6);">
-                    <div style="width:46px; height:38px; background:#1a123f; border-radius:13px; position:relative;">
+                <div class="bg-gold-gradient"
+                    style="position:absolute; right:-6px; bottom:-6px; width:88px; height:88px; border-radius:24px; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 24px -8px rgba(198,161,91,.5);">
+                    <div style="width:46px; height:38px; background:rgb(var(--hv-on-gold)); border-radius:13px; position:relative;">
                         <div
-                            style="position:absolute; top:11px; left:9px; width:9px; height:9px; border-radius:50%; background:#8fb4ff;">
+                            style="position:absolute; top:11px; left:9px; width:9px; height:9px; border-radius:50%; background:rgb(var(--hv-gold-bright));">
                         </div>
                         <div
-                            style="position:absolute; top:11px; right:9px; width:9px; height:9px; border-radius:50%; background:#8fb4ff;">
+                            style="position:absolute; top:11px; right:9px; width:9px; height:9px; border-radius:50%; background:rgb(var(--hv-gold-bright));">
                         </div>
                         <div
-                            style="position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:2px; height:7px; background:#cdbcff;">
+                            style="position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:2px; height:7px; background:rgb(var(--hv-gold-bright));">
                         </div>
                         <div
-                            style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); width:5px; height:5px; border-radius:50%; background:#cdbcff;">
+                            style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); width:5px; height:5px; border-radius:50%; background:rgb(var(--hv-gold-bright));">
                         </div>
                     </div>
                 </div>
@@ -212,7 +204,7 @@ function initials(name) {
                         </Link>
                         <div class="mx-3 my-1 h-px bg-border" />
                         <button
-                            class="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
+                            class="flex w-full items-center gap-2.5 px-3 py-2.5 text-sm text-destructive transition-colors hover:bg-destructive/10"
                             @click="logout">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -227,22 +219,22 @@ function initials(name) {
 
                 <!-- Profile trigger -->
                 <button
-                    class="flex w-full items-center border border-border rounded-xl cursor-pointer hover:bg-[#faf9fd] dark:hover:bg-client-accent/10 transition-colors text-left"
+                    class="flex w-full items-center border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 transition-colors text-left"
                     style="gap:11px; padding:11px 12px;" @click="profileOpen = !profileOpen">
-                    <div class="flex-none flex items-center justify-center rounded-full text-white"
-                        style="width:40px; height:40px; background:linear-gradient(135deg,#c9bdf7,#8b6df0); font-size:15px; font-weight:700;">
+                    <div class="flex-none flex items-center justify-center rounded-full bg-gold-gradient text-on-gold"
+                        style="width:40px; height:40px; font-size:15px; font-weight:700;">
                         {{ initials(client?.name) }}
                     </div>
                     <div class="min-w-0 flex-1">
-                        <div class="text-foreground font-bold truncate" style="font-size:13.5px;">{{ client?.name ??
+                        <div class="text-white font-bold truncate" style="font-size:13.5px;">{{ client?.name ??
                             'Buyer' }}
                         </div>
-                        <div class="text-muted-foreground truncate"
+                        <div class="text-white/40 truncate"
                             style="font-size:11.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{
                                 client?.email ?? '' }}</div>
                     </div>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b6b6c4" stroke-width="2.2"
-                        stroke-linecap="round" stroke-linejoin="round" class="flex-none">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round" class="flex-none text-white/40">
                         <path d="M9 6l6 6-6 6" />
                     </svg>
                 </button>

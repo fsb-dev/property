@@ -301,13 +301,13 @@ function submitFinal() {
                         @click="goTo(idx)"
                         :class="[
                             'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
-                            stepState(idx) === 'active' ? 'bg-[#F1ECFF] dark:bg-admin-accent/10' : 'hover:bg-slate-50 dark:hover:bg-white/[0.03]',
+                            stepState(idx) === 'active' ? 'bg-admin-accent/10' : 'hover:bg-slate-50 dark:hover:bg-white/[0.03]',
                         ]"
                     >
                         <div
                             :class="[
                                 'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors',
-                                stepState(idx) === 'active' ? 'bg-admin-accent text-white' : stepState(idx) === 'done' ? 'bg-green-500 text-white' : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400',
+                                stepState(idx) === 'active' ? 'bg-admin-accent text-on-gold' : stepState(idx) === 'done' ? 'bg-success text-on-gold' : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400',
                             ]"
                         >
                             <svg v-if="stepState(idx) === 'done'" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
@@ -350,10 +350,10 @@ function submitFinal() {
                                 @click="pickTile(tile.key)"
                                 :class="[
                                     'flex items-center gap-3 rounded-lg border p-3.5 text-left transition-colors',
-                                    pickerTile === tile.key ? 'border-admin-accent bg-[#F1ECFF] dark:bg-admin-accent/10' : 'border-border hover:bg-slate-50 dark:hover:bg-white/[0.03]',
+                                    pickerTile === tile.key ? 'border-admin-accent bg-admin-accent/10' : 'border-border hover:bg-slate-50 dark:hover:bg-white/[0.03]',
                                 ]"
                             >
-                                <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md text-base" :class="pickerTile === tile.key ? 'bg-admin-accent text-white' : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400'">{{ tile.icon }}</div>
+                                <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md text-base" :class="pickerTile === tile.key ? 'bg-admin-accent text-on-gold' : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400'">{{ tile.icon }}</div>
                                 <div class="min-w-0">
                                     <p :class="['text-sm font-semibold', pickerTile === tile.key ? 'text-admin-accent' : 'text-foreground']">{{ tile.title }}</p>
                                     <p class="text-xs text-muted-foreground">{{ tile.sub }}</p>
@@ -383,7 +383,7 @@ function submitFinal() {
                                     <template v-else>
                                         <ComboboxEmpty>No matching clients found.</ComboboxEmpty>
                                         <ComboboxItem v-for="c in searchResults" :key="c.id" :value="c" :text-value="c.name">
-                                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-xs font-bold text-white">
+                                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-xs font-bold text-on-gold">
                                                 <img v-if="c.avatar" :src="c.avatar" :alt="c.name" class="h-full w-full object-cover" />
                                                 <span v-else>{{ c.name.split(' ').map(w => w[0]).slice(0,2).join('') }}</span>
                                             </div>
@@ -399,7 +399,7 @@ function submitFinal() {
                         </div>
 
                         <div v-if="selectedClientDetail" class="col-span-2 flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-4 py-3">
-                            <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-base font-bold text-white">
+                            <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-admin-accent text-base font-bold text-on-gold">
                                 <img v-if="selectedClientDetail.avatar" :src="selectedClientDetail.avatar" :alt="selectedClientDetail.name" class="h-full w-full object-cover" />
                                 <span v-else>{{ selectedClientDetail.name.split(' ').map(w => w[0]).slice(0,2).join('') }}</span>
                             </div>
@@ -491,7 +491,7 @@ function submitFinal() {
                     </div>
 
                     <div v-if="selectedUnitDetail" class="col-span-2 flex items-center gap-4 rounded-lg border border-border bg-muted/40 px-4 py-3">
-                        <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-admin-accent text-base font-bold text-white">{{ selectedUnitDetail.unit_number.slice(0, 2) }}</div>
+                        <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-admin-accent text-base font-bold text-on-gold">{{ selectedUnitDetail.unit_number.slice(0, 2) }}</div>
                         <div class="min-w-0 grid flex-1 grid-cols-2 gap-x-4 gap-y-1">
                             <div class="col-span-2 text-sm font-semibold text-foreground">Unit {{ selectedUnitDetail.unit_number }} — {{ selectedUnitDetail.status_label }}</div>
                             <div class="text-xs text-muted-foreground">{{ selectedUnitDetail.project_name }} · {{ selectedUnitDetail.building_name }}</div>
@@ -734,7 +734,7 @@ function submitFinal() {
                     </div>
 
                     <div class="mt-5 flex gap-3 rounded-lg border border-admin-accent/20 bg-admin-accent/5 p-4">
-                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-admin-accent text-white">
+                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-admin-accent text-on-gold">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z" /></svg>
                         </div>
                         <div>
@@ -751,7 +751,7 @@ function submitFinal() {
                         <div class="flex items-center justify-between px-4 py-3"><span class="text-sm text-muted-foreground">Status</span><span class="text-sm font-semibold text-green-600 dark:text-green-400">Ready to reserve</span></div>
                     </div>
                     <div class="mt-4 flex gap-3 rounded-lg border border-admin-accent/20 bg-admin-accent/5 p-4">
-                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-admin-accent text-white">
+                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-admin-accent text-on-gold">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z" /></svg>
                         </div>
                         <p class="text-xs leading-relaxed text-muted-foreground">On publish: the unit is marked Reserved, a sale agreement draft is generated, and a confirmation is sent to the buyer and assigned rep.</p>
@@ -776,12 +776,12 @@ function submitFinal() {
                             {{ draftSaving ? 'Saving…' : 'Save Draft' }}
                         </button>
 
-                        <button v-if="!isLast" type="button" @click="goNext" class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90">
+                        <button v-if="!isLast" type="button" @click="goNext" class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90">
                             Next
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><polyline points="12 5 19 12 12 19" /></svg>
                         </button>
 
-                        <button v-else type="button" @click="submitFinal" :disabled="form.processing" class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
+                        <button v-else type="button" @click="submitFinal" :disabled="form.processing" class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
                             <svg v-if="form.processing" class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
                             <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13" /><path d="M22 2L15 22l-4-9-9-4 19-7z" /></svg>
                             {{ mode === 'edit' ? 'Save Changes' : 'Reserve Unit' }}

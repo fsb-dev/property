@@ -167,8 +167,8 @@ function goPage(page) {
 }
 
 const rowColorPairs = [
-    ['#E8F0FF', '#3B82F6'], ['#E6F7EE', '#22C55E'], ['#EDE9FE', '#7C3AED'],
-    ['#FFF3E0', '#F59E0B'], ['#FDE8E8', '#EF4444'], ['#CCFBF1', '#0D9488'],
+    ['rgba(96,165,250,0.15)', '#60A5FA'], ['rgba(52,211,153,0.15)', '#34D399'], ['rgba(167,139,250,0.15)', '#A78BFA'],
+    ['rgba(251,191,36,0.15)', '#FBBF24'], ['rgba(248,113,113,0.15)', '#F87171'], ['rgba(34,211,238,0.15)', '#22D3EE'],
 ];
 function rowColors(id) {
     return rowColorPairs[(id - 1) % rowColorPairs.length];
@@ -191,17 +191,17 @@ const topPerformingProjects = computed(() => [...props.projects]
 
 // Matches App\Enums\ProjectStatus labels (Draft is excluded server-side).
 const statusStyle = {
-    Planning:            { bg: '#E8F0FF', color: '#2563EB' },
-    'Under Construction': { bg: '#FFF3E0', color: '#B45309' },
-    Completed:           { bg: '#E6F7EE', color: '#15803D' },
-    'On Hold':           { bg: '#FDE8E8', color: '#B91C1C' },
-    Cancelled:           { bg: '#F1F4F9', color: '#64748B' },
+    Planning:            { bg: 'rgba(96,165,250,0.15)', color: '#60A5FA' },
+    'Under Construction': { bg: 'rgba(251,191,36,0.15)', color: '#FBBF24' },
+    Completed:           { bg: 'rgba(52,211,153,0.15)', color: '#34D399' },
+    'On Hold':           { bg: 'rgba(248,113,113,0.15)', color: '#F87171' },
+    Cancelled:           { bg: 'rgba(148,138,128,0.15)', color: '#8A8780' },
 };
 const demandStyle = {
-    'Very High': { bg: '#E6F7EE', color: '#15803D' },
-    High:        { bg: '#E8F0FF', color: '#2563EB' },
-    Medium:      { bg: '#FFF3E0', color: '#B45309' },
-    Low:         { bg: '#EEF1F6', color: '#6B7280' },
+    'Very High': { bg: 'rgba(52,211,153,0.15)', color: '#34D399' },
+    High:        { bg: 'rgba(96,165,250,0.15)', color: '#60A5FA' },
+    Medium:      { bg: 'rgba(251,191,36,0.15)', color: '#FBBF24' },
+    Low:         { bg: 'rgba(138,135,128,0.15)', color: '#8A8780' },
 };
 
 function formatBDT(amount) {
@@ -415,10 +415,10 @@ const aiRecommendations = computed(() => {
     const topGrowth = [...list].sort((a, b) => b.growth_yoy - a.growth_yoy)[0];
     const underperformer = [...list].filter(p => p.status !== 'Cancelled').sort((a, b) => a.roi - b.roi)[0] ?? topRoi;
     return [
-        { text: `${topRoi.name} in ${topRoi.location} delivers the portfolio's highest ROI at ${topRoi.roi}% — prioritise capital allocation here.`, color: '#15803D', bg: '#E6F7EE' },
-        { text: `${topRental.name} offers the strongest rental yield (${topRental.rental}%), suited to income-focused investors.`, color: '#2563EB', bg: '#E8F0FF' },
-        { text: `${topGrowth.name} is growing fastest year-over-year (${topGrowth.growth_yoy}%) — a candidate for early-stage entry.`, color: '#7C3AED', bg: '#EDE9FE' },
-        { text: `${underperformer.name} is underperforming its peers at ${underperformer.roi}% ROI — review pricing or occupancy strategy.`, color: '#B45309', bg: '#FFF3E0' },
+        { text: `${topRoi.name} in ${topRoi.location} delivers the portfolio's highest ROI at ${topRoi.roi}% — prioritise capital allocation here.`, color: '#34D399', bg: 'rgba(52,211,153,0.15)' },
+        { text: `${topRental.name} offers the strongest rental yield (${topRental.rental}%), suited to income-focused investors.`, color: '#60A5FA', bg: 'rgba(96,165,250,0.15)' },
+        { text: `${topGrowth.name} is growing fastest year-over-year (${topGrowth.growth_yoy}%) — a candidate for early-stage entry.`, color: '#C6A15B', bg: 'rgba(198,161,91,0.12)' },
+        { text: `${underperformer.name} is underperforming its peers at ${underperformer.roi}% ROI — review pricing or occupancy strategy.`, color: '#FBBF24', bg: 'rgba(251,191,36,0.15)' },
     ];
 });
 
@@ -449,17 +449,17 @@ function handleQuickAction(key) {
         <div class="space-y-6">
 
             <!-- Header -->
-            <div class="flex flex-col gap-4 rounded-[24px] border border-border bg-white p-6 shadow-card lg:flex-row lg:items-start lg:justify-between">
+            <div class="flex flex-col gap-4 rounded-[24px] border border-border bg-card p-6 shadow-card lg:flex-row lg:items-start lg:justify-between">
                 <div>
-                    <h1 class="text-[28px] font-extrabold tracking-[-0.5px] text-slate-900">Investment Data</h1>
-                    <p class="mt-2 text-sm text-slate-500">Analyze company-wide investment performance, market trends and project profitability.</p>
+                    <h1 class="text-[28px] font-extrabold tracking-[-0.5px] text-foreground">Investment Data</h1>
+                    <p class="mt-2 text-sm text-muted-foreground">Analyze company-wide investment performance, market trends and project profitability.</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-3">
-                    <Button class="gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 hover:-translate-y-0.5 hover:bg-violet-600" @click="openTool('report')">
+                    <Button class="gap-2 rounded-xl bg-gold-gradient px-4 py-2.5 text-sm font-semibold text-on-gold shadow-gold-glow hover:-translate-y-0.5 hover:shadow-gold-glow" @click="openTool('report')">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>
                         Generate Investment Report
                     </Button>
-                    <Button variant="outline" class="gap-2 rounded-xl border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50" @click="openTool('settings')">
+                    <Button variant="outline" class="gap-2 rounded-xl border-border px-4 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-muted" @click="openTool('settings')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M5 5l2 2M17 17l2 2M2 12h3M19 12h3M5 19l2-2M17 7l2-2" /></svg>
                         Market Settings
                     </Button>
@@ -468,24 +468,24 @@ function handleQuickAction(key) {
 
             <!-- KPI row -->
             <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
-                <div v-for="k in kpis" :key="k.key" class="rounded-[18px] border border-border bg-white px-4 py-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover">
+                <div v-for="k in kpis" :key="k.key" class="rounded-[18px] border border-border bg-card px-4 py-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover">
                     <div class="mb-2.5 flex items-center gap-2">
                         <span class="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-[10px]" :style="{ background: k.bg, color: k.color }">
                             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[k.icon]" />
                         </span>
-                        <span class="text-[11px] font-semibold leading-tight text-slate-500">{{ k.label }}</span>
+                        <span class="text-[11px] font-semibold leading-tight text-muted-foreground">{{ k.label }}</span>
                     </div>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-2xl font-extrabold tracking-tight text-slate-900">{{ k.value }}</span>
-                        <span v-if="k.suffix" class="text-[13px] font-semibold text-slate-400">{{ k.suffix }}</span>
+                        <span class="text-2xl font-extrabold tracking-tight text-foreground">{{ k.value }}</span>
+                        <span v-if="k.suffix" class="text-[13px] font-semibold text-muted-foreground">{{ k.suffix }}</span>
                     </div>
                     <div class="mt-2.5 flex items-end justify-between gap-1.5">
                         <div>
-                            <div class="flex items-center gap-0.5 text-xs font-bold text-emerald-500">
+                            <div class="flex items-center gap-0.5 text-xs font-bold text-success">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6" /></svg>
                                 {{ k.change }}%
                             </div>
-                            <div class="mt-0.5 text-[10px] text-slate-400">vs last month</div>
+                            <div class="mt-0.5 text-[10px] text-muted-foreground">vs last month</div>
                         </div>
                         <svg width="74" height="30" viewBox="0 0 120 36" fill="none" preserveAspectRatio="none">
                             <polyline :points="sparkPoints(k.spark)" fill="none" :stroke="k.color" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -498,18 +498,18 @@ function handleQuickAction(key) {
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-[2fr_1.15fr_1.15fr_1fr]">
 
                 <!-- Market Growth -->
-                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-5 shadow-card">
+                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-5 shadow-card">
                     <div class="flex flex-wrap items-center justify-between gap-3">
-                        <div class="text-base font-bold text-slate-900">Market Growth</div>
-                        <div class="flex items-center gap-0.5 rounded-[10px] bg-slate-100 p-[3px]">
+                        <div class="text-base font-bold text-foreground">Market Growth</div>
+                        <div class="flex items-center gap-0.5 rounded-[10px] bg-muted p-[3px]">
                             <button v-for="p in mg.periods" :key="p" type="button"
                                 class="rounded-lg px-3 py-1.5 text-[11.5px] font-semibold transition"
-                                :class="activePeriod === p ? 'bg-violet-600 text-white' : 'text-slate-500 hover:text-slate-700'"
+                                :class="activePeriod === p ? 'bg-gold-gradient text-on-gold' : 'text-muted-foreground hover:text-foreground/80'"
                                 @click="activePeriod = p"
                             >{{ p }}</button>
                         </div>
                     </div>
-                    <div class="mt-2 text-xs text-slate-400">Property Value Index (BDT)</div>
+                    <div class="mt-2 text-xs text-muted-foreground">Property Value Index (BDT)</div>
                     <div class="relative mt-2.5 flex-1" style="min-height:280px;">
                         <svg viewBox="0 0 660 280" preserveAspectRatio="none" class="block h-full w-full">
                             <line x1="60" y1="24" x2="60" y2="250" stroke="#EEF1F6" stroke-width="1" />
@@ -518,38 +518,38 @@ function handleQuickAction(key) {
                             <polyline v-for="c in mgCities" :key="c.name" :points="c.points" fill="none" :stroke="c.color" :stroke-width="c.name === 'Dhaka' ? 3 : 2.6" stroke-linecap="round" stroke-linejoin="round" />
                             <circle v-for="c in mgCities" :key="c.name + '-dot'" :cx="c.lastX" :cy="c.lastY" r="4" :fill="c.color" />
                         </svg>
-                        <div v-for="lbl in mgLabels" :key="lbl.text" class="absolute left-0 text-[9.5px] text-slate-400" :style="{ top: (lbl.y - 6) + 'px' }">{{ lbl.text }}</div>
-                        <div class="absolute right-3.5 top-2 min-w-[166px] rounded-[11px] border border-slate-100 bg-white p-2.5 shadow-lg">
-                            <div class="mb-1.5 text-[10.5px] font-bold text-slate-500">{{ mgTooltipLabel }}</div>
+                        <div v-for="lbl in mgLabels" :key="lbl.text" class="absolute left-0 text-[9.5px] text-muted-foreground" :style="{ top: (lbl.y - 6) + 'px' }">{{ lbl.text }}</div>
+                        <div class="absolute right-3.5 top-2 min-w-[166px] rounded-[11px] border border-border bg-card p-2.5 shadow-lg">
+                            <div class="mb-1.5 text-[10.5px] font-bold text-muted-foreground">{{ mgTooltipLabel }}</div>
                             <div v-for="c in mgCities" :key="c.name + '-tip'" class="mb-1 flex items-center justify-between gap-3.5 text-[11px] last:mb-0">
-                                <span class="flex items-center gap-1.5 text-slate-700"><span class="h-2 w-2 rounded-full" :style="{ background: c.color }" />{{ c.name }}</span>
+                                <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2 w-2 rounded-full" :style="{ background: c.color }" />{{ c.name }}</span>
                                 <span class="flex items-center gap-1.5">
                                     <b>{{ mg.unit }} {{ c.lastValue.toLocaleString() }}</b>
-                                    <b class="text-emerald-500">+{{ c.changePct }}%</b>
+                                    <b class="text-success">+{{ c.changePct }}%</b>
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between pl-14 pt-1.5 text-[10.5px] text-slate-400">
+                    <div class="flex items-center justify-between pl-14 pt-1.5 text-[10.5px] text-muted-foreground">
                         <span v-for="y in activeDataset.years" :key="y">{{ y }}</span>
                     </div>
-                    <div class="mt-3 flex flex-wrap items-center justify-center gap-4 border-t border-slate-100 pt-3.5">
-                        <span v-for="c in mgCities" :key="c.name + '-legend'" class="flex items-center gap-1.5 text-[11.5px] font-medium text-slate-700">
+                    <div class="mt-3 flex flex-wrap items-center justify-center gap-4 border-t border-border pt-3.5">
+                        <span v-for="c in mgCities" :key="c.name + '-legend'" class="flex items-center gap-1.5 text-[11.5px] font-medium text-foreground/80">
                             <span class="h-2.5 w-2.5 rounded-full" :style="{ background: c.color }" />{{ c.name }}
                         </span>
                     </div>
-                    <a class="mt-3.5 flex cursor-pointer items-center justify-center gap-1.5 text-[12.5px] font-semibold text-violet-600" @click="openTool('forecast')">
+                    <a class="mt-3.5 flex cursor-pointer items-center justify-center gap-1.5 text-[12.5px] font-semibold text-brand" @click="openTool('forecast')">
                         View Market Report
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                     </a>
                 </div>
 
                 <!-- ROI Projection -->
-                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-5 shadow-card">
+                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-5 shadow-card">
                     <div class="flex items-center justify-between gap-2.5">
-                        <div class="text-base font-bold text-slate-900">ROI Projection</div>
+                        <div class="text-base font-bold text-foreground">ROI Projection</div>
                         <Select v-model="activeRoiYear">
-                            <SelectTrigger class="h-8 w-[84px] gap-1 rounded-[9px] border-slate-200 px-2.5 text-[11.5px] font-semibold text-slate-700 shadow-none">
+                            <SelectTrigger class="h-8 w-[84px] gap-1 rounded-[9px] border-border px-2.5 text-[11.5px] font-semibold text-foreground/80 shadow-none">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -558,12 +558,12 @@ function handleQuickAction(key) {
                         </Select>
                     </div>
                     <div class="mt-3.5 flex flex-wrap items-center gap-3.5">
-                        <span v-for="s in activeRoiSeries" :key="s.label" class="flex items-center gap-1.5 text-[11px] font-medium text-slate-700">
+                        <span v-for="s in activeRoiSeries" :key="s.label" class="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80">
                             <span class="h-2 w-2 rounded" :style="{ background: s.color }" />{{ s.label }}
                         </span>
                     </div>
-                    <div class="relative mt-3.5 flex flex-1 items-end border-b border-slate-100 pl-8" style="min-height:260px;">
-                        <div class="absolute inset-y-0 left-0 flex flex-col justify-between pb-6 text-right text-[9.5px] text-slate-400" style="width:30px;">
+                    <div class="relative mt-3.5 flex flex-1 items-end border-b border-border pl-8" style="min-height:260px;">
+                        <div class="absolute inset-y-0 left-0 flex flex-col justify-between pb-6 text-right text-[9.5px] text-muted-foreground" style="width:30px;">
                             <span>40%</span><span>30%</span><span>20%</span><span>10%</span><span>0%</span>
                         </div>
                         <div class="flex h-full flex-1 items-end justify-around pb-6">
@@ -571,21 +571,21 @@ function handleQuickAction(key) {
                                 <div v-for="s in activeRoiSeries" :key="s.label" class="w-[11px] rounded-t transition-all" :style="{ height: barHeightPct(s.values[ci]) + '%', background: s.color }" />
                             </div>
                         </div>
-                        <div class="absolute inset-x-8 bottom-0 flex justify-around text-center text-[9.5px] text-slate-400">
+                        <div class="absolute inset-x-8 bottom-0 flex justify-around text-center text-[9.5px] text-muted-foreground">
                             <span v-for="cat in roi.categories" :key="cat + '-lbl'">{{ cat }}</span>
                         </div>
                     </div>
-                    <a class="mt-4 flex cursor-pointer items-center justify-center gap-1.5 text-[12.5px] font-semibold text-violet-600" @click="openTool('roiCalculator')">
+                    <a class="mt-4 flex cursor-pointer items-center justify-center gap-1.5 text-[12.5px] font-semibold text-brand" @click="openTool('roiCalculator')">
                         View Projection Report
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                     </a>
                 </div>
 
                 <!-- Investment Heatmap -->
-                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-5 shadow-card">
+                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-5 shadow-card">
                     <div class="flex items-center justify-between gap-2.5">
-                        <div class="text-base font-bold text-slate-900">Investment Heatmap</div>
-                        <div class="flex cursor-pointer items-center gap-1.5 rounded-[9px] border border-slate-200 px-2.5 py-1.5 text-[11.5px] font-semibold text-slate-700">
+                        <div class="text-base font-bold text-foreground">Investment Heatmap</div>
+                        <div class="flex cursor-pointer items-center gap-1.5 rounded-[9px] border border-border px-2.5 py-1.5 text-[11.5px] font-semibold text-foreground/80">
                             ROI Potential
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA3B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
                         </div>
@@ -599,48 +599,48 @@ function handleQuickAction(key) {
                                 <circle v-for="(ring, ri) in region.rings" :key="ri" :cx="region.x" :cy="region.y" :r="ring.radius" :fill="region.color" :opacity="ring.opacity" />
                             </g>
                         </svg>
-                        <div class="absolute right-0 top-1.5 min-w-[142px] rounded-[11px] border border-slate-100 bg-white p-2.5 shadow-lg">
-                            <div class="mb-2 text-xs font-extrabold text-slate-900">{{ activeRegion.name }}</div>
-                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-slate-400">Avg. Price</span><b>{{ activeRegion.avg_price }}</b></div>
-                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-slate-400">ROI</span><b class="text-emerald-500">{{ activeRegion.roi }}</b></div>
-                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-slate-400">Rental Yield</span><b>{{ activeRegion.rental_yield }}</b></div>
-                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-slate-400">Projects</span><b>{{ activeRegion.projects }}</b></div>
-                            <div class="flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-slate-400">Pop. Growth</span><b>{{ activeRegion.pop_growth }}</b></div>
+                        <div class="absolute right-0 top-1.5 min-w-[142px] rounded-[11px] border border-border bg-card p-2.5 shadow-lg">
+                            <div class="mb-2 text-xs font-extrabold text-foreground">{{ activeRegion.name }}</div>
+                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-muted-foreground">Avg. Price</span><b>{{ activeRegion.avg_price }}</b></div>
+                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-muted-foreground">ROI</span><b class="text-success">{{ activeRegion.roi }}</b></div>
+                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-muted-foreground">Rental Yield</span><b>{{ activeRegion.rental_yield }}</b></div>
+                            <div class="mb-1.5 flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-muted-foreground">Projects</span><b>{{ activeRegion.projects }}</b></div>
+                            <div class="flex items-center justify-between gap-2.5 text-[10.5px]"><span class="text-muted-foreground">Pop. Growth</span><b>{{ activeRegion.pop_growth }}</b></div>
                         </div>
                         <div class="absolute bottom-1.5 left-0 flex flex-col gap-1.5">
-                            <span class="flex items-center gap-1.5 text-[10px] text-slate-500"><span class="h-2.5 w-2.5 rounded" style="background:#EF4444;" />Very High</span>
-                            <span class="flex items-center gap-1.5 text-[10px] text-slate-500"><span class="h-2.5 w-2.5 rounded" style="background:#F59E0B;" />High</span>
-                            <span class="flex items-center gap-1.5 text-[10px] text-slate-500"><span class="h-2.5 w-2.5 rounded" style="background:#22C55E;" />Medium</span>
-                            <span class="flex items-center gap-1.5 text-[10px] text-slate-500"><span class="h-2.5 w-2.5 rounded" style="background:#A9DFB8;" />Low</span>
+                            <span class="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span class="h-2.5 w-2.5 rounded" style="background:#F87171;" />Very High</span>
+                            <span class="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span class="h-2.5 w-2.5 rounded" style="background:#FBBF24;" />High</span>
+                            <span class="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span class="h-2.5 w-2.5 rounded" style="background:#34D399;" />Medium</span>
+                            <span class="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span class="h-2.5 w-2.5 rounded" style="background:#A9DFB8;" />Low</span>
                         </div>
                     </div>
-                    <a class="mt-3.5 flex cursor-pointer items-center justify-center gap-1.5 text-[12.5px] font-semibold text-violet-600" @click="openTool('demandPrediction')">
+                    <a class="mt-3.5 flex cursor-pointer items-center justify-center gap-1.5 text-[12.5px] font-semibold text-brand" @click="openTool('demandPrediction')">
                         View Heatmap
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                     </a>
                 </div>
 
                 <!-- Investment Summary -->
-                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-5 shadow-card">
+                <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-5 shadow-card">
                     <div class="flex items-center justify-between gap-2">
-                        <div class="text-base font-bold text-slate-900">Investment Summary</div>
-                        <div class="flex cursor-pointer items-center gap-1 text-[11px] font-semibold text-slate-500">
+                        <div class="text-base font-bold text-foreground">Investment Summary</div>
+                        <div class="flex cursor-pointer items-center gap-1 text-[11px] font-semibold text-muted-foreground">
                             This Year
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA3B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
                         </div>
                     </div>
                     <div class="mt-3.5 flex flex-1 flex-col gap-0.5">
-                        <div v-for="item in investment_summary" :key="item.label" class="flex items-center justify-between border-b border-slate-100 py-2.5 last:border-b-0">
-                            <span class="flex items-center gap-2 text-[12.5px] text-slate-700">
+                        <div v-for="item in investment_summary" :key="item.label" class="flex items-center justify-between border-b border-border py-2.5 last:border-b-0">
+                            <span class="flex items-center gap-2 text-[12.5px] text-foreground/80">
                                 <span class="flex h-7 w-7 items-center justify-center rounded-lg" :style="{ background: item.bg, color: item.color }">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[item.icon]" />
                                 </span>
                                 {{ item.label }}
                             </span>
-                            <b class="text-[13.5px]" :style="item.highlight ? 'color:#22C55E' : ''">{{ item.value }}</b>
+                            <b class="text-[13.5px]" :style="item.highlight ? 'color:#34D399' : ''">{{ item.value }}</b>
                         </div>
                     </div>
-                    <a class="mt-2 flex cursor-pointer items-center justify-center gap-1.5 rounded-[11px] bg-violet-50 py-2.5 text-[12.5px] font-semibold text-violet-600" @click="openTool('report')">
+                    <a class="mt-2 flex cursor-pointer items-center justify-center gap-1.5 rounded-[11px] bg-gold/10 py-2.5 text-[12.5px] font-semibold text-brand" @click="openTool('report')">
                         View Detailed Report
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                     </a>
@@ -651,29 +651,29 @@ function handleQuickAction(key) {
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
 
                 <!-- Project Investment Overview -->
-                <div id="investment-table" class="min-w-0 scroll-mt-6 rounded-[18px] border border-border bg-white px-2 pb-3.5 pt-4">
+                <div id="investment-table" class="min-w-0 scroll-mt-6 rounded-[18px] border border-border bg-card px-2 pb-3.5 pt-4">
                     <div class="flex flex-wrap items-center justify-between gap-4 px-3.5 pb-2">
-                        <div class="text-[17px] font-bold text-slate-900">Project Investment Overview</div>
+                        <div class="text-[17px] font-bold text-foreground">Project Investment Overview</div>
                         <div class="flex flex-wrap items-center gap-2.5">
-                            <Button variant="outline" size="sm" class="gap-1.5 rounded-[10px] border-slate-200 text-[13px] font-semibold text-slate-700" :class="(filterLocation || filterDemand) && 'border-violet-300 bg-violet-50 text-violet-700'" @click="openTool('filters')">
+                            <Button variant="outline" size="sm" class="gap-1.5 rounded-[10px] border-border text-[13px] font-semibold text-foreground/80" :class="(filterLocation || filterDemand) && 'border-gold/40 bg-gold/10 text-brand'" @click="openTool('filters')">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
                                 Filters<template v-if="filterLocation || filterDemand"> (1)</template>
                             </Button>
-                            <Button variant="outline" size="sm" class="gap-1.5 rounded-[10px] border-slate-200 text-[13px] font-semibold text-slate-700" @click="exportFiltered">
+                            <Button variant="outline" size="sm" class="gap-1.5 rounded-[10px] border-border text-[13px] font-semibold text-foreground/80" @click="exportFiltered">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></svg>
                                 Export
                             </Button>
-                            <Button variant="outline" size="sm" class="gap-1.5 rounded-[10px] border-slate-200 text-[13px] font-semibold text-slate-700" :class="compareMode && 'border-violet-300 bg-violet-50 text-violet-700'" @click="toggleCompareMode">
+                            <Button variant="outline" size="sm" class="gap-1.5 rounded-[10px] border-border text-[13px] font-semibold text-foreground/80" :class="compareMode && 'border-gold/40 bg-gold/10 text-brand'" @click="toggleCompareMode">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4" /></svg>
                                 {{ compareMode ? 'Cancel Compare' : 'Compare' }}
                             </Button>
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap items-center border-b border-slate-100 px-3.5">
+                    <div class="flex flex-wrap items-center border-b border-border px-3.5">
                         <button v-for="t in tabs" :key="t.field + '-' + t.value" type="button"
                             class="border-b-2 px-3 py-2.5 text-[13.5px] font-semibold transition"
-                            :class="isActiveTab(t) ? 'border-violet-600 text-violet-600' : 'border-transparent text-slate-500 hover:text-slate-900'"
+                            :class="isActiveTab(t) ? 'border-gold text-brand' : 'border-transparent text-muted-foreground hover:text-foreground'"
                             @click="setTab(t)"
                         >{{ t.label }} ({{ t.count }})</button>
                     </div>
@@ -683,51 +683,51 @@ function handleQuickAction(key) {
                             <TableHeader>
                                 <TableRow class="hover:bg-transparent">
                                     <TableHead v-if="compareMode" class="h-auto w-10 py-3.5 pl-4"></TableHead>
-                                    <TableHead class="h-auto py-3.5 pl-4 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Project</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Location</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Investment (BDT)</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Current Value</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">ROI</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Rental</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Occupancy</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Demand</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Growth YoY</TableHead>
-                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Status</TableHead>
+                                    <TableHead class="h-auto py-3.5 pl-4 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Project</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Location</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Investment (BDT)</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Current Value</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">ROI</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Rental</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Occupancy</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Demand</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Growth YoY</TableHead>
+                                    <TableHead class="h-auto py-3.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Status</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 <TableRow v-if="pagedProjects.length === 0">
-                                    <TableCell :colspan="compareMode ? 11 : 10" class="py-10 text-center text-sm text-slate-400">No projects match this filter.</TableCell>
+                                    <TableCell :colspan="compareMode ? 11 : 10" class="py-10 text-center text-sm text-muted-foreground">No projects match this filter.</TableCell>
                                 </TableRow>
-                                <TableRow v-for="p in pagedProjects" :key="p.id" class="cursor-pointer" :class="compareSelection.includes(p.id) && 'bg-violet-50/60'">
+                                <TableRow v-for="p in pagedProjects" :key="p.id" class="cursor-pointer" :class="compareSelection.includes(p.id) && 'bg-gold/10'">
                                     <TableCell v-if="compareMode" class="py-3 pl-4" @click.stop="toggleCompareSelect(p.id)">
-                                        <input type="checkbox" class="h-4 w-4 accent-violet-600" :checked="compareSelection.includes(p.id)" @click.stop @change="toggleCompareSelect(p.id)" />
+                                        <input type="checkbox" class="h-4 w-4 accent-[#C6A15B]" :checked="compareSelection.includes(p.id)" @click.stop @change="toggleCompareSelect(p.id)" />
                                     </TableCell>
                                     <TableCell class="py-3 pl-4">
                                         <div class="flex items-center gap-2.5">
                                             <span class="flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-[9px]" :style="{ background: rowColors(p.id)[0], color: rowColors(p.id)[1] }">
                                                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01" /></svg>
                                             </span>
-                                            <span class="whitespace-nowrap text-[13px] font-bold text-slate-900">{{ p.name }}</span>
+                                            <span class="whitespace-nowrap text-[13px] font-bold text-foreground">{{ p.name }}</span>
                                         </div>
                                     </TableCell>
-                                    <TableCell class="whitespace-nowrap py-3 text-[12.5px] text-slate-700">{{ p.location }}</TableCell>
-                                    <TableCell class="whitespace-nowrap py-3 text-[13px] font-semibold text-slate-900">{{ formatBDT(p.investment) }}</TableCell>
-                                    <TableCell class="whitespace-nowrap py-3 text-[13px] font-bold text-slate-900">{{ formatBDT(p.value) }}</TableCell>
+                                    <TableCell class="whitespace-nowrap py-3 text-[12.5px] text-foreground/80">{{ p.location }}</TableCell>
+                                    <TableCell class="whitespace-nowrap py-3 text-[13px] font-semibold text-foreground">{{ formatBDT(p.investment) }}</TableCell>
+                                    <TableCell class="whitespace-nowrap py-3 text-[13px] font-bold text-foreground">{{ formatBDT(p.value) }}</TableCell>
                                     <TableCell class="py-3">
                                         <div class="flex items-center gap-2">
-                                            <span class="w-10 text-[12.5px] font-bold text-emerald-500">{{ p.roi }}%</span>
-                                            <div class="h-1.5 min-w-[54px] flex-1 overflow-hidden rounded-full bg-emerald-50">
-                                                <div class="h-full rounded-full bg-emerald-500" :style="{ width: roiWidth(p.roi) + '%' }" />
+                                            <span class="w-10 text-[12.5px] font-bold text-success">{{ p.roi }}%</span>
+                                            <div class="h-1.5 min-w-[54px] flex-1 overflow-hidden rounded-full bg-success/15">
+                                                <div class="h-full rounded-full bg-success" :style="{ width: roiWidth(p.roi) + '%' }" />
                                             </div>
                                         </div>
                                     </TableCell>
-                                    <TableCell class="whitespace-nowrap py-3 text-[12.5px] font-semibold text-slate-700">{{ p.rental }}%</TableCell>
+                                    <TableCell class="whitespace-nowrap py-3 text-[12.5px] font-semibold text-foreground/80">{{ p.rental }}%</TableCell>
                                     <TableCell class="py-3">
                                         <div class="flex items-center gap-2">
-                                            <span class="w-8 text-[12.5px] font-semibold text-slate-900">{{ p.occupancy }}%</span>
-                                            <div class="h-1.5 min-w-[54px] flex-1 overflow-hidden rounded-full bg-blue-50">
-                                                <div class="h-full rounded-full bg-blue-500" :style="{ width: p.occupancy + '%' }" />
+                                            <span class="w-8 text-[12.5px] font-semibold text-foreground">{{ p.occupancy }}%</span>
+                                            <div class="h-1.5 min-w-[54px] flex-1 overflow-hidden rounded-full bg-info/15">
+                                                <div class="h-full rounded-full bg-info" :style="{ width: p.occupancy + '%' }" />
                                             </div>
                                         </div>
                                     </TableCell>
@@ -735,7 +735,7 @@ function handleQuickAction(key) {
                                         <Badge variant="outline" class="whitespace-nowrap rounded-full border-transparent px-2.5 py-1 text-[11px] font-bold" :style="{ background: demandStyle[p.demand]?.bg, color: demandStyle[p.demand]?.color }">{{ p.demand }}</Badge>
                                     </TableCell>
                                     <TableCell class="py-3">
-                                        <span class="flex items-center gap-1 text-[12.5px] font-bold text-emerald-500">
+                                        <span class="flex items-center gap-1 text-[12.5px] font-bold text-success">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8" /></svg>
                                             {{ p.growth_yoy }}%
                                         </span>
@@ -748,20 +748,20 @@ function handleQuickAction(key) {
                         </Table>
                     </div>
 
-                    <div class="flex flex-wrap items-center justify-between gap-2.5 border-t border-slate-100 px-3.5 pb-1 pt-4">
-                        <span class="text-[12.5px] text-slate-500">
+                    <div class="flex flex-wrap items-center justify-between gap-2.5 border-t border-border px-3.5 pb-1 pt-4">
+                        <span class="text-[12.5px] text-muted-foreground">
                             Showing {{ filteredProjects.length === 0 ? 0 : (currentPage - 1) * perPage + 1 }}
                             to {{ Math.min(currentPage * perPage, filteredProjects.length) }}
                             of {{ filteredProjects.length }} projects
                         </span>
                         <div class="flex items-center gap-1.5">
-                            <button type="button" class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-slate-200 text-slate-400 disabled:opacity-40" :disabled="currentPage === 1" @click="goPage(currentPage - 1)">‹</button>
+                            <button type="button" class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-border text-muted-foreground disabled:opacity-40" :disabled="currentPage === 1" @click="goPage(currentPage - 1)">‹</button>
                             <button v-for="n in totalPages" :key="n" type="button"
                                 class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] text-[13px] font-semibold"
-                                :class="currentPage === n ? 'bg-violet-600 text-white' : 'border border-slate-200 text-slate-700'"
+                                :class="currentPage === n ? 'bg-gold-gradient text-on-gold' : 'border border-border text-foreground/80'"
                                 @click="goPage(n)"
                             >{{ n }}</button>
-                            <button type="button" class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-slate-200 text-slate-400 disabled:opacity-40" :disabled="currentPage === totalPages" @click="goPage(currentPage + 1)">›</button>
+                            <button type="button" class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-border text-muted-foreground disabled:opacity-40" :disabled="currentPage === totalPages" @click="goPage(currentPage + 1)">›</button>
                         </div>
                     </div>
                 </div>
@@ -770,25 +770,25 @@ function handleQuickAction(key) {
                 <div class="flex min-w-0 flex-col gap-6">
 
                     <!-- Top Performing Projects -->
-                    <div class="rounded-[18px] border border-border bg-white p-5 shadow-card">
+                    <div class="rounded-[18px] border border-border bg-card p-5 shadow-card">
                         <div class="mb-1.5 flex items-center justify-between">
-                            <div class="text-base font-bold text-slate-900">Top Performing Projects</div>
-                            <a class="cursor-pointer text-xs font-semibold text-violet-600" @click="openTool('marketAnalysis')">View All</a>
+                            <div class="text-base font-bold text-foreground">Top Performing Projects</div>
+                            <a class="cursor-pointer text-xs font-semibold text-brand" @click="openTool('marketAnalysis')">View All</a>
                         </div>
                         <div class="flex flex-col">
-                            <div v-for="t in topPerformingProjects" :key="t.rank" class="flex items-center gap-2.5 border-t border-slate-100 py-2.5 first:border-t-0">
-                                <div class="w-3.5 flex-shrink-0 text-[13px] font-extrabold text-slate-300">{{ t.rank }}</div>
+                            <div v-for="t in topPerformingProjects" :key="t.rank" class="flex items-center gap-2.5 border-t border-border py-2.5 first:border-t-0">
+                                <div class="w-3.5 flex-shrink-0 text-[13px] font-extrabold text-muted-foreground/50">{{ t.rank }}</div>
                                 <div class="flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-[9px]" :style="{ background: rowColorPairs[(t.rank - 1) % rowColorPairs.length][0], color: rowColorPairs[(t.rank - 1) % rowColorPairs.length][1] }">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01" /></svg>
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <div class="truncate text-[13px] font-bold text-slate-900">{{ t.name }}</div>
+                                    <div class="truncate text-[13px] font-bold text-foreground">{{ t.name }}</div>
                                     <div class="mt-0.5 flex items-center gap-2.5">
-                                        <span class="text-[11px] text-slate-400">ROI <b class="text-slate-700">{{ t.roi }}</b></span>
-                                        <span class="text-[11px] text-slate-400">{{ t.rental }}</span>
+                                        <span class="text-[11px] text-muted-foreground">ROI <b class="text-foreground/80">{{ t.roi }}</b></span>
+                                        <span class="text-[11px] text-muted-foreground">{{ t.rental }}</span>
                                     </div>
                                 </div>
-                                <div class="flex flex-shrink-0 items-center gap-0.5 text-xs font-bold text-emerald-500">
+                                <div class="flex flex-shrink-0 items-center gap-0.5 text-xs font-bold text-success">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8" /></svg>
                                     {{ t.growth }}
                                 </div>
@@ -797,25 +797,25 @@ function handleQuickAction(key) {
                     </div>
 
                     <!-- Market Insights -->
-                    <div class="rounded-[18px] border border-border bg-white p-5 shadow-card">
+                    <div class="rounded-[18px] border border-border bg-card p-5 shadow-card">
                         <div class="mb-2 flex items-center justify-between">
                             <div class="flex items-center gap-1.5">
-                                <div class="text-base font-bold text-slate-900">Market Insights</div>
-                                <span class="flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-bold text-violet-600">
+                                <div class="text-base font-bold text-foreground">Market Insights</div>
+                                <span class="flex items-center gap-1 rounded-full bg-gold/10 px-2 py-0.5 text-[10px] font-bold text-brand">
                                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z" /></svg>
                                     AI
                                 </span>
                             </div>
-                            <a class="cursor-pointer text-xs font-semibold text-violet-600" @click="openTool('aiRecommendations')">View All</a>
+                            <a class="cursor-pointer text-xs font-semibold text-brand" @click="openTool('aiRecommendations')">View All</a>
                         </div>
                         <div class="flex max-h-[280px] flex-col overflow-y-auto">
-                            <div v-for="(ins, i) in insights" :key="i" class="flex items-start gap-2.5 border-t border-slate-100 py-3 first:border-t-0">
+                            <div v-for="(ins, i) in insights" :key="i" class="flex items-start gap-2.5 border-t border-border py-3 first:border-t-0">
                                 <span class="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-[9px]" :style="{ background: ins.bg, color: ins.color }">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z" /></svg>
                                 </span>
                                 <div class="min-w-0 flex-1">
-                                    <div class="text-[12.5px] font-semibold leading-snug text-slate-800">{{ ins.text }}</div>
-                                    <div class="mt-1 text-[11px] text-slate-400">{{ ins.time }}</div>
+                                    <div class="text-[12.5px] font-semibold leading-snug text-foreground">{{ ins.text }}</div>
+                                    <div class="mt-1 text-[11px] text-muted-foreground">{{ ins.time }}</div>
                                 </div>
                             </div>
                         </div>
@@ -824,17 +824,17 @@ function handleQuickAction(key) {
             </div>
 
             <!-- Quick Investment Actions -->
-            <div class="rounded-[18px] border border-border bg-white p-5 shadow-card">
-                <div class="mb-3.5 text-base font-bold text-slate-900">Quick Investment Actions</div>
+            <div class="rounded-[18px] border border-border bg-card p-5 shadow-card">
+                <div class="mb-3.5 text-base font-bold text-foreground">Quick Investment Actions</div>
                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-9">
                     <button v-for="qa in quick_actions" :key="qa.key" type="button"
-                        class="flex flex-col items-center gap-2 rounded-[14px] border border-slate-200 px-1.5 py-3.5 transition hover:-translate-y-0.5"
+                        class="flex flex-col items-center gap-2 rounded-[14px] border border-border px-1.5 py-3.5 transition hover:-translate-y-0.5"
                         @click="handleQuickAction(qa.key)"
                     >
                         <span class="flex h-9 w-9 items-center justify-center rounded-[10px]" :style="{ background: qa.bg, color: qa.color }">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[qa.icon]" />
                         </span>
-                        <span class="text-center text-[11px] font-semibold text-slate-700">{{ qa.label }}</span>
+                        <span class="text-center text-[11px] font-semibold text-foreground/80">{{ qa.label }}</span>
                     </button>
                 </div>
             </div>
@@ -845,7 +845,7 @@ function handleQuickAction(key) {
             <div v-if="compareMode && compareSelection.length > 0" class="fixed bottom-6 left-1/2 z-[110] flex -translate-x-1/2 items-center gap-3 rounded-2xl bg-slate-900 px-5 py-3 text-white shadow-2xl">
                 <span class="text-sm font-semibold">{{ compareSelection.length }} project{{ compareSelection.length > 1 ? 's' : '' }} selected</span>
                 <button type="button" class="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold hover:bg-white/20" @click="compareSelection = []">Clear</button>
-                <button type="button" class="rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-semibold hover:bg-violet-500" :disabled="compareSelection.length < 2" :class="compareSelection.length < 2 && 'cursor-not-allowed opacity-50'" @click="openTool('compareView')">Compare Now</button>
+                <button type="button" class="rounded-lg bg-gold-gradient px-3 py-1.5 text-xs font-semibold text-on-gold hover:shadow-gold-glow" :disabled="compareSelection.length < 2" :class="compareSelection.length < 2 && 'cursor-not-allowed opacity-50'" @click="openTool('compareView')">Compare Now</button>
             </div>
         </Teleport>
 
@@ -853,35 +853,35 @@ function handleQuickAction(key) {
         <Teleport to="body">
             <div v-if="activeTool === 'filters'" class="fixed inset-0 z-50" @click="closeTool">
                 <div class="absolute inset-0 bg-black/40" />
-                <div class="absolute inset-y-0 right-0 w-full max-w-[380px] bg-white shadow-2xl" @click.stop>
-                    <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+                <div class="absolute inset-y-0 right-0 w-full max-w-[380px] bg-card shadow-2xl" @click.stop>
+                    <div class="flex items-center justify-between border-b border-border px-6 py-5">
                         <div>
-                            <div class="text-[17px] font-bold text-slate-900">Filter Projects</div>
-                            <div class="mt-0.5 text-xs text-slate-400">Refine the investment table below.</div>
+                            <div class="text-[17px] font-bold text-foreground">Filter Projects</div>
+                            <div class="mt-0.5 text-xs text-muted-foreground">Refine the investment table below.</div>
                         </div>
-                        <button class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200" @click="closeTool">
+                        <button class="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70" @click="closeTool">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
                         </button>
                     </div>
                     <div class="flex flex-col gap-4 p-6">
                         <div>
-                            <div class="mb-1.5 text-xs font-semibold text-slate-500">Location</div>
-                            <select v-model="filterLocation" class="h-[42px] w-full rounded-xl border border-slate-200 px-3 text-sm text-slate-700 outline-none focus:border-violet-400">
+                            <div class="mb-1.5 text-xs font-semibold text-muted-foreground">Location</div>
+                            <select v-model="filterLocation" class="h-[42px] w-full rounded-xl border border-border px-3 text-sm text-foreground/80 outline-none focus:border-gold">
                                 <option value="">Any location</option>
                                 <option v-for="loc in uniqueLocations" :key="loc" :value="loc">{{ loc }}</option>
                             </select>
                         </div>
                         <div>
-                            <div class="mb-1.5 text-xs font-semibold text-slate-500">Demand</div>
-                            <select v-model="filterDemand" class="h-[42px] w-full rounded-xl border border-slate-200 px-3 text-sm text-slate-700 outline-none focus:border-violet-400">
+                            <div class="mb-1.5 text-xs font-semibold text-muted-foreground">Demand</div>
+                            <select v-model="filterDemand" class="h-[42px] w-full rounded-xl border border-border px-3 text-sm text-foreground/80 outline-none focus:border-gold">
                                 <option value="">Any demand level</option>
                                 <option v-for="lvl in Object.keys(demandStyle)" :key="lvl" :value="lvl">{{ lvl }}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2.5 border-t border-slate-100 bg-slate-50 px-6 py-4">
-                        <button class="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100" @click="resetFilters">Reset</button>
-                        <button class="flex-[1.5] rounded-xl bg-violet-600 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-600/30" @click="applyFilters">Apply Filters</button>
+                    <div class="flex items-center gap-2.5 border-t border-border bg-muted px-6 py-4">
+                        <button class="flex-1 rounded-xl border border-border bg-card py-2.5 text-sm font-semibold text-foreground/80 hover:bg-muted" @click="resetFilters">Reset</button>
+                        <button class="flex-[1.5] rounded-xl bg-gold-gradient py-2.5 text-sm font-bold text-on-gold shadow-gold-glow" @click="applyFilters">Apply Filters</button>
                     </div>
                 </div>
             </div>
@@ -891,9 +891,9 @@ function handleQuickAction(key) {
         <Teleport to="body">
             <div v-if="activeTool && activeTool !== 'filters'" class="fixed inset-0 z-50 flex items-center justify-center p-4" @click="closeTool">
                 <div class="absolute inset-0 bg-black/45" />
-                <div class="relative z-10 max-h-[85vh] w-full overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl" :class="activeTool === 'report' || activeTool === 'compareView' ? 'max-w-2xl' : 'max-w-md'" @click.stop>
+                <div class="relative z-10 max-h-[85vh] w-full overflow-y-auto rounded-2xl bg-card p-6 shadow-2xl" :class="activeTool === 'report' || activeTool === 'compareView' ? 'max-w-2xl' : 'max-w-md'" @click.stop>
                     <div class="mb-5 flex items-center justify-between">
-                        <div class="text-[17px] font-bold text-slate-900">
+                        <div class="text-[17px] font-bold text-foreground">
                             <template v-if="activeTool === 'report'">Investment Report</template>
                             <template v-else-if="activeTool === 'settings'">Market Settings</template>
                             <template v-else-if="activeTool === 'marketAnalysis'">Market Analysis by Location</template>
@@ -904,52 +904,52 @@ function handleQuickAction(key) {
                             <template v-else-if="activeTool === 'aiRecommendations'">AI Recommendations</template>
                             <template v-else-if="activeTool === 'compareView'">Compare Projects</template>
                         </div>
-                        <button class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200" @click="closeTool">
+                        <button class="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:bg-muted/70" @click="closeTool">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
                         </button>
                     </div>
 
                     <!-- Investment Report -->
                     <div v-if="activeTool === 'report'">
-                        <div class="mb-4 text-xs text-slate-400">Generated {{ reportGeneratedAt }}</div>
+                        <div class="mb-4 text-xs text-muted-foreground">Generated {{ reportGeneratedAt }}</div>
                         <div class="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                            <div v-for="k in kpis" :key="k.key" class="rounded-xl border border-slate-100 p-3">
-                                <div class="text-[10.5px] font-semibold text-slate-400">{{ k.label }}</div>
-                                <div class="mt-1 text-base font-extrabold text-slate-900">{{ k.value }}{{ k.suffix }}</div>
+                            <div v-for="k in kpis" :key="k.key" class="rounded-xl border border-border p-3">
+                                <div class="text-[10.5px] font-semibold text-muted-foreground">{{ k.label }}</div>
+                                <div class="mt-1 text-base font-extrabold text-foreground">{{ k.value }}{{ k.suffix }}</div>
                             </div>
                         </div>
-                        <div class="mb-2 text-xs font-bold uppercase tracking-wide text-slate-400">Investment Summary</div>
+                        <div class="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Investment Summary</div>
                         <div class="mb-5 flex flex-col">
-                            <div v-for="item in investment_summary" :key="item.label" class="flex items-center justify-between border-b border-slate-100 py-2 last:border-b-0">
-                                <span class="text-[12.5px] text-slate-600">{{ item.label }}</span>
+                            <div v-for="item in investment_summary" :key="item.label" class="flex items-center justify-between border-b border-border py-2 last:border-b-0">
+                                <span class="text-[12.5px] text-muted-foreground">{{ item.label }}</span>
                                 <b class="text-[13px]">{{ item.value }}</b>
                             </div>
                         </div>
-                        <div class="mb-2 text-xs font-bold uppercase tracking-wide text-slate-400">Top Performing Projects</div>
+                        <div class="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Top Performing Projects</div>
                         <div class="mb-5 flex flex-col">
-                            <div v-for="t in topPerformingProjects" :key="t.rank" class="flex items-center justify-between border-b border-slate-100 py-2 last:border-b-0 text-[12.5px]">
-                                <span class="text-slate-700">{{ t.rank }}. {{ t.name }}</span>
-                                <span class="font-bold text-emerald-500">ROI {{ t.roi }}</span>
+                            <div v-for="t in topPerformingProjects" :key="t.rank" class="flex items-center justify-between border-b border-border py-2 last:border-b-0 text-[12.5px]">
+                                <span class="text-foreground/80">{{ t.rank }}. {{ t.name }}</span>
+                                <span class="font-bold text-success">ROI {{ t.roi }}</span>
                             </div>
                         </div>
                         <div class="flex gap-2.5">
-                            <button class="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50" @click="exportAll">Download Data (CSV)</button>
-                            <button class="flex-1 rounded-xl bg-violet-600 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-600/30" @click="printReport">Print / Save as PDF</button>
+                            <button class="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold text-foreground/80 hover:bg-muted" @click="exportAll">Download Data (CSV)</button>
+                            <button class="flex-1 rounded-xl bg-gold-gradient py-2.5 text-sm font-bold text-on-gold shadow-gold-glow" @click="printReport">Print / Save as PDF</button>
                         </div>
                     </div>
 
                     <!-- Market Settings -->
                     <div v-else-if="activeTool === 'settings'">
                         <div class="mb-5">
-                            <div class="mb-1.5 text-xs font-semibold text-slate-500">Table number format</div>
+                            <div class="mb-1.5 text-xs font-semibold text-muted-foreground">Table number format</div>
                             <div class="flex gap-2">
-                                <button type="button" class="flex-1 rounded-xl border px-3 py-2.5 text-xs font-semibold" :class="!compactNumbers ? 'border-violet-600 bg-violet-50 text-violet-700' : 'border-slate-200 text-slate-600'" @click="compactNumbers = false">Full — BDT 1,850,000,000</button>
-                                <button type="button" class="flex-1 rounded-xl border px-3 py-2.5 text-xs font-semibold" :class="compactNumbers ? 'border-violet-600 bg-violet-50 text-violet-700' : 'border-slate-200 text-slate-600'" @click="compactNumbers = true">Compact — BDT 1.85B</button>
+                                <button type="button" class="flex-1 rounded-xl border px-3 py-2.5 text-xs font-semibold" :class="!compactNumbers ? 'border-gold bg-gold/10 text-brand' : 'border-border text-muted-foreground'" @click="compactNumbers = false">Full — BDT 1,850,000,000</button>
+                                <button type="button" class="flex-1 rounded-xl border px-3 py-2.5 text-xs font-semibold" :class="compactNumbers ? 'border-gold bg-gold/10 text-brand' : 'border-border text-muted-foreground'" @click="compactNumbers = true">Compact — BDT 1.85B</button>
                             </div>
                         </div>
                         <div>
-                            <div class="mb-1.5 text-xs font-semibold text-slate-500">Default heatmap region</div>
-                            <select v-model.number="activeRegionIdx" class="h-[42px] w-full rounded-xl border border-slate-200 px-3 text-sm text-slate-700 outline-none focus:border-violet-400">
+                            <div class="mb-1.5 text-xs font-semibold text-muted-foreground">Default heatmap region</div>
+                            <select v-model.number="activeRegionIdx" class="h-[42px] w-full rounded-xl border border-border px-3 text-sm text-foreground/80 outline-none focus:border-gold">
                                 <option v-for="(r, i) in heatmap_regions" :key="r.name" :value="i">{{ r.name }}</option>
                             </select>
                         </div>
@@ -960,20 +960,20 @@ function handleQuickAction(key) {
                         <table class="w-full min-w-[480px] border-collapse text-sm">
                             <thead>
                                 <tr>
-                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">Location</th>
-                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">Projects</th>
-                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">Investment</th>
-                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">Avg ROI</th>
-                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">Avg Rental</th>
+                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">Location</th>
+                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">Projects</th>
+                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">Investment</th>
+                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">Avg ROI</th>
+                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">Avg Rental</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="row in marketAnalysisRows" :key="row.location" class="border-t border-slate-100">
-                                    <td class="px-2 py-2.5 font-semibold text-slate-900">{{ row.location }}</td>
-                                    <td class="px-2 py-2.5 text-slate-600">{{ row.count }}</td>
-                                    <td class="px-2 py-2.5 text-slate-600">{{ formatBDT(row.investment) }}</td>
-                                    <td class="px-2 py-2.5 font-bold text-emerald-500">{{ row.avgRoi }}%</td>
-                                    <td class="px-2 py-2.5 text-slate-600">{{ row.avgRental }}%</td>
+                                <tr v-for="row in marketAnalysisRows" :key="row.location" class="border-t border-border">
+                                    <td class="px-2 py-2.5 font-semibold text-foreground">{{ row.location }}</td>
+                                    <td class="px-2 py-2.5 text-muted-foreground">{{ row.count }}</td>
+                                    <td class="px-2 py-2.5 text-muted-foreground">{{ formatBDT(row.investment) }}</td>
+                                    <td class="px-2 py-2.5 font-bold text-success">{{ row.avgRoi }}%</td>
+                                    <td class="px-2 py-2.5 text-muted-foreground">{{ row.avgRental }}%</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -982,19 +982,19 @@ function handleQuickAction(key) {
                     <!-- ROI Calculator -->
                     <div v-else-if="activeTool === 'roiCalculator'">
                         <div class="mb-4">
-                            <div class="mb-1.5 text-xs font-semibold text-slate-500">Investment amount (BDT)</div>
-                            <input v-model.number="calcAmount" type="number" min="0" step="10000" class="h-[42px] w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-violet-400" />
+                            <div class="mb-1.5 text-xs font-semibold text-muted-foreground">Investment amount (BDT)</div>
+                            <input v-model.number="calcAmount" type="number" min="0" step="10000" class="h-[42px] w-full rounded-xl border border-border px-3 text-sm outline-none focus:border-gold" />
                         </div>
                         <div class="mb-5">
-                            <div class="mb-1.5 text-xs font-semibold text-slate-500">Reference project</div>
-                            <select v-model.number="calcProjectId" class="h-[42px] w-full rounded-xl border border-slate-200 px-3 text-sm text-slate-700 outline-none focus:border-violet-400">
+                            <div class="mb-1.5 text-xs font-semibold text-muted-foreground">Reference project</div>
+                            <select v-model.number="calcProjectId" class="h-[42px] w-full rounded-xl border border-border px-3 text-sm text-foreground/80 outline-none focus:border-gold">
                                 <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }} ({{ p.roi }}% ROI)</option>
                             </select>
                         </div>
-                        <div v-if="calcResult" class="flex flex-col gap-2 rounded-xl bg-slate-50 p-4">
-                            <div class="flex items-center justify-between text-sm"><span class="text-slate-500">Projected Value (Year 1)</span><b class="text-slate-900">{{ formatBDT(calcResult.projectedValue) }}</b></div>
-                            <div class="flex items-center justify-between text-sm"><span class="text-slate-500">Annual Rental Income</span><b class="text-slate-900">{{ formatBDT(calcResult.annualRental) }}</b></div>
-                            <div class="flex items-center justify-between text-sm"><span class="text-slate-500">Capital Gain</span><b class="text-emerald-500">{{ formatBDT(calcResult.capitalGain) }}</b></div>
+                        <div v-if="calcResult" class="flex flex-col gap-2 rounded-xl bg-muted p-4">
+                            <div class="flex items-center justify-between text-sm"><span class="text-muted-foreground">Projected Value (Year 1)</span><b class="text-foreground">{{ formatBDT(calcResult.projectedValue) }}</b></div>
+                            <div class="flex items-center justify-between text-sm"><span class="text-muted-foreground">Annual Rental Income</span><b class="text-foreground">{{ formatBDT(calcResult.annualRental) }}</b></div>
+                            <div class="flex items-center justify-between text-sm"><span class="text-muted-foreground">Capital Gain</span><b class="text-success">{{ formatBDT(calcResult.capitalGain) }}</b></div>
                         </div>
                     </div>
 
@@ -1003,54 +1003,54 @@ function handleQuickAction(key) {
                         <table class="w-full min-w-[420px] border-collapse text-sm">
                             <thead>
                                 <tr>
-                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">City</th>
-                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">Growth Rate</th>
-                                    <th v-for="y in forecastYearLabels" :key="y" class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">{{ y }}</th>
+                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">City</th>
+                                    <th class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">Growth Rate</th>
+                                    <th v-for="y in forecastYearLabels" :key="y" class="px-2 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">{{ y }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="row in forecastRows" :key="row.name" class="border-t border-slate-100">
-                                    <td class="px-2 py-2.5 font-semibold text-slate-900"><span class="mr-1.5 inline-block h-2 w-2 rounded-full" :style="{ background: row.color }" />{{ row.name }}</td>
-                                    <td class="px-2 py-2.5 font-bold text-emerald-500">{{ row.ratePct }}%</td>
-                                    <td v-for="(val, i) in row.future" :key="i" class="px-2 py-2.5 text-slate-700">{{ mg.unit }} {{ val.toLocaleString() }}</td>
+                                <tr v-for="row in forecastRows" :key="row.name" class="border-t border-border">
+                                    <td class="px-2 py-2.5 font-semibold text-foreground"><span class="mr-1.5 inline-block h-2 w-2 rounded-full" :style="{ background: row.color }" />{{ row.name }}</td>
+                                    <td class="px-2 py-2.5 font-bold text-success">{{ row.ratePct }}%</td>
+                                    <td v-for="(val, i) in row.future" :key="i" class="px-2 py-2.5 text-foreground/80">{{ mg.unit }} {{ val.toLocaleString() }}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p class="mt-3 text-xs text-slate-400">Projected using each city's own historical compound growth rate from the Market Growth chart.</p>
+                        <p class="mt-3 text-xs text-muted-foreground">Projected using each city's own historical compound growth rate from the Market Growth chart.</p>
                     </div>
 
                     <!-- Price Simulator -->
                     <div v-else-if="activeTool === 'priceSimulator'">
                         <div class="mb-4">
-                            <div class="mb-1.5 text-xs font-semibold text-slate-500">City</div>
-                            <select v-model="simCity" class="h-[42px] w-full rounded-xl border border-slate-200 px-3 text-sm text-slate-700 outline-none focus:border-violet-400">
+                            <div class="mb-1.5 text-xs font-semibold text-muted-foreground">City</div>
+                            <select v-model="simCity" class="h-[42px] w-full rounded-xl border border-border px-3 text-sm text-foreground/80 outline-none focus:border-gold">
                                 <option v-for="c in mgMaster.cities" :key="c.name" :value="c.name">{{ c.name }}</option>
                             </select>
                         </div>
                         <div class="mb-5">
-                            <div class="mb-1.5 flex items-center justify-between text-xs font-semibold text-slate-500">
+                            <div class="mb-1.5 flex items-center justify-between text-xs font-semibold text-muted-foreground">
                                 <span>Years ahead</span><span>{{ simYears }} year{{ simYears > 1 ? 's' : '' }}</span>
                             </div>
-                            <input v-model.number="simYears" type="range" min="1" max="10" step="1" class="w-full accent-violet-600" />
+                            <input v-model.number="simYears" type="range" min="1" max="10" step="1" class="w-full accent-[#C6A15B]" />
                         </div>
-                        <div class="flex flex-col gap-2 rounded-xl bg-slate-50 p-4 text-sm">
-                            <div class="flex items-center justify-between"><span class="text-slate-500">Current price/sqft</span><b class="text-slate-900">{{ mg.unit }} {{ simResult.current.toLocaleString() }}</b></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-500">Projected price/sqft</span><b class="text-emerald-500">{{ mg.unit }} {{ simResult.projected.toLocaleString() }}</b></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-500">Est. annual growth</span><b class="text-slate-900">{{ simResult.perYearRatePct }}%</b></div>
+                        <div class="flex flex-col gap-2 rounded-xl bg-muted p-4 text-sm">
+                            <div class="flex items-center justify-between"><span class="text-muted-foreground">Current price/sqft</span><b class="text-foreground">{{ mg.unit }} {{ simResult.current.toLocaleString() }}</b></div>
+                            <div class="flex items-center justify-between"><span class="text-muted-foreground">Projected price/sqft</span><b class="text-success">{{ mg.unit }} {{ simResult.projected.toLocaleString() }}</b></div>
+                            <div class="flex items-center justify-between"><span class="text-muted-foreground">Est. annual growth</span><b class="text-foreground">{{ simResult.perYearRatePct }}%</b></div>
                         </div>
                     </div>
 
                     <!-- Demand Prediction -->
                     <div v-else-if="activeTool === 'demandPrediction'">
                         <div class="grid grid-cols-3 gap-3 text-center">
-                            <div class="rounded-xl bg-slate-50 p-4"><div class="text-[11px] font-semibold text-slate-400">Current</div><div class="mt-1 text-xl font-extrabold text-slate-900">{{ demandForecast.current }}</div></div>
-                            <div class="rounded-xl bg-slate-50 p-4"><div class="text-[11px] font-semibold text-slate-400">Next Quarter</div><div class="mt-1 text-xl font-extrabold text-slate-900">{{ demandForecast.q1 }}</div></div>
-                            <div class="rounded-xl bg-slate-50 p-4"><div class="text-[11px] font-semibold text-slate-400">In 2 Quarters</div><div class="mt-1 text-xl font-extrabold text-emerald-500">{{ demandForecast.q2 }}</div></div>
+                            <div class="rounded-xl bg-muted p-4"><div class="text-[11px] font-semibold text-muted-foreground">Current</div><div class="mt-1 text-xl font-extrabold text-foreground">{{ demandForecast.current }}</div></div>
+                            <div class="rounded-xl bg-muted p-4"><div class="text-[11px] font-semibold text-muted-foreground">Next Quarter</div><div class="mt-1 text-xl font-extrabold text-foreground">{{ demandForecast.q1 }}</div></div>
+                            <div class="rounded-xl bg-muted p-4"><div class="text-[11px] font-semibold text-muted-foreground">In 2 Quarters</div><div class="mt-1 text-xl font-extrabold text-success">{{ demandForecast.q2 }}</div></div>
                         </div>
-                        <p class="mt-4 text-xs text-slate-400">Projected from the Market Demand Index KPI's own month-over-month change, compounded per quarter.</p>
+                        <p class="mt-4 text-xs text-muted-foreground">Projected from the Market Demand Index KPI's own month-over-month change, compounded per quarter.</p>
                         <div class="mt-4 flex flex-col gap-2">
-                            <div v-for="r in heatmap_regions" :key="r.name" class="flex items-center justify-between rounded-lg border border-slate-100 px-3 py-2 text-sm">
-                                <span class="font-semibold text-slate-700">{{ r.name }}</span>
+                            <div v-for="r in heatmap_regions" :key="r.name" class="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
+                                <span class="font-semibold text-foreground/80">{{ r.name }}</span>
                                 <Badge variant="outline" class="border-transparent text-[11px] font-bold" :style="{ background: demandStyle[r.level]?.bg, color: demandStyle[r.level]?.color }">{{ r.level }}</Badge>
                             </div>
                         </div>
@@ -1058,11 +1058,11 @@ function handleQuickAction(key) {
 
                     <!-- AI Recommendations -->
                     <div v-else-if="activeTool === 'aiRecommendations'" class="flex flex-col gap-3">
-                        <div v-for="(rec, i) in aiRecommendations" :key="i" class="flex items-start gap-3 rounded-xl border border-slate-100 p-3">
+                        <div v-for="(rec, i) in aiRecommendations" :key="i" class="flex items-start gap-3 rounded-xl border border-border p-3">
                             <span class="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg" :style="{ background: rec.bg, color: rec.color }">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z" /></svg>
                             </span>
-                            <div class="text-[13px] leading-snug text-slate-700">{{ rec.text }}</div>
+                            <div class="text-[13px] leading-snug text-foreground/80">{{ rec.text }}</div>
                         </div>
                     </div>
 
@@ -1071,14 +1071,14 @@ function handleQuickAction(key) {
                         <table class="w-full min-w-[560px] border-collapse text-sm">
                             <thead>
                                 <tr>
-                                    <th class="px-3 py-2 text-left text-[11px] font-semibold uppercase text-slate-400">Metric</th>
-                                    <th v-for="p in compareProjects" :key="p.id" class="px-3 py-2 text-left text-[12.5px] font-bold text-slate-900">{{ p.name }}</th>
+                                    <th class="px-3 py-2 text-left text-[11px] font-semibold uppercase text-muted-foreground">Metric</th>
+                                    <th v-for="p in compareProjects" :key="p.id" class="px-3 py-2 text-left text-[12.5px] font-bold text-foreground">{{ p.name }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="row in compareRows" :key="row.label" class="border-t border-slate-100">
-                                    <td class="px-3 py-2 text-xs font-semibold text-slate-500">{{ row.label }}</td>
-                                    <td v-for="p in compareProjects" :key="p.id + row.label" class="px-3 py-2 text-sm font-semibold text-slate-900">{{ row.get(p) }}</td>
+                                <tr v-for="row in compareRows" :key="row.label" class="border-t border-border">
+                                    <td class="px-3 py-2 text-xs font-semibold text-muted-foreground">{{ row.label }}</td>
+                                    <td v-for="p in compareProjects" :key="p.id + row.label" class="px-3 py-2 text-sm font-semibold text-foreground">{{ row.get(p) }}</td>
                                 </tr>
                             </tbody>
                         </table>

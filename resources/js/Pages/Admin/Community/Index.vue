@@ -86,12 +86,12 @@ const customInitiatives = ref(loadCustomInitiatives());
 const combinedRoadmap = computed(() => [...props.roadmap, ...customInitiatives.value]);
 
 const colorChoices = [
-    { bg: '#F1ECFF', color: '#5B3DF5' },
-    { bg: '#E6F7EE', color: '#22C55E' },
-    { bg: '#E8F0FF', color: '#3B82F6' },
-    { bg: '#FFF3E0', color: '#F59E0B' },
-    { bg: '#FDE8E8', color: '#EF4444' },
-    { bg: '#CCFBF1', color: '#0D9488' },
+    { bg: 'rgba(198,161,91,0.12)', color: '#C6A15B' },
+    { bg: 'rgba(52,211,153,0.15)', color: '#34D399' },
+    { bg: 'rgba(96,165,250,0.15)', color: '#60A5FA' },
+    { bg: 'rgba(251,191,36,0.15)', color: '#FBBF24' },
+    { bg: 'rgba(248,113,113,0.15)', color: '#F87171' },
+    { bg: 'rgba(34,211,238,0.15)', color: '#22D3EE' },
 ];
 const iconChoices = ['spark', 'green', 'smart', 'education', 'heart', 'housing', 'lightning', 'inclusion'];
 
@@ -129,7 +129,7 @@ function submitInitiative() {
                 <p class="mt-1 text-sm text-muted-foreground">Building better communities today for a sustainable tomorrow.</p>
             </div>
             <div class="flex items-center gap-3">
-                <Button @click="openAddInitiative" class="gap-2 rounded-xl bg-admin-accent px-[18px] py-[11px] text-[13.5px] font-semibold text-white hover:bg-admin-accent/90">
+                <Button @click="openAddInitiative" class="gap-2 rounded-xl bg-admin-accent px-[18px] py-[11px] text-[13.5px] font-semibold text-on-gold hover:bg-admin-accent/90">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                     Add Initiative
                 </Button>
@@ -142,7 +142,7 @@ function submitInitiative() {
 
         <!-- KPI row -->
         <div class="mb-6 grid grid-cols-1 gap-[18px] sm:grid-cols-3 lg:grid-cols-6">
-            <div v-for="k in kpis" :key="k.key" class="rounded-[18px] border border-border bg-white p-[18px] shadow-card transition-all hover:-translate-y-[3px] hover:shadow-card-hover">
+            <div v-for="k in kpis" :key="k.key" class="rounded-[18px] border border-border bg-card p-[18px] shadow-card transition-all hover:-translate-y-[3px] hover:shadow-card-hover">
                 <div class="mb-3 flex items-center gap-2.5">
                     <div class="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-[11px]" :style="{ background: k.bg, color: k.color }">
                         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[k.icon]" />
@@ -151,11 +151,11 @@ function submitInitiative() {
                 </div>
                 <div class="text-[30px] font-extrabold leading-none tracking-[-1px] text-foreground">{{ k.value }}</div>
                 <div class="mt-3 flex items-center gap-1 text-xs">
-                    <span class="flex items-center gap-[3px] font-bold text-green-500">
+                    <span class="flex items-center gap-[3px] font-bold text-success">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                         {{ k.change }}%
                     </span>
-                    <span class="text-slate-400">vs last year</span>
+                    <span class="text-muted-foreground">vs last year</span>
                 </div>
             </div>
         </div>
@@ -168,7 +168,7 @@ function submitInitiative() {
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.25fr_1fr]">
 
                     <!-- Our Community Vision -->
-                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                         <div class="mb-3.5 text-[17px] font-bold text-foreground">Our Community Vision</div>
                         <div class="grid flex-1 grid-cols-1 gap-[18px] sm:grid-cols-[1fr_0.9fr]">
                             <div class="flex min-w-0 flex-col">
@@ -180,7 +180,7 @@ function submitInitiative() {
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-[13px] font-bold text-foreground">{{ pt.title }}</div>
-                                            <div class="mt-px text-[11.5px] text-slate-400">{{ pt.desc }}</div>
+                                            <div class="mt-px text-[11.5px] text-muted-foreground">{{ pt.desc }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@ function submitInitiative() {
                     </div>
 
                     <!-- Upcoming Community Projects -->
-                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                         <div class="mb-1 flex items-center justify-between">
                             <div class="text-[17px] font-bold text-foreground">Upcoming Community Projects</div>
                             <a class="cursor-pointer text-xs font-semibold text-admin-accent">View All</a>
@@ -208,15 +208,15 @@ function submitInitiative() {
                             <div v-for="p in upcoming_projects" :key="p.title" class="grid grid-cols-[48px_24px_1fr] items-center py-[9px]">
                                 <div class="leading-[1.15]">
                                     <div class="text-[12.5px] font-extrabold text-foreground">{{ p.year }}</div>
-                                    <div class="text-[11px] font-semibold text-slate-400">{{ p.quarter }}</div>
+                                    <div class="text-[11px] font-semibold text-muted-foreground">{{ p.quarter }}</div>
                                 </div>
                                 <div class="flex justify-center">
-                                    <span class="z-[1] h-[13px] w-[13px] flex-none rounded-full border-[3px] bg-white" :style="{ borderColor: p.dot_color }" />
+                                    <span class="z-[1] h-[13px] w-[13px] flex-none rounded-full border-[3px] bg-card" :style="{ borderColor: p.dot_color }" />
                                 </div>
                                 <div class="flex min-w-0 items-center justify-between gap-2.5">
                                     <div class="min-w-0">
                                         <div class="overflow-hidden text-ellipsis whitespace-nowrap text-[13px] font-bold text-foreground">{{ p.title }}</div>
-                                        <div class="mt-px overflow-hidden text-ellipsis whitespace-nowrap text-[11.5px] text-slate-400">{{ p.sub }}</div>
+                                        <div class="mt-px overflow-hidden text-ellipsis whitespace-nowrap text-[11.5px] text-muted-foreground">{{ p.sub }}</div>
                                     </div>
                                     <div class="flex flex-none flex-col items-end gap-1">
                                         <Badge variant="outline" class="whitespace-nowrap rounded-[20px] border-transparent px-[9px] py-[3px] text-[10.5px] font-bold" :style="{ background: p.status_bg, color: p.status_color }">{{ p.status }}</Badge>
@@ -237,7 +237,7 @@ function submitInitiative() {
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr] lg:items-stretch">
 
                     <!-- Community Engagement -->
-                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                         <div class="mb-3.5 text-[17px] font-bold text-foreground">Community Engagement</div>
                         <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                             <div v-for="s in engagement_stats" :key="s.label" class="rounded-[14px] border border-border p-[13px]">
@@ -245,11 +245,11 @@ function submitInitiative() {
                                     <div class="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-[9px]" :style="{ background: s.bg, color: s.color }">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[s.icon]" />
                                     </div>
-                                    <span class="text-[10.5px] font-semibold text-slate-400">{{ s.label }}</span>
+                                    <span class="text-[10.5px] font-semibold text-muted-foreground">{{ s.label }}</span>
                                 </div>
                                 <div class="mt-2.5 flex items-end justify-between">
                                     <div class="text-[22px] font-extrabold leading-none tracking-[-0.5px] text-foreground">{{ s.value }}</div>
-                                    <span class="flex items-center gap-[2px] text-[11px] font-bold text-green-500">
+                                    <span class="flex items-center gap-[2px] text-[11px] font-bold text-success">
                                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                                         {{ s.change }}%
                                     </span>
@@ -267,10 +267,10 @@ function submitInitiative() {
                                     </div>
                                     <div class="min-w-0 flex-1">
                                         <div class="overflow-hidden text-ellipsis whitespace-nowrap text-[13px] font-bold text-foreground">{{ a.title }}</div>
-                                        <div class="mt-px overflow-hidden text-ellipsis whitespace-nowrap text-[11.5px] text-slate-400">{{ a.desc }}</div>
+                                        <div class="mt-px overflow-hidden text-ellipsis whitespace-nowrap text-[11.5px] text-muted-foreground">{{ a.desc }}</div>
                                     </div>
-                                    <div class="flex-none whitespace-nowrap text-[11.5px] text-slate-400">{{ a.date }}</div>
-                                    <div class="flex min-w-[42px] flex-none items-center justify-end gap-1 text-[11.5px] font-bold text-red-500">
+                                    <div class="flex-none whitespace-nowrap text-[11.5px] text-muted-foreground">{{ a.date }}</div>
+                                    <div class="flex min-w-[42px] flex-none items-center justify-end gap-1 text-[11.5px] font-bold text-destructive">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21s-7-4.3-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.7-7 10-7 10z"/></svg>
                                         {{ a.likes }}
                                     </div>
@@ -284,7 +284,7 @@ function submitInitiative() {
                     </div>
 
                     <!-- Community Feedback -->
-                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                    <div class="flex min-w-0 flex-col rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                         <div class="flex items-center justify-between">
                             <div class="text-[17px] font-bold text-foreground">Community Feedback</div>
                             <div class="flex cursor-pointer items-center gap-1.5 rounded-[9px] border border-border px-2.5 py-1.5 text-[11px] font-semibold text-foreground/80">
@@ -294,12 +294,12 @@ function submitInitiative() {
                         </div>
                         <div class="mt-[18px] flex items-center gap-2.5">
                             <div class="text-[44px] font-extrabold leading-none tracking-[-1.5px] text-foreground">{{ feedback.average }}</div>
-                            <div class="pb-1 text-sm font-bold text-slate-400">/ 5</div>
+                            <div class="pb-1 text-sm font-bold text-muted-foreground">/ 5</div>
                             <div class="ml-1.5 flex flex-col gap-[3px]">
                                 <div class="flex gap-0.5 text-[#F5B100]">
                                     <svg v-for="n in 5" :key="n" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" :opacity="n <= Math.round(feedback.average) ? 1 : 0.45"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.8L12 17.3 5.8 20.7l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>
                                 </div>
-                                <div class="text-[11px] text-slate-400">Based on {{ feedback.review_count.toLocaleString() }} reviews</div>
+                                <div class="text-[11px] text-muted-foreground">Based on {{ feedback.review_count.toLocaleString() }} reviews</div>
                             </div>
                         </div>
                         <div class="mt-5 flex flex-1 flex-col gap-3">
@@ -320,7 +320,7 @@ function submitInitiative() {
                 </div>
 
                 <!-- Future Roadmap & Key Initiatives -->
-                <div class="rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                <div class="rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                     <div class="mb-4 flex items-center justify-between">
                         <div class="text-[17px] font-bold text-foreground">Future Roadmap &amp; Key Initiatives</div>
                         <a class="cursor-pointer text-xs font-semibold text-admin-accent">Manage</a>
@@ -335,7 +335,7 @@ function submitInitiative() {
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="icons[r.icon]" />
                             </div>
                             <div class="text-[12.5px] font-bold text-foreground">{{ r.title }}</div>
-                            <div class="text-[10.5px] leading-[1.4] text-slate-400">{{ r.desc }}</div>
+                            <div class="text-[10.5px] leading-[1.4] text-muted-foreground">{{ r.desc }}</div>
                         </div>
                     </div>
                     <a class="mt-[18px] flex cursor-pointer items-center justify-center gap-[7px] text-[12.5px] font-semibold text-admin-accent">
@@ -346,38 +346,38 @@ function submitInitiative() {
 
                 <!-- Community Growth -->
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div class="rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                    <div class="rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                         <div class="mb-1 flex items-center justify-between">
                             <div class="text-[15px] font-bold text-foreground">Population Growth</div>
-                            <span class="flex items-center gap-[3px] text-xs font-bold text-green-500">
+                            <span class="flex items-center gap-[3px] text-xs font-bold text-success">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                                 {{ growth.population.change }}%
                             </span>
                         </div>
                         <div class="text-[26px] font-extrabold tracking-[-1px] text-foreground">{{ growth.population.value }}</div>
                         <svg viewBox="0 0 320 90" preserveAspectRatio="none" class="mt-2 h-20 w-full">
-                            <defs><linearGradient id="commPop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5B3DF5" stop-opacity="0.22"/><stop offset="100%" stop-color="#5B3DF5" stop-opacity="0"/></linearGradient></defs>
+                            <defs><linearGradient id="commPop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C6A15B" stop-opacity="0.22"/><stop offset="100%" stop-color="#C6A15B" stop-opacity="0"/></linearGradient></defs>
                             <path :d="sparkArea(growth.population.points, 320, 90)" fill="url(#commPop)" />
-                            <path :d="sparkPath(growth.population.points, 320, 90)" fill="none" stroke="#5B3DF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path :d="sparkPath(growth.population.points, 320, 90)" fill="none" stroke="#C6A15B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <a class="mt-2 flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-admin-accent">
                             View Report
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </a>
                     </div>
-                    <div class="rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                    <div class="rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                         <div class="mb-1 flex items-center justify-between">
                             <div class="text-[15px] font-bold text-foreground">Community Happiness</div>
-                            <span class="flex items-center gap-[3px] text-xs font-bold text-green-500">
+                            <span class="flex items-center gap-[3px] text-xs font-bold text-success">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                                 {{ growth.happiness.change }}%
                             </span>
                         </div>
                         <div class="text-[26px] font-extrabold tracking-[-1px] text-foreground">{{ growth.happiness.value }}</div>
                         <svg viewBox="0 0 320 90" preserveAspectRatio="none" class="mt-2 h-20 w-full">
-                            <defs><linearGradient id="commHap" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22C55E" stop-opacity="0.22"/><stop offset="100%" stop-color="#22C55E" stop-opacity="0"/></linearGradient></defs>
+                            <defs><linearGradient id="commHap" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34D399" stop-opacity="0.22"/><stop offset="100%" stop-color="#34D399" stop-opacity="0"/></linearGradient></defs>
                             <path :d="sparkArea(growth.happiness.points, 320, 90)" fill="url(#commHap)" />
-                            <path :d="sparkPath(growth.happiness.points, 320, 90)" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path :d="sparkPath(growth.happiness.points, 320, 90)" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <a class="mt-2 flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-admin-accent">
                             View Report
@@ -391,7 +391,7 @@ function submitInitiative() {
             <div class="flex min-w-0 flex-col gap-6">
 
                 <!-- Sustainability Goals -->
-                <div class="rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                <div class="rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                     <div class="flex items-center justify-between">
                         <div class="text-[17px] font-bold text-foreground">Sustainability Goals</div>
                         <a class="cursor-pointer text-xs font-semibold text-admin-accent">Details</a>
@@ -399,8 +399,8 @@ function submitInitiative() {
                     <div class="my-3.5 flex justify-center">
                         <div class="relative h-[150px] w-[150px]">
                             <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">
-                                <defs><linearGradient id="commSus" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#15803D"/></linearGradient></defs>
-                                <circle cx="75" cy="75" r="60" fill="none" stroke="#F1F4F9" stroke-width="16"/>
+                                <defs><linearGradient id="commSus" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#1F9E6E"/></linearGradient></defs>
+                                <circle cx="75" cy="75" r="60" fill="none" class="stroke-muted" stroke-width="16"/>
                                 <circle cx="75" cy="75" r="60" fill="none" stroke="url(#commSus)" stroke-width="16" stroke-linecap="round" :stroke-dasharray="sustainabilityDash"/>
                             </svg>
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -428,7 +428,7 @@ function submitInitiative() {
                 </div>
 
                 <!-- Community Impact -->
-                <div class="rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                <div class="rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                     <div class="mb-3.5 flex items-center justify-between">
                         <div class="text-[17px] font-bold text-foreground">Community Impact</div>
                         <div class="flex cursor-pointer items-center gap-1.5 rounded-[9px] border border-border px-2.5 py-[5px] text-[11px] font-semibold text-foreground/80">
@@ -443,15 +443,15 @@ function submitInitiative() {
                             </div>
                             <div class="text-[19px] font-extrabold tracking-[-0.5px] text-foreground">{{ im.value }}</div>
                             <div class="mt-0.5 flex items-center justify-between">
-                                <div class="text-[10.5px] text-slate-400">{{ im.label }}</div>
-                                <div class="text-[10.5px] font-bold text-green-500">+{{ im.change }}%</div>
+                                <div class="text-[10.5px] text-muted-foreground">{{ im.label }}</div>
+                                <div class="text-[10.5px] font-bold text-success">+{{ im.change }}%</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Future Highlights -->
-                <div class="rounded-[18px] border border-border bg-white p-[22px] shadow-card">
+                <div class="rounded-[18px] border border-border bg-card p-[22px] shadow-card">
                     <div class="mb-3 flex items-center justify-between">
                         <div class="text-[17px] font-bold text-foreground">Future Highlights</div>
                         <a class="cursor-pointer text-xs font-semibold text-admin-accent">View All</a>
@@ -465,7 +465,7 @@ function submitInitiative() {
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="text-[13px] font-bold text-foreground">{{ f.title }}</div>
-                                    <div class="mt-px overflow-hidden text-ellipsis whitespace-nowrap text-[11px] text-slate-400">{{ f.desc }}</div>
+                                    <div class="mt-px overflow-hidden text-ellipsis whitespace-nowrap text-[11px] text-muted-foreground">{{ f.desc }}</div>
                                 </div>
                                 <span class="flex-none text-xs font-bold text-muted-foreground">{{ f.year }}</span>
                             </div>
@@ -520,7 +520,7 @@ function submitInitiative() {
 
                     <DialogFooter class="!px-0 pt-2">
                         <Button type="button" variant="outline" @click="showAddInitiative = false">Cancel</Button>
-                        <Button type="submit" class="bg-admin-accent text-white hover:bg-admin-accent/90">Save Initiative</Button>
+                        <Button type="submit" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90">Save Initiative</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

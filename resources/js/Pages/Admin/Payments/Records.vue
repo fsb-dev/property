@@ -29,10 +29,10 @@ const META = {
         prefix: 'INV',
         statuses: ['All', 'Paid', 'Pending', 'Overdue'],
         kpis: [
-            { label: 'Total Invoiced',   value: 'BDT 312M',  sub: '1,240 invoices',        iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5"/>` },
-            { label: 'Paid',             value: 'BDT 186M',  sub: '62% collected',          iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13l2 2 4-4"/>` },
-            { label: 'Outstanding',      value: 'BDT 126M',  sub: '506 invoices',           iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
-            { label: 'Overdue',          value: 'BDT 4.2M',  sub: '34 invoices',            iconBg: 'bg-red-50',   iconColor: 'text-red-600',   icon: `<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>` },
+            { label: 'Total Invoiced',   value: 'BDT 312M',  sub: '1,240 invoices',        iconBg: 'bg-gold/10', iconColor: 'text-admin-accent', icon: `<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5"/>` },
+            { label: 'Paid',             value: 'BDT 186M',  sub: '62% collected',          iconBg: 'bg-success/10', iconColor: 'text-success', icon: `<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13l2 2 4-4"/>` },
+            { label: 'Outstanding',      value: 'BDT 126M',  sub: '506 invoices',           iconBg: 'bg-warning/10', iconColor: 'text-warning', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
+            { label: 'Overdue',          value: 'BDT 4.2M',  sub: '34 invoices',            iconBg: 'bg-destructive/10',   iconColor: 'text-destructive',   icon: `<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>` },
         ],
     },
     installments: {
@@ -41,10 +41,10 @@ const META = {
         prefix: 'INST',
         statuses: ['All', 'Paid', 'Pending', 'Overdue', 'Upcoming'],
         kpis: [
-            { label: 'Due This Month',   value: 'BDT 18.4M', sub: '74 installments',        iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/>` },
-            { label: 'Collected',        value: 'BDT 14.2M', sub: '77% of monthly target',  iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
-            { label: 'Overdue',          value: 'BDT 4.2M',  sub: '23 installments',        iconBg: 'bg-red-50',   iconColor: 'text-red-600',   icon: `<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>` },
-            { label: 'Next 30 Days',     value: 'BDT 22.1M', sub: '89 installments',        iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4M12 13v4M10 15h4"/>` },
+            { label: 'Due This Month',   value: 'BDT 18.4M', sub: '74 installments',        iconBg: 'bg-gold/10', iconColor: 'text-admin-accent', icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4"/>` },
+            { label: 'Collected',        value: 'BDT 14.2M', sub: '77% of monthly target',  iconBg: 'bg-success/10', iconColor: 'text-success', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'Overdue',          value: 'BDT 4.2M',  sub: '23 installments',        iconBg: 'bg-destructive/10',   iconColor: 'text-destructive',   icon: `<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>` },
+            { label: 'Next 30 Days',     value: 'BDT 22.1M', sub: '89 installments',        iconBg: 'bg-info/10',  iconColor: 'text-info',  icon: `<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2v4M16 2v4M12 13v4M10 15h4"/>` },
         ],
     },
     receipts: {
@@ -53,10 +53,10 @@ const META = {
         prefix: 'REC',
         statuses: ['All', 'Issued', 'Pending'],
         kpis: [
-            { label: 'Total Receipts',   value: '864',        sub: 'All time',               iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<path d="M6 2H3a1 1 0 00-1 1v18a1 1 0 001 1h3M18 2h3a1 1 0 011 1v18a1 1 0 01-1 1h-3M6 2v20M18 2v20"/>` },
-            { label: 'Issued Today',     value: '12',         sub: 'Receipts generated',     iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
-            { label: 'Total Value',      value: 'BDT 186M',   sub: 'Receipted amount',        iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>` },
-            { label: 'Pending Issue',    value: '28',         sub: 'Awaiting generation',    iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
+            { label: 'Total Receipts',   value: '864',        sub: 'All time',               iconBg: 'bg-gold/10', iconColor: 'text-admin-accent', icon: `<path d="M6 2H3a1 1 0 00-1 1v18a1 1 0 001 1h3M18 2h3a1 1 0 011 1v18a1 1 0 01-1 1h-3M6 2v20M18 2v20"/>` },
+            { label: 'Issued Today',     value: '12',         sub: 'Receipts generated',     iconBg: 'bg-success/10', iconColor: 'text-success', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'Total Value',      value: 'BDT 186M',   sub: 'Receipted amount',        iconBg: 'bg-info/10',  iconColor: 'text-info',  icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>` },
+            { label: 'Pending Issue',    value: '28',         sub: 'Awaiting generation',    iconBg: 'bg-warning/10', iconColor: 'text-warning', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
         ],
     },
     reminders: {
@@ -65,10 +65,10 @@ const META = {
         prefix: 'REM',
         statuses: ['All', 'Sent', 'Pending', 'Failed'],
         kpis: [
-            { label: 'Total Sent',       value: '1,240',      sub: 'All time',               iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 011.91 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>` },
-            { label: 'Sent Today',       value: '48',         sub: 'Auto-triggered',         iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
-            { label: 'Pending Send',     value: '23',         sub: 'Queued reminders',       iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
-            { label: 'Response Rate',    value: '68%',        sub: 'Payment within 3 days',  iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>` },
+            { label: 'Total Sent',       value: '1,240',      sub: 'All time',               iconBg: 'bg-gold/10', iconColor: 'text-admin-accent', icon: `<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 011.91 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>` },
+            { label: 'Sent Today',       value: '48',         sub: 'Auto-triggered',         iconBg: 'bg-success/10', iconColor: 'text-success', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'Pending Send',     value: '23',         sub: 'Queued reminders',       iconBg: 'bg-warning/10', iconColor: 'text-warning', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
+            { label: 'Response Rate',    value: '68%',        sub: 'Payment within 3 days',  iconBg: 'bg-info/10',  iconColor: 'text-info',  icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>` },
         ],
     },
     collections: {
@@ -77,10 +77,10 @@ const META = {
         prefix: 'COL',
         statuses: ['All', 'Pending', 'Overdue', 'Paid', 'Escalated'],
         kpis: [
-            { label: 'Open Cases',       value: '34',         sub: 'Active collection',      iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>` },
-            { label: 'Recovered',        value: 'BDT 12M',   sub: 'This quarter',           iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
-            { label: 'At Risk',          value: 'BDT 8.3M',  sub: '18 accounts',            iconBg: 'bg-red-50',   iconColor: 'text-red-600',   icon: `<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>` },
-            { label: 'Recovery Rate',    value: '82%',        sub: 'vs 78% last quarter',    iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>` },
+            { label: 'Open Cases',       value: '34',         sub: 'Active collection',      iconBg: 'bg-gold/10', iconColor: 'text-admin-accent', icon: `<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>` },
+            { label: 'Recovered',        value: 'BDT 12M',   sub: 'This quarter',           iconBg: 'bg-success/10', iconColor: 'text-success', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'At Risk',          value: 'BDT 8.3M',  sub: '18 accounts',            iconBg: 'bg-destructive/10',   iconColor: 'text-destructive',   icon: `<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>` },
+            { label: 'Recovery Rate',    value: '82%',        sub: 'vs 78% last quarter',    iconBg: 'bg-info/10',  iconColor: 'text-info',  icon: `<path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/>` },
         ],
     },
     refunds: {
@@ -89,10 +89,10 @@ const META = {
         prefix: 'REF',
         statuses: ['All', 'Pending', 'Approved', 'Paid', 'Rejected'],
         kpis: [
-            { label: 'Total Requests',   value: '18',         sub: 'This year',              iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<path d="M3 12a9 9 0 109 9M3 12l4-4M3 12l4 4"/>` },
-            { label: 'Approved',         value: '11',         sub: 'BDT 3.2M total',         iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
-            { label: 'Pending',          value: '5',          sub: 'Under review',           iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
-            { label: 'Refunded Amount',  value: 'BDT 2.8M',  sub: 'Disbursed this year',    iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>` },
+            { label: 'Total Requests',   value: '18',         sub: 'This year',              iconBg: 'bg-gold/10', iconColor: 'text-admin-accent', icon: `<path d="M3 12a9 9 0 109 9M3 12l4-4M3 12l4 4"/>` },
+            { label: 'Approved',         value: '11',         sub: 'BDT 3.2M total',         iconBg: 'bg-success/10', iconColor: 'text-success', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'Pending',          value: '5',          sub: 'Under review',           iconBg: 'bg-warning/10', iconColor: 'text-warning', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
+            { label: 'Refunded Amount',  value: 'BDT 2.8M',  sub: 'Disbursed this year',    iconBg: 'bg-info/10',  iconColor: 'text-info',  icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>` },
         ],
     },
     adjustments: {
@@ -101,10 +101,10 @@ const META = {
         prefix: 'ADJ',
         statuses: ['All', 'Approved', 'Pending', 'Rejected'],
         kpis: [
-            { label: 'Total Adjustments','value': '42',       sub: 'All time',               iconBg: 'bg-[#F1ECFF]', iconColor: 'text-admin-accent', icon: `<path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>` },
-            { label: 'Approved',         value: '36',         sub: 'BDT 1.4M adjusted',     iconBg: 'bg-green-50', iconColor: 'text-green-600', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
-            { label: 'Pending Review',   value: '6',          sub: 'Awaiting approval',      iconBg: 'bg-amber-50', iconColor: 'text-amber-600', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
-            { label: 'Total Value',      value: 'BDT 1.4M',  sub: 'Net adjustments',        iconBg: 'bg-blue-50',  iconColor: 'text-blue-600',  icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>` },
+            { label: 'Total Adjustments','value': '42',       sub: 'All time',               iconBg: 'bg-gold/10', iconColor: 'text-admin-accent', icon: `<path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>` },
+            { label: 'Approved',         value: '36',         sub: 'BDT 1.4M adjusted',     iconBg: 'bg-success/10', iconColor: 'text-success', icon: `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>` },
+            { label: 'Pending Review',   value: '6',          sub: 'Awaiting approval',      iconBg: 'bg-warning/10', iconColor: 'text-warning', icon: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>` },
+            { label: 'Total Value',      value: 'BDT 1.4M',  sub: 'Net adjustments',        iconBg: 'bg-info/10',  iconColor: 'text-info',  icon: `<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>` },
         ],
     },
 };
@@ -175,17 +175,17 @@ function buildRows(view) {
 
 // ── Status badge styles ───────────────────────────────────────────────────────
 const STATUS_STYLE = {
-    Paid:      { bg: 'bg-green-50',   text: 'text-green-700' },
-    Approved:  { bg: 'bg-green-50',   text: 'text-green-700' },
-    Issued:    { bg: 'bg-green-50',   text: 'text-green-700' },
-    Upcoming:  { bg: 'bg-blue-50',    text: 'text-blue-700' },
-    Sent:      { bg: 'bg-blue-50',    text: 'text-blue-700' },
-    Partial:   { bg: 'bg-amber-50',   text: 'text-amber-700' },
-    Pending:   { bg: 'bg-yellow-50',  text: 'text-yellow-700' },
-    Overdue:   { bg: 'bg-red-50',     text: 'text-red-700' },
-    Escalated: { bg: 'bg-red-100',    text: 'text-red-800' },
-    Failed:    { bg: 'bg-slate-100',  text: 'text-slate-500' },
-    Rejected:  { bg: 'bg-rose-50',    text: 'text-rose-700' },
+    Paid:      { bg: 'bg-success/15',     text: 'text-success' },
+    Approved:  { bg: 'bg-success/15',     text: 'text-success' },
+    Issued:    { bg: 'bg-success/15',     text: 'text-success' },
+    Upcoming:  { bg: 'bg-warning/15',     text: 'text-warning' },
+    Sent:      { bg: 'bg-info/15',        text: 'text-info' },
+    Partial:   { bg: 'bg-info/15',        text: 'text-info' },
+    Pending:   { bg: 'bg-info/15',        text: 'text-info' },
+    Overdue:   { bg: 'bg-destructive/15', text: 'text-destructive' },
+    Escalated: { bg: 'bg-destructive/20', text: 'text-destructive' },
+    Failed:    { bg: 'bg-destructive/15', text: 'text-destructive' },
+    Rejected:  { bg: 'bg-destructive/15', text: 'text-destructive' },
 };
 
 // ── Search + filter ───────────────────────────────────────────────────────────
@@ -236,11 +236,11 @@ function editRow(row) {
 
 // Avatar color pool
 const AVATARS = [
-    ['bg-blue-100','text-blue-700'], ['bg-pink-100','text-pink-700'],
-    ['bg-green-100','text-green-700'], ['bg-amber-100','text-amber-700'],
-    ['bg-purple-100','text-purple-700'], ['bg-teal-100','text-teal-700'],
-    ['bg-indigo-100','text-indigo-700'], ['bg-sky-100','text-sky-700'],
-    ['bg-rose-100','text-rose-700'], ['bg-orange-100','text-orange-700'],
+    ['bg-info/15','text-info'], ['bg-chart-5/15','text-chart-5'],
+    ['bg-success/15','text-success'], ['bg-warning/15','text-warning'],
+    ['bg-chart-4/15','text-chart-4'], ['bg-chart-6/15','text-chart-6'],
+    ['bg-gold/15','text-brand'], ['bg-info/15','text-info'],
+    ['bg-destructive/15','text-destructive'], ['bg-warning/15','text-warning'],
 ];
 function avatarFor(i) { return AVATARS[i % AVATARS.length]; }
 function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(''); }
@@ -263,12 +263,11 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
             </div>
             <div class="flex items-center gap-3">
                 <Link :href="route('admin.payments.record')"
-                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5"
-                    style="background:linear-gradient(135deg,#5B3DF5,#7C5CFF); box-shadow:0 8px 20px rgba(91,61,245,0.35);">
+                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-on-gold bg-gold-gradient shadow-[0_8px_20px_rgba(198,161,91,0.30)] transition-all hover:-translate-y-0.5 hover:shadow-gold-glow">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                     Record Payment
                 </Link>
-                <button class="inline-flex items-center gap-2 rounded-xl border border-border bg-white dark:bg-slate-800 px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm hover:bg-slate-50">
+                <button class="inline-flex items-center gap-2 rounded-xl border border-border bg-muted px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm hover:bg-muted">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
                     Export
                 </button>
@@ -278,7 +277,7 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
         <!-- View tabs -->
         <nav class="mb-5 flex flex-wrap gap-2">
             <Link :href="route('admin.payments.index')"
-                class="rounded-xl px-3.5 py-2 text-sm font-semibold transition-colors bg-white dark:bg-slate-800 border border-border text-foreground hover:bg-slate-50">
+                class="rounded-xl px-3.5 py-2 text-sm font-semibold transition-colors bg-muted border border-border text-foreground hover:bg-muted">
                 ← Overview
             </Link>
             <button v-for="v in views" :key="v.key"
@@ -286,8 +285,8 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
                 :class="[
                     'rounded-xl px-3.5 py-2 text-sm font-semibold transition-colors',
                     activeView === v.key
-                        ? 'bg-admin-accent text-white'
-                        : 'bg-white dark:bg-slate-800 border border-border text-foreground hover:bg-slate-50 dark:hover:bg-slate-700'
+                        ? 'bg-admin-accent text-on-gold'
+                        : 'bg-muted border border-border text-foreground hover:bg-muted/70'
                 ]">
                 {{ v.label }}
             </button>
@@ -296,7 +295,7 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
         <!-- KPI cards -->
         <div class="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
             <div v-for="kpi in currentMeta.kpis" :key="kpi.label"
-                class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm p-5 hover:-translate-y-1 transition-transform cursor-pointer">
+                class="rounded-2xl border border-border bg-card shadow-sm p-5 hover:-translate-y-1 transition-transform cursor-pointer">
                 <div class="mb-3 flex items-center gap-2.5">
                     <div :class="['flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl', kpi.iconBg, kpi.iconColor]">
                         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" v-html="kpi.icon" />
@@ -309,7 +308,7 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
         </div>
 
         <!-- Table card -->
-        <div class="rounded-2xl border border-border bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+        <div class="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
 
             <!-- Table toolbar -->
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
@@ -317,7 +316,7 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
                 <div class="relative w-full max-w-xs">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                     <input v-model="search" type="text" placeholder="Search ref, buyer, project…"
-                        class="w-full rounded-xl border border-border bg-slate-50 dark:bg-slate-800 py-2 pl-9 pr-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-admin-accent focus:outline-none" />
+                        class="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-admin-accent focus:outline-none" />
                 </div>
                 <!-- Status filter pills -->
                 <div class="flex items-center gap-2 flex-wrap">
@@ -326,8 +325,8 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
                         :class="[
                             'rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
                             statusFilter === s
-                                ? 'bg-admin-accent text-white'
-                                : 'border border-border bg-white dark:bg-slate-800 text-foreground hover:bg-slate-50'
+                                ? 'bg-admin-accent text-on-gold'
+                                : 'border border-border bg-muted text-foreground hover:bg-muted'
                         ]">
                         {{ s }}
                     </button>
@@ -354,7 +353,7 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
                         </tr>
                         <tr v-for="(row, i) in rows" :key="row.ref"
                             @click="editRow(row)"
-                            class="cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            class="cursor-pointer transition-colors hover:bg-muted">
                             <!-- Reference -->
                             <td class="border-t border-border px-4 py-3">
                                 <span class="text-sm font-bold text-admin-accent">{{ row.ref }}</span>
@@ -378,12 +377,12 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
                             <!-- Amount -->
                             <td class="border-t border-border px-4 py-3 text-sm font-bold text-foreground whitespace-nowrap">{{ row.amount }}</td>
                             <!-- Method -->
-                            <td class="border-t border-border px-4 py-3 text-sm" :class="row.method === '—' ? 'text-slate-300' : 'text-foreground'">{{ row.method }}</td>
+                            <td class="border-t border-border px-4 py-3 text-sm" :class="row.method === '—' ? 'text-muted-foreground/50' : 'text-foreground'">{{ row.method }}</td>
                             <!-- Status -->
                             <td class="border-t border-border px-4 py-3">
                                 <span :class="['inline-block rounded-full px-3 py-1 text-[11px] font-bold whitespace-nowrap',
-                                    STATUS_STYLE[row.status]?.bg ?? 'bg-slate-100',
-                                    STATUS_STYLE[row.status]?.text ?? 'text-slate-500']">
+                                    STATUS_STYLE[row.status]?.bg ?? 'bg-muted',
+                                    STATUS_STYLE[row.status]?.text ?? 'text-muted-foreground']">
                                     {{ row.status }}
                                 </span>
                             </td>
@@ -391,11 +390,11 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
                             <td class="border-t border-border px-4 py-3">
                                 <div class="flex items-center gap-1.5" @click.stop>
                                     <button @click="editRow(row)"
-                                        class="flex h-8 w-8 items-center justify-center rounded-lg text-admin-accent hover:bg-[#F1ECFF] transition-colors"
+                                        class="flex h-8 w-8 items-center justify-center rounded-lg text-admin-accent hover:bg-gold/10 transition-colors"
                                         title="Edit">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     </button>
-                                    <button class="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-slate-100 transition-colors" title="More">
+                                    <button class="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted transition-colors" title="More">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                                     </button>
                                 </div>
@@ -411,12 +410,12 @@ function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(
                     Showing {{ rows.length }} of {{ allRows.length }} {{ currentMeta.title.toLowerCase() }}
                 </span>
                 <div class="flex items-center gap-1.5">
-                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white text-sm text-muted-foreground hover:bg-slate-50">‹</button>
-                    <button class="flex h-8 w-8 items-center justify-center rounded-lg bg-admin-accent text-sm font-semibold text-white">1</button>
-                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white text-sm text-foreground hover:bg-slate-50">2</button>
-                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white text-sm text-foreground hover:bg-slate-50">3</button>
+                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card text-sm text-muted-foreground hover:bg-muted">‹</button>
+                    <button class="flex h-8 w-8 items-center justify-center rounded-lg bg-admin-accent text-sm font-semibold text-on-gold">1</button>
+                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card text-sm text-foreground hover:bg-muted">2</button>
+                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card text-sm text-foreground hover:bg-muted">3</button>
                     <span class="w-6 text-center text-muted-foreground">…</span>
-                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-white text-sm text-muted-foreground hover:bg-slate-50">›</button>
+                    <button class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card text-sm text-muted-foreground hover:bg-muted">›</button>
                 </div>
             </div>
         </div>

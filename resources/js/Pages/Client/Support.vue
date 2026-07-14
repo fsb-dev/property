@@ -8,7 +8,7 @@ const FAQ_GROUPS = [
     {
         id: 'payment',
         label: 'Payment & Installments',
-        color: '#6a4dff',
+        color: 'rgb(198,161,91)',
         bg: 'rgba(106,77,255,.1)',
         icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3z',
         faqs: [
@@ -37,7 +37,7 @@ const FAQ_GROUPS = [
     {
         id: 'documents',
         label: 'Documents',
-        color: '#16a34a',
+        color: 'hsl(var(--success))',
         bg: 'rgba(22,163,74,.1)',
         icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z',
         faqs: [
@@ -62,7 +62,7 @@ const FAQ_GROUPS = [
     {
         id: 'construction',
         label: 'Construction',
-        color: '#3b82f6',
+        color: 'hsl(var(--info))',
         bg: 'rgba(59,130,246,.1)',
         icon: 'M2 20h20M4 20V10l8-6 8 6v10M10 20v-5h4v5',
         faqs: [
@@ -87,7 +87,7 @@ const FAQ_GROUPS = [
     {
         id: 'general',
         label: 'General',
-        color: '#f59e0b',
+        color: 'hsl(var(--warning))',
         bg: 'rgba(245,158,11,.1)',
         icon: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01',
         faqs: [
@@ -181,11 +181,11 @@ const MY_TICKETS = [
 
 function ticketStatusStyle(s) {
     return {
-        resolved:    { bg: 'rgba(22,163,74,.1)',   text: '#16a34a' },
-        in_progress: { bg: 'rgba(59,130,246,.1)',  text: '#2563eb' },
-        open:        { bg: 'rgba(245,158,11,.1)',  text: '#b45309' },
-        closed:      { bg: 'rgba(154,154,176,.1)', text: '#6b6b80' },
-    }[s] || { bg: 'rgba(106,77,255,.1)', text: '#6a4dff' };
+        resolved:    { bg: 'rgba(22,163,74,.1)',   text: 'hsl(var(--success))' },
+        in_progress: { bg: 'rgba(59,130,246,.1)',  text: 'hsl(var(--info))' },
+        open:        { bg: 'rgba(245,158,11,.1)',  text: 'hsl(var(--warning))' },
+        closed:      { bg: 'rgba(154,154,176,.1)', text: 'hsl(var(--muted-foreground))' },
+    }[s] || { bg: 'rgba(106,77,255,.1)', text: 'rgb(198,161,91)' };
 }
 </script>
 
@@ -194,16 +194,16 @@ function ticketStatusStyle(s) {
         <div>
 
             <!-- Breadcrumb -->
-            <nav style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:#9a9ab0; margin-bottom:20px;">
-                <Link :href="route('client.dashboard')" style="color:#9a9ab0; text-decoration:none;" class="hover:text-foreground">Home</Link>
+            <nav style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:hsl(var(--muted-foreground)); margin-bottom:20px;">
+                <Link :href="route('client.dashboard')" style="color:hsl(var(--muted-foreground)); text-decoration:none;" class="hover:text-foreground">Home</Link>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                <span style="color:#3d3d55; font-weight:600;">Support & Help</span>
+                <span style="color:hsl(var(--foreground)); font-weight:600;">Support & Help</span>
             </nav>
 
             <!-- Page title -->
             <div style="margin-bottom:22px;">
-                <h1 style="font-size:22px; font-weight:800; color:#16162a; letter-spacing:-0.02em; margin:0 0 4px;">Support & Help</h1>
-                <p style="font-size:13.5px; color:#7a7a90; margin:0;">Get answers instantly or reach our team — we're here to help.</p>
+                <h1 style="font-size:22px; font-weight:800; color:hsl(var(--foreground)); letter-spacing:-0.02em; margin:0 0 4px;">Support & Help</h1>
+                <p style="font-size:13.5px; color:hsl(var(--muted-foreground)); margin:0;">Get answers instantly or reach our team — we're here to help.</p>
             </div>
 
             <!-- Body -->
@@ -216,75 +216,75 @@ function ticketStatusStyle(s) {
                     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;" class="contact-grid">
                         <!-- WhatsApp -->
                         <a href="https://wa.me/8801700000000" target="_blank"
-                            style="background:#fff; border:1px solid #ededf3; border-radius:16px; padding:16px; text-decoration:none; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; transition:box-shadow .18s; cursor:pointer;"
+                            style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:16px; padding:16px; text-decoration:none; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; transition:box-shadow .18s; cursor:pointer;"
                             class="hover:shadow-md">
                             <div style="width:44px; height:44px; border-radius:13px; background:rgba(37,211,102,.12); display:flex; align-items:center; justify-content:center;">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.004 22l4.952-1.398A9.953 9.953 0 0 0 12 22c5.523 0 10-4.477 10-10S17.522 2 12 2h-.001z"/></svg>
                             </div>
                             <div>
-                                <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:2px;">WhatsApp</div>
-                                <div style="font-size:11.5px; color:#9a9ab0; line-height:1.4;">Instant reply<br>Mon–Sat 9am–7pm</div>
+                                <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:2px;">WhatsApp</div>
+                                <div style="font-size:11.5px; color:hsl(var(--muted-foreground)); line-height:1.4;">Instant reply<br>Mon–Sat 9am–7pm</div>
                             </div>
                         </a>
 
                         <!-- Phone -->
-                        <div style="background:#fff; border:1px solid #ededf3; border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; cursor:pointer; transition:box-shadow .18s;" class="hover:shadow-md">
+                        <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; cursor:pointer; transition:box-shadow .18s;" class="hover:shadow-md">
                             <div style="width:44px; height:44px; border-radius:13px; background:rgba(59,130,246,.1); display:flex; align-items:center; justify-content:center;">
-                                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--info))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                             </div>
                             <div>
-                                <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:2px;">Call Us</div>
-                                <div style="font-size:11.5px; color:#9a9ab0; line-height:1.4;">+880 1700 000000<br>Mon–Fri 9am–6pm</div>
+                                <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:2px;">Call Us</div>
+                                <div style="font-size:11.5px; color:hsl(var(--muted-foreground)); line-height:1.4;">+880 1700 000000<br>Mon–Fri 9am–6pm</div>
                             </div>
                         </div>
 
                         <!-- Email -->
-                        <div style="background:#fff; border:1px solid #ededf3; border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; cursor:pointer; transition:box-shadow .18s;" class="hover:shadow-md">
+                        <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; cursor:pointer; transition:box-shadow .18s;" class="hover:shadow-md">
                             <div style="width:44px; height:44px; border-radius:13px; background:rgba(245,158,11,.1); display:flex; align-items:center; justify-content:center;">
-                                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--warning))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                             </div>
                             <div>
-                                <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:2px;">Email</div>
-                                <div style="font-size:11.5px; color:#9a9ab0; line-height:1.4;">support@lakeview.com<br>Reply within 24h</div>
+                                <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:2px;">Email</div>
+                                <div style="font-size:11.5px; color:hsl(var(--muted-foreground)); line-height:1.4;">support@lakeview.com<br>Reply within 24h</div>
                             </div>
                         </div>
 
                         <!-- AI Advisor -->
                         <Link :href="route('client.ai.advisor')"
-                            style="background:linear-gradient(135deg,#6a4dff,#5132e0); border:none; border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; cursor:pointer; text-decoration:none; transition:box-shadow .18s; box-shadow:0 6px 18px -6px rgba(81,50,224,.45);"
+                            style="background:linear-gradient(135deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); border:none; border-radius:16px; padding:16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; cursor:pointer; text-decoration:none; transition:box-shadow .18s; box-shadow:0 6px 18px -6px rgba(81,50,224,.45);"
                             class="hover:shadow-xl">
                             <div style="width:44px; height:44px; border-radius:13px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--card))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
                             </div>
                             <div>
-                                <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:2px;">Sara AI</div>
+                                <div style="font-size:13px; font-weight:700; color:hsl(var(--card)); margin-bottom:2px;">Sara AI</div>
                                 <div style="font-size:11.5px; color:rgba(255,255,255,.7); line-height:1.4;">Instant answers<br>Available 24/7</div>
                             </div>
                         </Link>
                     </div>
 
                     <!-- Submit a ticket -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:18px; overflow:hidden;">
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; overflow:hidden;">
                         <!-- Header -->
-                        <div style="padding:18px 22px 16px; border-bottom:1px solid #f0eff7; display:flex; align-items:center; gap:12px;">
+                        <div style="padding:18px 22px 16px; border-bottom:1px solid hsl(var(--muted)); display:flex; align-items:center; gap:12px;">
                             <div style="width:36px; height:36px; border-radius:10px; background:rgba(106,77,255,.1); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6a4dff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--hv-gold))" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                             </div>
                             <div>
-                                <div style="font-size:14px; font-weight:800; color:#16162a;">Submit a Ticket</div>
-                                <div style="font-size:12px; color:#9a9ab0; margin-top:1px;">Our team responds within 2 business days</div>
+                                <div style="font-size:14px; font-weight:800; color:hsl(var(--foreground));">Submit a Ticket</div>
+                                <div style="font-size:12px; color:hsl(var(--muted-foreground)); margin-top:1px;">Our team responds within 2 business days</div>
                             </div>
                         </div>
 
                         <!-- Success banner -->
                         <Transition enter-active-class="transition duration-300 ease-out" enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition duration-200" leave-from-class="opacity-100" leave-to-class="opacity-0">
                             <div v-if="ticketSubmitted" style="margin:16px 22px; background:rgba(22,163,74,.08); border:1px solid rgba(22,163,74,.2); border-radius:12px; padding:12px 16px; display:flex; align-items:center; gap:10px;">
-                                <div style="width:28px; height:28px; border-radius:8px; background:#16a34a; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                <div style="width:28px; height:28px; border-radius:8px; background:hsl(var(--success)); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--card))" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                                 </div>
                                 <div>
-                                    <div style="font-size:13px; font-weight:700; color:#16a34a;">Ticket submitted successfully!</div>
-                                    <div style="font-size:12px; color:#5a8a6a; margin-top:2px;">You'll receive a confirmation email shortly. Reference number: TKT-0046</div>
+                                    <div style="font-size:13px; font-weight:700; color:hsl(var(--success));">Ticket submitted successfully!</div>
+                                    <div style="font-size:12px; color:hsl(var(--success)); margin-top:2px;">You'll receive a confirmation email shortly. Reference number: TKT-0046</div>
                                 </div>
                             </div>
                         </Transition>
@@ -294,20 +294,20 @@ function ticketStatusStyle(s) {
                             <!-- Subject + Category row -->
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;" class="form-two-col">
                                 <div>
-                                    <label style="display:block; font-size:12px; font-weight:700; color:#5a5a6e; margin-bottom:6px;">Subject <span style="color:#ef4444;">*</span></label>
+                                    <label style="display:block; font-size:12px; font-weight:700; color:hsl(var(--muted-foreground)); margin-bottom:6px;">Subject <span style="color:hsl(var(--destructive));">*</span></label>
                                     <input
                                         v-model="ticketForm.subject"
                                         placeholder="Briefly describe your issue"
-                                        style="width:100%; height:40px; padding:0 13px; border:1.5px solid #ededf3; border-radius:10px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13px; color:#16162a; background:#faf9fd; box-sizing:border-box; transition:border-color .15s;"
-                                        class="focus:border-[#6a4dff]"
+                                        style="width:100%; height:40px; padding:0 13px; border:1.5px solid hsl(var(--border)); border-radius:10px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13px; color:hsl(var(--foreground)); background:hsl(var(--background)); box-sizing:border-box; transition:border-color .15s;"
+                                        class="focus:border-[rgb(var(--hv-gold))]"
                                     />
                                 </div>
                                 <div>
-                                    <label style="display:block; font-size:12px; font-weight:700; color:#5a5a6e; margin-bottom:6px;">Category <span style="color:#ef4444;">*</span></label>
+                                    <label style="display:block; font-size:12px; font-weight:700; color:hsl(var(--muted-foreground)); margin-bottom:6px;">Category <span style="color:hsl(var(--destructive));">*</span></label>
                                     <select
                                         v-model="ticketForm.category"
-                                        style="width:100%; height:40px; padding:0 13px; border:1.5px solid #ededf3; border-radius:10px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13px; color:#16162a; background:#faf9fd; box-sizing:border-box; cursor:pointer; transition:border-color .15s; appearance:none;"
-                                        class="focus:border-[#6a4dff]"
+                                        style="width:100%; height:40px; padding:0 13px; border:1.5px solid hsl(var(--border)); border-radius:10px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13px; color:hsl(var(--foreground)); background:hsl(var(--background)); box-sizing:border-box; cursor:pointer; transition:border-color .15s; appearance:none;"
+                                        class="focus:border-[rgb(var(--hv-gold))]"
                                     >
                                         <option value="" disabled>Select a category</option>
                                         <option v-for="cat in TICKET_CATEGORIES" :key="cat" :value="cat">{{ cat }}</option>
@@ -317,15 +317,15 @@ function ticketStatusStyle(s) {
 
                             <!-- Priority -->
                             <div>
-                                <label style="display:block; font-size:12px; font-weight:700; color:#5a5a6e; margin-bottom:8px;">Priority</label>
+                                <label style="display:block; font-size:12px; font-weight:700; color:hsl(var(--muted-foreground)); margin-bottom:8px;">Priority</label>
                                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
                                     <button
-                                        v-for="p in [{ id:'low', label:'Low', color:'#16a34a' }, { id:'normal', label:'Normal', color:'#2563eb' }, { id:'urgent', label:'Urgent', color:'#ef4444' }]"
+                                        v-for="p in [{ id:'low', label:'Low', color:'hsl(var(--success))' }, { id:'normal', label:'Normal', color:'hsl(var(--info))' }, { id:'urgent', label:'Urgent', color:'hsl(var(--destructive))' }]"
                                         :key="p.id"
                                         @click="ticketForm.priority = p.id"
                                         :style="ticketForm.priority === p.id
                                             ? `background:${p.color}15; border-color:${p.color}; color:${p.color};`
-                                            : 'background:#fff; border-color:#ededf3; color:#7a7a90;'"
+                                            : 'background:hsl(var(--card)); border-color:hsl(var(--border)); color:hsl(var(--muted-foreground));'"
                                         style="padding:6px 16px; border-radius:999px; font-size:12px; font-weight:700; border:1.5px solid; cursor:pointer; font-family:inherit; transition:all .15s;"
                                     >{{ p.label }}</button>
                                 </div>
@@ -333,17 +333,17 @@ function ticketStatusStyle(s) {
 
                             <!-- Message -->
                             <div>
-                                <label style="display:block; font-size:12px; font-weight:700; color:#5a5a6e; margin-bottom:6px;">Message <span style="color:#ef4444;">*</span></label>
+                                <label style="display:block; font-size:12px; font-weight:700; color:hsl(var(--muted-foreground)); margin-bottom:6px;">Message <span style="color:hsl(var(--destructive));">*</span></label>
                                 <textarea
                                     v-model="ticketForm.message"
                                     placeholder="Describe your issue in detail (minimum 20 characters)..."
                                     rows="5"
-                                    style="width:100%; padding:12px 13px; border:1.5px solid #ededf3; border-radius:10px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13px; color:#16162a; background:#faf9fd; resize:vertical; box-sizing:border-box; line-height:1.6; transition:border-color .15s;"
-                                    class="focus:border-[#6a4dff]"
+                                    style="width:100%; padding:12px 13px; border:1.5px solid hsl(var(--border)); border-radius:10px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13px; color:hsl(var(--foreground)); background:hsl(var(--background)); resize:vertical; box-sizing:border-box; line-height:1.6; transition:border-color .15s;"
+                                    class="focus:border-[rgb(var(--hv-gold))]"
                                 ></textarea>
-                                <div style="font-size:11.5px; color:#b0b0c0; margin-top:4px; text-align:right;">
+                                <div style="font-size:11.5px; color:hsl(var(--muted-foreground)); margin-top:4px; text-align:right;">
                                     {{ ticketForm.message.length }} characters
-                                    <span v-if="ticketForm.message.length > 0 && ticketForm.message.length < 20" style="color:#ef4444;"> — min 20 required</span>
+                                    <span v-if="ticketForm.message.length > 0 && ticketForm.message.length < 20" style="color:hsl(var(--destructive));"> — min 20 required</span>
                                 </div>
                             </div>
 
@@ -353,8 +353,8 @@ function ticketStatusStyle(s) {
                                     @click="submitTicket"
                                     :disabled="!formValid || submitting"
                                     :style="formValid && !submitting
-                                        ? 'background:linear-gradient(100deg,#6a4dff,#5132e0); color:#fff; box-shadow:0 6px 16px -4px rgba(81,50,224,.45); cursor:pointer;'
-                                        : 'background:#f0eff7; color:#b0b0c0; cursor:not-allowed;'"
+                                        ? 'background:linear-gradient(100deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); color:hsl(var(--card)); box-shadow:0 6px 16px -4px rgba(81,50,224,.45); cursor:pointer;'
+                                        : 'background:hsl(var(--muted)); color:hsl(var(--muted-foreground)); cursor:not-allowed;'"
                                     style="display:inline-flex; align-items:center; gap:8px; padding:10px 24px; border-radius:11px; font-size:13.5px; font-weight:700; border:none; font-family:inherit; transition:all .18s;"
                                 >
                                     <svg v-if="submitting" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
@@ -366,27 +366,27 @@ function ticketStatusStyle(s) {
                     </div>
 
                     <!-- FAQ section -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:18px; overflow:hidden;">
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; overflow:hidden;">
                         <!-- Header + search -->
-                        <div style="padding:18px 22px 16px; border-bottom:1px solid #f0eff7;">
+                        <div style="padding:18px 22px 16px; border-bottom:1px solid hsl(var(--muted));">
                             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
                                 <div style="display:flex; align-items:center; gap:12px;">
                                     <div style="width:36px; height:36px; border-radius:10px; background:rgba(245,158,11,.1); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--warning))" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                                     </div>
                                     <div>
-                                        <div style="font-size:14px; font-weight:800; color:#16162a;">Frequently Asked Questions</div>
-                                        <div style="font-size:12px; color:#9a9ab0; margin-top:1px;">{{ totalFaqs }} questions across 4 topics</div>
+                                        <div style="font-size:14px; font-weight:800; color:hsl(var(--foreground));">Frequently Asked Questions</div>
+                                        <div style="font-size:12px; color:hsl(var(--muted-foreground)); margin-top:1px;">{{ totalFaqs }} questions across 4 topics</div>
                                     </div>
                                 </div>
                                 <!-- Search -->
                                 <div style="position:relative; width:220px;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9a9ab0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:11px; top:50%; transform:translateY(-50%);"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:11px; top:50%; transform:translateY(-50%);"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
                                     <input
                                         v-model="searchQuery"
                                         placeholder="Search FAQs…"
-                                        style="width:100%; height:36px; padding:0 11px 0 32px; border:1.5px solid #ededf3; border-radius:9px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:12.5px; color:#16162a; background:#faf9fd; box-sizing:border-box; transition:border-color .15s;"
-                                        class="focus:border-[#6a4dff]"
+                                        style="width:100%; height:36px; padding:0 11px 0 32px; border:1.5px solid hsl(var(--border)); border-radius:9px; outline:none; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:12.5px; color:hsl(var(--foreground)); background:hsl(var(--background)); box-sizing:border-box; transition:border-color .15s;"
+                                        class="focus:border-[rgb(var(--hv-gold))]"
                                     />
                                 </div>
                             </div>
@@ -398,8 +398,8 @@ function ticketStatusStyle(s) {
                                     :key="tab.id"
                                     @click="activeGroup = tab.id"
                                     :style="activeGroup === tab.id
-                                        ? 'background:#6a4dff; color:#fff; border-color:#6a4dff;'
-                                        : 'background:#fff; color:#5a5a6e; border-color:#e8e6f0;'"
+                                        ? 'background:rgb(var(--hv-gold)); color:hsl(var(--card)); border-color:rgb(var(--brand-text));'
+                                        : 'background:hsl(var(--card)); color:hsl(var(--muted-foreground)); border-color:hsl(var(--border));'"
                                     style="padding:5px 13px; border-radius:999px; font-size:12px; font-weight:600; border:1.5px solid; cursor:pointer; font-family:inherit; transition:all .15s;"
                                 >{{ tab.label }}</button>
                             </div>
@@ -420,19 +420,19 @@ function ticketStatusStyle(s) {
                                         <div
                                             v-for="(faq, fi) in group.faqs"
                                             :key="group.id + '-' + fi"
-                                            style="border:1.5px solid #ededf3; border-radius:12px; overflow:hidden; transition:border-color .15s;"
-                                            :style="openFaq === group.id + fi ? 'border-color:#c9b8ff;' : ''"
+                                            style="border:1.5px solid hsl(var(--border)); border-radius:12px; overflow:hidden; transition:border-color .15s;"
+                                            :style="openFaq === group.id + fi ? 'border-color:rgb(var(--hv-gold-bright));' : ''"
                                         >
                                             <!-- Question row -->
                                             <button
                                                 @click="toggleFaq(group.id + fi)"
                                                 style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 16px; background:transparent; border:none; cursor:pointer; font-family:inherit; text-align:left;"
                                             >
-                                                <span style="font-size:13.5px; font-weight:600; color:#16162a; line-height:1.4;">{{ faq.q }}</span>
+                                                <span style="font-size:13.5px; font-weight:600; color:hsl(var(--foreground)); line-height:1.4;">{{ faq.q }}</span>
                                                 <svg
-                                                    width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a9ab0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                                    width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
                                                     style="flex-shrink:0; transition:transform .2s;"
-                                                    :style="openFaq === group.id + fi ? 'transform:rotate(180deg); stroke:#6a4dff;' : ''"
+                                                    :style="openFaq === group.id + fi ? 'transform:rotate(180deg); stroke:rgb(var(--hv-gold));' : ''"
                                                 >
                                                     <path d="M6 9l6 6 6-6"/>
                                                 </svg>
@@ -447,8 +447,8 @@ function ticketStatusStyle(s) {
                                                 leave-to-class="opacity-0"
                                             >
                                                 <div v-if="openFaq === group.id + fi"
-                                                    style="padding:0 16px 14px; border-top:1px solid #f0eff7;">
-                                                    <p style="font-size:13px; color:#5a5a6e; line-height:1.7; margin:10px 0 0;">{{ faq.a }}</p>
+                                                    style="padding:0 16px 14px; border-top:1px solid hsl(var(--muted));">
+                                                    <p style="font-size:13px; color:hsl(var(--muted-foreground)); line-height:1.7; margin:10px 0 0;">{{ faq.a }}</p>
                                                 </div>
                                             </Transition>
                                         </div>
@@ -457,10 +457,10 @@ function ticketStatusStyle(s) {
                             </template>
                             <!-- Empty state -->
                             <div v-else style="text-align:center; padding:32px 0;">
-                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#d0cee8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
-                                <div style="font-size:13.5px; font-weight:700; color:#16162a; margin-bottom:5px;">No results found</div>
-                                <div style="font-size:13px; color:#9a9ab0; margin-bottom:14px;">Try different keywords or browse all topics.</div>
-                                <button @click="searchQuery=''; activeGroup='all'" style="padding:7px 18px; border-radius:9px; background:#f5f4fb; border:1px solid #ededf3; font-size:13px; font-weight:600; color:#6a4dff; cursor:pointer; font-family:inherit;">Clear search</button>
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(198,161,91,0.08)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+                                <div style="font-size:13.5px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:5px;">No results found</div>
+                                <div style="font-size:13px; color:hsl(var(--muted-foreground)); margin-bottom:14px;">Try different keywords or browse all topics.</div>
+                                <button @click="searchQuery=''; activeGroup='all'" style="padding:7px 18px; border-radius:9px; background:hsl(var(--muted)); border:1px solid hsl(var(--border)); font-size:13px; font-weight:600; color:rgb(var(--brand-text)); cursor:pointer; font-family:inherit;">Clear search</button>
                             </div>
                         </div>
                     </div>
@@ -471,38 +471,38 @@ function ticketStatusStyle(s) {
                 <div style="width:284px; flex-shrink:0; display:flex; flex-direction:column; gap:14px;" class="support-rail">
 
                     <!-- My tickets -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:16px; overflow:hidden;">
-                        <div style="padding:14px 18px 12px; border-bottom:1px solid #f0eff7; display:flex; align-items:center; justify-content:space-between;">
-                            <div style="font-size:13px; font-weight:700; color:#16162a;">My Tickets</div>
-                            <span style="font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:999px; background:rgba(106,77,255,.1); color:#6a4dff;">{{ MY_TICKETS.length }}</span>
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:16px; overflow:hidden;">
+                        <div style="padding:14px 18px 12px; border-bottom:1px solid hsl(var(--muted)); display:flex; align-items:center; justify-content:space-between;">
+                            <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground));">My Tickets</div>
+                            <span style="font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:999px; background:rgba(106,77,255,.1); color:rgb(var(--brand-text));">{{ MY_TICKETS.length }}</span>
                         </div>
                         <div>
                             <div
                                 v-for="(ticket, idx) in MY_TICKETS" :key="ticket.id"
                                 style="padding:12px 18px; transition:background .15s;"
-                                :style="idx < MY_TICKETS.length - 1 ? 'border-bottom:1px solid #f5f4fb;' : ''"
-                                class="hover:bg-[#faf9fd]"
+                                :style="idx < MY_TICKETS.length - 1 ? 'border-bottom:1px solid hsl(var(--muted));' : ''"
+                                class="hover:bg-[hsl(var(--background))]"
                             >
                                 <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:5px;">
-                                    <span style="font-size:12.5px; font-weight:600; color:#16162a; line-height:1.4; flex:1;">{{ ticket.subject }}</span>
+                                    <span style="font-size:12.5px; font-weight:600; color:hsl(var(--foreground)); line-height:1.4; flex:1;">{{ ticket.subject }}</span>
                                     <span
                                         :style="{ background: ticketStatusStyle(ticket.status).bg, color: ticketStatusStyle(ticket.status).text }"
                                         style="font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:999px; flex-shrink:0; white-space:nowrap;"
                                     >{{ ticket.status_label }}</span>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:8px;">
-                                    <span style="font-size:11px; font-weight:700; color:#9a9ab0;">{{ ticket.id }}</span>
-                                    <span style="font-size:11px; color:#b0b0c0;">·</span>
-                                    <span style="font-size:11px; color:#b0b0c0;">{{ ticket.date }}</span>
+                                    <span style="font-size:11px; font-weight:700; color:hsl(var(--muted-foreground));">{{ ticket.id }}</span>
+                                    <span style="font-size:11px; color:hsl(var(--muted-foreground));">·</span>
+                                    <span style="font-size:11px; color:hsl(var(--muted-foreground));">{{ ticket.date }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Office hours -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:16px; padding:18px;">
-                        <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6a4dff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:16px; padding:18px;">
+                        <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--hv-gold))" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                             Office Hours
                         </div>
                         <div style="display:flex; flex-direction:column; gap:0;">
@@ -511,35 +511,35 @@ function ticketStatusStyle(s) {
                                 { day: 'Saturday',          time: '10:00 AM – 4:00 PM', open: true },
                                 { day: 'Friday',            time: 'Closed',             open: false },
                             ]" :key="row.day"
-                                style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f5f4fb;">
-                                <span style="font-size:12px; color:#5a5a6e; font-weight:500;">{{ row.day }}</span>
+                                style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid hsl(var(--muted));">
+                                <span style="font-size:12px; color:hsl(var(--muted-foreground)); font-weight:500;">{{ row.day }}</span>
                                 <span style="font-size:12px; font-weight:700;"
-                                    :style="row.open ? 'color:#16a34a;' : 'color:#ef4444;'">{{ row.time }}</span>
+                                    :style="row.open ? 'color:hsl(var(--success));' : 'color:hsl(var(--destructive));'">{{ row.time }}</span>
                             </div>
                         </div>
-                        <div style="margin-top:12px; padding:10px 12px; background:#f8f7fe; border-radius:10px; display:flex; align-items:center; gap:8px;">
-                            <div style="width:7px; height:7px; border-radius:50%; background:#16a34a; flex-shrink:0; box-shadow:0 0 0 3px rgba(22,163,74,.2);"></div>
-                            <span style="font-size:12px; font-weight:600; color:#5a5a6e;">Support is currently <strong style="color:#16a34a;">open</strong></span>
+                        <div style="margin-top:12px; padding:10px 12px; background:rgba(198,161,91,0.08); border-radius:10px; display:flex; align-items:center; gap:8px;">
+                            <div style="width:7px; height:7px; border-radius:50%; background:hsl(var(--success)); flex-shrink:0; box-shadow:0 0 0 3px rgba(22,163,74,.2);"></div>
+                            <span style="font-size:12px; font-weight:600; color:hsl(var(--muted-foreground));">Support is currently <strong style="color:hsl(var(--success));">open</strong></span>
                         </div>
                     </div>
 
                     <!-- Escalation -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:16px; padding:18px;">
-                        <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:4px;">Escalation Contact</div>
-                        <div style="font-size:12px; color:#9a9ab0; margin-bottom:14px;">For urgent or unresolved issues beyond 5 business days</div>
-                        <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:#f8f7fe; border:1px solid #ece9f6; border-radius:11px;">
-                            <div style="width:36px; height:36px; border-radius:9px; background:linear-gradient(135deg,#c9bdf7,#8b6df0); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#fff;">SR</div>
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:16px; padding:18px;">
+                        <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:4px;">Escalation Contact</div>
+                        <div style="font-size:12px; color:hsl(var(--muted-foreground)); margin-bottom:14px;">For urgent or unresolved issues beyond 5 business days</div>
+                        <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(198,161,91,0.08); border:1px solid hsl(var(--muted)); border-radius:11px;">
+                            <div style="width:36px; height:36px; border-radius:9px; background:linear-gradient(135deg,rgb(var(--hv-gold-bright)),rgb(var(--hv-gold))); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:hsl(var(--card));">SR</div>
                             <div>
-                                <div style="font-size:13px; font-weight:700; color:#16162a;">Salma Rahman</div>
-                                <div style="font-size:11.5px; color:#9a9ab0;">Client Relations Manager</div>
-                                <div style="font-size:11.5px; color:#6a4dff; margin-top:2px; font-weight:600;">salma@lakeview.com</div>
+                                <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground));">Salma Rahman</div>
+                                <div style="font-size:11.5px; color:hsl(var(--muted-foreground));">Client Relations Manager</div>
+                                <div style="font-size:11.5px; color:rgb(var(--brand-text)); margin-top:2px; font-weight:600;">salma@lakeview.com</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Useful links -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:16px; padding:18px;">
-                        <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:12px;">Quick Links</div>
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:16px; padding:18px;">
+                        <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:12px;">Quick Links</div>
                         <div style="display:flex; flex-direction:column; gap:4px;">
                             <Link
                                 v-for="link in [
@@ -549,8 +549,8 @@ function ticketStatusStyle(s) {
                                     { label: 'Ask Sara AI',            href: route('client.ai.advisor') },
                                 ]" :key="link.label"
                                 :href="link.href"
-                                style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:9px; font-size:13px; font-weight:600; color:#3d3d55; text-decoration:none; transition:background .15s;"
-                                class="hover:bg-[#f5f4fb] hover:text-[#6a4dff]"
+                                style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:9px; font-size:13px; font-weight:600; color:hsl(var(--foreground)); text-decoration:none; transition:background .15s;"
+                                class="hover:bg-[hsl(var(--muted))] hover:text-[rgb(var(--hv-gold))]"
                             >
                                 {{ link.label }}
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>

@@ -111,10 +111,10 @@ function optsWith(list, value) {
 
 // ── AI checks (step 9) ────────────────────────────────────────────────────────
 const checks = [
-    { icon: '✓', bg: 'bg-green-50',  color: 'text-green-700', label: 'No duplicate payment',      note: 'No matching transaction in last 30 days' },
-    { icon: '✓', bg: 'bg-green-50',  color: 'text-green-700', label: 'Amount matches invoice',    note: `BDT ${form.value.amount || '340,000'}` },
-    { icon: '✓', bg: 'bg-green-50',  color: 'text-green-700', label: 'Bank reference present',    note: 'Transaction ID captured' },
-    { icon: '!', bg: 'bg-amber-50',  color: 'text-amber-700', label: 'Finance approval pending',  note: 'Required before posting' },
+    { icon: '✓', bg: 'bg-success/15',  color: 'text-success', label: 'No duplicate payment',      note: 'No matching transaction in last 30 days' },
+    { icon: '✓', bg: 'bg-success/15',  color: 'text-success', label: 'Amount matches invoice',    note: `BDT ${form.value.amount || '340,000'}` },
+    { icon: '✓', bg: 'bg-success/15',  color: 'text-success', label: 'Bank reference present',    note: 'Transaction ID captured' },
+    { icon: '!', bg: 'bg-warning/15',  color: 'text-warning', label: 'Finance approval pending',  note: 'Required before posting' },
 ];
 
 function stepState(idx) {
@@ -178,7 +178,7 @@ function reset() {
                 </div>
                 <div class="flex items-center gap-2.5 flex-shrink-0">
                     <span class="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <span class="h-1.5 w-1.5 rounded-full bg-green-500" />
+                        <span class="h-1.5 w-1.5 rounded-full bg-success" />
                         Draft autosaved
                     </span>
                     <Link :href="route('admin.payments.index')"
@@ -203,14 +203,14 @@ function reset() {
                         :class="[
                             'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
                             stepState(idx) === 'active'
-                                ? 'bg-[#F1ECFF] dark:bg-admin-accent/10'
+                                ? 'bg-admin-accent/10'
                                 : 'hover:bg-slate-50 dark:hover:bg-white/[0.03]',
                         ]"
                     >
                         <div :class="[
                             'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors',
-                            stepState(idx) === 'active' ? 'bg-admin-accent text-white' :
-                            stepState(idx) === 'done'   ? 'bg-green-500 text-white' :
+                            stepState(idx) === 'active' ? 'bg-admin-accent text-on-gold' :
+                            stepState(idx) === 'done'   ? 'bg-success text-on-gold' :
                                                           'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400',
                         ]">
                             <svg v-if="stepState(idx) === 'done'" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
@@ -241,7 +241,7 @@ function reset() {
 
                 <!-- ── Success screen ─────────────────────────────────────────── -->
                 <div v-if="done" class="flex flex-col items-center py-16 text-center px-6">
-                    <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50 text-green-500">
+                    <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-success/15 text-success">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                     </div>
                     <h2 class="text-2xl font-extrabold tracking-tight text-foreground">
@@ -254,7 +254,7 @@ function reset() {
                     </p>
                     <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
                         <Link :href="route('admin.payments.records')"
-                            class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-admin-accent/90">
+                            class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-5 py-2.5 text-sm font-semibold text-on-gold transition-colors hover:bg-admin-accent/90">
                             Back to Records
                         </Link>
                         <Link :href="route('admin.payments.index')"
@@ -302,7 +302,7 @@ function reset() {
                                     <SelectItem
                                         v-if="isEdit && prefill.buyer && !buyers.some(b => b.name === prefill.buyer)"
                                         :value="prefill.buyer"
-                                        class="text-amber-700">
+                                        class="text-warning">
                                         {{ prefill.buyer }}
                                         <span class="ml-1 text-xs opacity-70">(pre-filled)</span>
                                     </SelectItem>
@@ -316,8 +316,8 @@ function reset() {
 
                         <!-- Buyer card: shows DB match OR prefill name in edit mode -->
                         <div v-if="displayBuyer"
-                            class="col-span-2 flex items-center gap-4 rounded-xl border border-[#E7E0FF] bg-[#F6F5FF] dark:bg-admin-accent/10 p-4">
-                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-admin-accent text-sm font-bold text-white">
+                            class="col-span-2 flex items-center gap-4 rounded-xl border border-admin-accent/20 bg-admin-accent/10 p-4">
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-admin-accent text-sm font-bold text-on-gold">
                                 {{ displayBuyer.name.split(' ').map(w => w[0]).slice(0, 2).join('') }}
                             </div>
                             <div class="flex-1 min-w-0">
@@ -326,18 +326,18 @@ function reset() {
                                     <span v-if="displayBuyer.phone || displayBuyer.email">
                                         {{ displayBuyer.phone || displayBuyer.email }} &nbsp;·&nbsp;
                                     </span>
-                                    Outstanding <b class="text-amber-600">BDT 8.3M</b>
+                                    Outstanding <b class="text-warning">BDT 8.3M</b>
                                     &nbsp;·&nbsp; Last paid 22 May
                                 </div>
                             </div>
                             <span v-if="isEdit && !selectedBuyer"
-                                class="shrink-0 rounded-md bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-700">
+                                class="shrink-0 rounded-md bg-warning/15 px-2 py-1 text-[11px] font-semibold text-warning">
                                 Pre-filled
                             </span>
                         </div>
 
                         <div v-else-if="!buyers.length"
-                            class="col-span-2 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
+                            class="col-span-2 rounded-xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning">
                             No clients found. Please add clients first.
                         </div>
                     </div>
@@ -468,7 +468,7 @@ function reset() {
                                     :class="[
                                         'rounded-lg border px-3 py-2.5 text-sm font-medium transition-all text-center',
                                         form.method === m
-                                            ? 'border-admin-accent bg-[#F1ECFF] text-admin-accent'
+                                            ? 'border-admin-accent bg-admin-accent/10 text-admin-accent'
                                             : 'border-slate-200 dark:border-white/[0.09] bg-slate-50 dark:bg-white/[0.04] text-foreground hover:border-admin-accent/50',
                                     ]">
                                     {{ m }}
@@ -531,7 +531,7 @@ function reset() {
                                 :key="doc[0]" class="space-y-1.5">
                                 <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ doc[1] }}</Label>
                                 <div class="flex flex-col items-center gap-2 rounded-lg border-2 border-dashed border-slate-200 dark:border-white/[0.09] bg-slate-50 dark:bg-white/[0.04] p-5 text-center cursor-pointer hover:border-admin-accent/50 transition-colors">
-                                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F1ECFF] text-admin-accent">
+                                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-admin-accent/10 text-admin-accent">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>
                                     </div>
                                     <p class="text-xs font-medium text-foreground">Upload {{ doc[1].toLowerCase() }}</p>
@@ -686,7 +686,7 @@ function reset() {
                             </button>
 
                             <button v-if="step < TOTAL_STEPS" type="button" @click="next"
-                                class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90">
+                                class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90">
                                 Next
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/>
@@ -694,7 +694,7 @@ function reset() {
                             </button>
 
                             <button v-else type="button" @click="post"
-                                class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-admin-accent/90">
+                                class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-on-gold transition-colors hover:bg-admin-accent/90">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 19-7z"/>
                                 </svg>
@@ -711,10 +711,9 @@ function reset() {
         <Transition enter-from-class="opacity-0 translate-y-2" leave-to-class="opacity-0 translate-y-2"
             enter-active-class="transition duration-200" leave-active-class="transition duration-150">
             <div v-if="toast"
-                class="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-2xl"
-                style="background:#0A1B36;">
-                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                class="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-xl bg-foreground px-4 py-3 text-sm font-semibold text-background shadow-2xl">
+                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-success">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0A0C10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                 </span>
                 {{ toast }}
             </div>

@@ -96,7 +96,7 @@ const f =
                             :class="[
                                 'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors',
                                 stepState(idx) === 'active'
-                                    ? 'bg-admin-accent text-white'
+                                    ? 'bg-admin-accent text-on-gold'
                                     : stepState(idx) === 'done'
                                       ? 'bg-green-500 text-white'
                                       : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400',
@@ -1392,7 +1392,7 @@ const f =
                             v-if="!isLast"
                             type="button"
                             @click="goNext"
-                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90"
+                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90"
                         >
                             Next
                             <svg
@@ -1416,7 +1416,7 @@ const f =
                             type="button"
                             @click="emit('submit', 'final')"
                             :disabled="form.processing"
-                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
+                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
                         >
                             <svg
                                 v-if="form.processing"

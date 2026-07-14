@@ -68,7 +68,7 @@ const avatarInitials = (name) => name?.split(' ').map(w => w[0]).slice(0, 2).joi
             </div>
             <Link
                 :href="route('admin.clients.create')"
-                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90"
+                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90"
             >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                 New Client
@@ -204,7 +204,7 @@ const avatarInitials = (name) => name?.split(' ').map(w => w[0]).slice(0, 2).joi
                 <div class="flex items-center gap-1">
                     <template v-for="link in clients.links" :key="link.label">
                         <span v-if="!link.url" class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs pointer-events-none text-muted-foreground/40"><span v-html="link.label" /></span>
-                        <Link v-else :href="link.url" :preserve-state="true" :class="['inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs transition-colors', link.active ? 'bg-admin-accent text-white' : 'text-muted-foreground hover:bg-muted']"><span v-html="link.label" /></Link>
+                        <Link v-else :href="link.url" :preserve-state="true" :class="['inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs transition-colors', link.active ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:bg-muted']"><span v-html="link.label" /></Link>
                     </template>
                 </div>
             </div>

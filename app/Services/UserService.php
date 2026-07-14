@@ -96,10 +96,10 @@ class UserService
     public function accessSummary(): array
     {
         $buckets = [
-            'Full Access'    => ['count' => 0, 'color' => '#5B3DF5'],
-            'Manage Access'  => ['count' => 0, 'color' => '#3B82F6'],
-            'View Access'    => ['count' => 0, 'color' => '#22C55E'],
-            'Limited Access' => ['count' => 0, 'color' => '#F59E0B'],
+            'Full Access'    => ['count' => 0, 'color' => '#C6A15B'],
+            'Manage Access'  => ['count' => 0, 'color' => '#60A5FA'],
+            'View Access'    => ['count' => 0, 'color' => '#34D399'],
+            'Limited Access' => ['count' => 0, 'color' => '#FBBF24'],
         ];
 
         $totalPermissions = max(\Spatie\Permission\Models\Permission::count(), 1);
@@ -148,7 +148,7 @@ class UserService
             ->toArray();
     }
 
-    private const DEPARTMENT_COLORS = ['#5B3DF5', '#3B82F6', '#22C55E', '#F59E0B', '#0EA5E9', '#EC4899', '#0D9488', '#94A3B8'];
+    private const DEPARTMENT_COLORS = ['#C6A15B', '#60A5FA', '#34D399', '#FBBF24', '#A78BFA', '#F472B6', '#22D3EE', '#8A8780'];
 
     public function departmentBreakdown(): array
     {

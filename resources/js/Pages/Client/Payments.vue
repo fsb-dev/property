@@ -147,7 +147,7 @@ const paymentDonutOptions = computed(() => ({
                         fontSize: '12px',
                         fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
                         fontWeight: '600',
-                        color: '#9a9ab0',
+                        color: 'hsl(var(--muted-foreground))',
                         offsetY: 18,
                     },
                     value: {
@@ -155,7 +155,7 @@ const paymentDonutOptions = computed(() => ({
                         fontSize: '13px',
                         fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
                         fontWeight: '800',
-                        color: '#16162a',
+                        color: 'hsl(var(--foreground))',
                         offsetY: -4,
                         formatter: (val) => {
                             const n = Number(val);
@@ -171,14 +171,14 @@ const paymentDonutOptions = computed(() => ({
                         fontSize: '12px',
                         fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
                         fontWeight: '600',
-                        color: '#9a9ab0',
+                        color: 'hsl(var(--muted-foreground))',
                         formatter: () => viewKpi.value.paidPct + '%',
                     },
                 },
             },
         },
     },
-    colors: ['#16a34a', '#f59e0b'],
+    colors: ['hsl(var(--success))', 'hsl(var(--warning))'],
     labels: ['Paid Amount', 'Outstanding'],
     legend: { show: false },
     dataLabels: { enabled: false },
@@ -218,20 +218,20 @@ function absRem(n) {
         <!-- ── KPI 5-col row ──────────────────────────────────────── -->
         <div class="mt-5 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
             <!-- Total Property Value -->
-            <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+            <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
-                    <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[#efeafc]">
-                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#5b3fe8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+                    <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[rgba(198,161,91,0.1)]">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--hv-gold))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-muted-foreground leading-tight">Total Property Value</span>
                 </div>
                 <div class="mt-3.5 text-xl font-extrabold tracking-tight text-foreground" style="letter-spacing:-0.02em;">{{ fmtBDT(viewKpi.totalValue) }}</div>
             </div>
             <!-- Paid Amount -->
-            <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+            <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
                     <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-green-100 dark:bg-green-500/15">
-                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/><path d="M3 12h18"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--success))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/><path d="M3 12h18"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-muted-foreground leading-tight">Paid Amount</span>
                 </div>
@@ -241,10 +241,10 @@ function absRem(n) {
                 </div>
             </div>
             <!-- Outstanding -->
-            <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+            <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
                     <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-500/15">
-                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#f08a1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M7.5 10.5V8a4.5 4.5 0 0 1 9 0v2.5"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--warning))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M7.5 10.5V8a4.5 4.5 0 0 1 9 0v2.5"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-muted-foreground leading-tight">Outstanding Balance</span>
                 </div>
@@ -254,10 +254,10 @@ function absRem(n) {
                 </div>
             </div>
             <!-- Total Installments -->
-            <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+            <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
                     <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-500/15">
-                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2f6bdb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--info))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-muted-foreground leading-tight">Total Installments</span>
                 </div>
@@ -265,10 +265,10 @@ function absRem(n) {
                 <div class="mt-1 text-xs font-medium text-muted-foreground">Installments</div>
             </div>
             <!-- Paid Installments -->
-            <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+            <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
-                    <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[#efeafc]">
-                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#5b3fe8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><path d="m9 14 2 2 4-4"/></svg>
+                    <div class="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[rgba(198,161,91,0.1)]">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--hv-gold))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><path d="m9 14 2 2 4-4"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-muted-foreground leading-tight">Paid Installments</span>
                 </div>
@@ -284,7 +284,7 @@ function absRem(n) {
                 class="text-xs font-bold px-3 py-1.5 rounded-lg border transition-colors"
                 :class="selectedBookingId === null
                     ? 'border-client-accent bg-client-accent/10 text-client-accent'
-                    : 'border-[#ededf3] dark:border-white/[0.06] bg-client-surface-card text-muted-foreground hover:border-client-accent/40'"
+                    : 'border-[hsl(var(--border))] dark:border-white/[0.06] bg-client-surface-card text-muted-foreground hover:border-client-accent/40'"
                 @click="selectedBookingId = null"
             >All Properties</button>
             <button
@@ -292,7 +292,7 @@ function absRem(n) {
                 class="text-xs font-bold px-3 py-1.5 rounded-lg border transition-colors"
                 :class="selectedBookingId === b.id
                     ? 'border-client-accent bg-client-accent/10 text-client-accent'
-                    : 'border-[#ededf3] dark:border-white/[0.06] bg-client-surface-card text-muted-foreground hover:border-client-accent/40'"
+                    : 'border-[hsl(var(--border))] dark:border-white/[0.06] bg-client-surface-card text-muted-foreground hover:border-client-accent/40'"
                 @click="selectedBookingId = b.id"
             >{{ b.project_name }} – {{ b.unit_number }}</button>
         </div>
@@ -307,7 +307,7 @@ function absRem(n) {
                 <div class="grid grid-cols-1 xl:grid-cols-[0.95fr_1.35fr] gap-5">
 
                     <!-- Donut -->
-                    <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                         <h3 class="text-base font-bold text-foreground">Payment Progress</h3>
                         <div class="flex items-center gap-5 mt-5">
                             <!-- ApexCharts donut -->
@@ -342,13 +342,13 @@ function absRem(n) {
                     </div>
 
                     <!-- Installment Timeline -->
-                    <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm flex flex-col">
+                    <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm flex flex-col">
                         <h3 class="text-base font-bold text-foreground">Installment Summary</h3>
 
                         <!-- Timeline -->
                         <div class="relative flex justify-between mt-8 mx-2">
                             <!-- Track -->
-                            <div class="absolute top-[13px] left-6 right-6 h-[3px] rounded-full bg-[#eceaf4] dark:bg-white/[0.08]"></div>
+                            <div class="absolute top-[13px] left-6 right-6 h-[3px] rounded-full bg-muted dark:bg-white/[0.08]"></div>
                             <!-- Fill -->
                             <div class="absolute top-[13px] left-6 h-[3px] rounded-full bg-green-500 transition-all duration-700"
                                 :style="`width: calc((100% - 48px) * ${timelineLineWidth / 100})`"
@@ -359,18 +359,18 @@ function absRem(n) {
                                 <!-- Dot -->
                                 <div v-if="stage.done"
                                     class="w-7 h-7 rounded-full bg-green-500 flex items-center justify-center z-10"
-                                    style="box-shadow: 0 0 0 4px #e6f7ed;"
+                                    style="box-shadow: 0 0 0 4px rgba(52,211,153,0.15);"
                                 >
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--card))" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
                                 </div>
                                 <div v-else-if="stage.active"
                                     class="w-7 h-7 rounded-full flex items-center justify-center z-10"
-                                    style="background:#5b3fe8; box-shadow: 0 0 0 4px #ece7fb;"
+                                    style="background:rgb(var(--hv-gold)); box-shadow: 0 0 0 4px rgba(198,161,91,0.15);"
                                 >
                                     <span class="w-2.5 h-2.5 rounded-full bg-white"></span>
                                 </div>
                                 <div v-else
-                                    class="w-7 h-7 rounded-full bg-client-surface-card border-[3px] border-[#e2e0ec] dark:border-white/[0.12] z-10"
+                                    class="w-7 h-7 rounded-full bg-client-surface-card border-[3px] border-[rgba(198,161,91,0.08)] dark:border-white/[0.12] z-10"
                                 ></div>
 
                                 <!-- Labels -->
@@ -383,7 +383,7 @@ function absRem(n) {
 
                         <!-- Info banner -->
                         <div class="mt-auto pt-5">
-                            <div class="flex items-center gap-3 p-3.5 bg-[#f7f6fd] dark:bg-client-accent/10 rounded-xl">
+                            <div class="flex items-center gap-3 p-3.5 bg-[rgba(198,161,91,0.08)] dark:bg-client-accent/10 rounded-xl">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-client-accent flex-none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
                                 <span class="text-xs text-muted-foreground font-medium leading-relaxed">Please check your payment schedule and make sure your next installment is paid on time.</span>
                             </div>
@@ -392,7 +392,7 @@ function absRem(n) {
                 </div>
 
                 <!-- Payment History -->
-                <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <div class="flex items-center justify-between mb-1">
                         <h3 class="text-base font-bold text-foreground">Payment History</h3>
                         <a href="#" class="text-sm font-bold text-client-accent hover:underline">View All</a>
@@ -400,7 +400,7 @@ function absRem(n) {
 
                     <div v-if="paymentHistory.length">
                         <!-- Header -->
-                        <div class="grid text-xs font-bold uppercase tracking-wide text-muted-foreground py-3 border-b border-[#f0f0f5] dark:border-white/[0.06]"
+                        <div class="grid text-xs font-bold uppercase tracking-wide text-muted-foreground py-3 border-b border-[hsl(var(--muted))] dark:border-white/[0.06]"
                             style="grid-template-columns:1fr 1.1fr 1.5fr 1fr 1.1fr 0.75fr 0.5fr; gap:10px; padding-left:6px; padding-right:6px;"
                         >
                             <span>Date</span>
@@ -413,8 +413,8 @@ function absRem(n) {
                         </div>
                         <!-- Rows -->
                         <div v-for="(row, i) in paymentHistory" :key="row.id"
-                            class="grid items-center transition-colors hover:bg-[#faf9fd] dark:hover:bg-white/[0.02]"
-                            :class="i < paymentHistory.length - 1 ? 'border-b border-[#f4f4f8] dark:border-white/[0.04]' : ''"
+                            class="grid items-center transition-colors hover:bg-[hsl(var(--background))] dark:hover:bg-white/[0.02]"
+                            :class="i < paymentHistory.length - 1 ? 'border-b border-[hsl(var(--border))] dark:border-white/[0.04]' : ''"
                             style="grid-template-columns:1fr 1.1fr 1.5fr 1fr 1.1fr 0.75fr 0.5fr; gap:10px; padding:13px 6px; font-size:13px;"
                         >
                             <span class="text-muted-foreground font-medium">{{ row.date }}</span>
@@ -427,7 +427,7 @@ function absRem(n) {
                             <span class="font-bold text-foreground">{{ fmtBDT(row.amount) }}</span>
                             <span class="text-muted-foreground font-medium">{{ row.method }}</span>
                             <span>
-                                <span class="inline-block text-xs font-bold px-2.5 py-1 rounded-lg bg-[#e6f7ed] text-green-700 dark:bg-green-500/15 dark:text-green-400">Paid</span>
+                                <span class="inline-block text-xs font-bold px-2.5 py-1 rounded-lg bg-[rgba(52,211,153,0.15)] text-green-700 dark:bg-green-500/15 dark:text-green-400">Paid</span>
                             </span>
                             <span class="text-right">
                                 <button class="inline-flex items-center justify-center hover:text-client-accent text-muted-foreground transition-colors" title="Download Receipt">
@@ -450,25 +450,25 @@ function absRem(n) {
                 <div class="grid grid-cols-1 xl:grid-cols-[1.45fr_1fr] gap-5">
 
                     <!-- Download Statements -->
-                    <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                         <h3 class="text-base font-bold text-foreground mb-4">Download Statements</h3>
                         <div class="grid grid-cols-3 gap-3">
-                            <a href="#" class="flex items-center gap-3 p-3.5 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl hover:bg-[#faf9fd] hover:border-[#e6e1fb] dark:hover:bg-white/[0.04] transition-colors">
+                            <a href="#" class="flex items-center gap-3 p-3.5 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl hover:bg-[hsl(var(--background))] hover:border-[rgba(198,161,91,0.1)] dark:hover:bg-white/[0.04] transition-colors">
                                 <span class="w-9 h-9 flex-none rounded-lg bg-[#fdebe8] flex items-center justify-center text-[9px] font-extrabold text-[#e0584b]">PDF</span>
                                 <span>
                                     <span class="block text-xs font-bold text-foreground">Payment Statement</span>
                                     <span class="block text-xs text-muted-foreground mt-0.5">PDF Format</span>
                                 </span>
                             </a>
-                            <a href="#" class="flex items-center gap-3 p-3.5 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl hover:bg-[#faf9fd] hover:border-[#e6e1fb] dark:hover:bg-white/[0.04] transition-colors">
+                            <a href="#" class="flex items-center gap-3 p-3.5 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl hover:bg-[hsl(var(--background))] hover:border-[rgba(198,161,91,0.1)] dark:hover:bg-white/[0.04] transition-colors">
                                 <span class="w-9 h-9 flex-none rounded-lg bg-[#e6f4ec] flex items-center justify-center text-[9px] font-extrabold text-[#1d8a4e]">XLS</span>
                                 <span>
                                     <span class="block text-xs font-bold text-foreground">Payment Statement</span>
                                     <span class="block text-xs text-muted-foreground mt-0.5">Excel Format</span>
                                 </span>
                             </a>
-                            <a href="#" class="flex items-center gap-3 p-3.5 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl hover:bg-[#faf9fd] hover:border-[#e6e1fb] dark:hover:bg-white/[0.04] transition-colors">
-                                <span class="w-9 h-9 flex-none rounded-lg bg-[#efeafc] flex items-center justify-center text-client-accent">
+                            <a href="#" class="flex items-center gap-3 p-3.5 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl hover:bg-[hsl(var(--background))] hover:border-[rgba(198,161,91,0.1)] dark:hover:bg-white/[0.04] transition-colors">
+                                <span class="w-9 h-9 flex-none rounded-lg bg-[rgba(198,161,91,0.1)] flex items-center justify-center text-client-accent">
                                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="m9 14 2 2 4-4"/></svg>
                                 </span>
                                 <span>
@@ -480,22 +480,22 @@ function absRem(n) {
                     </div>
 
                     <!-- Need Help -->
-                    <div class="relative overflow-hidden rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    <div class="relative overflow-hidden rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                         <div style="max-width:230px;">
                             <h3 class="text-base font-bold text-foreground">Need Help?</h3>
                             <p class="text-xs text-muted-foreground font-medium leading-relaxed mt-2 mb-4">Our support team is here to help you with any payment related queries.</p>
                             <button class="inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border transition-colors text-client-accent"
-                                style="border-color:#e6e1fb; background:#f6f3ff;"
-                                @mouseenter="$event.currentTarget.style.background='#efeafc'"
-                                @mouseleave="$event.currentTarget.style.background='#f6f3ff'"
+                                style="border-color:rgba(198,161,91,0.1); background:rgba(198,161,91,0.08);"
+                                @mouseenter="$event.currentTarget.style.background='rgba(198,161,91,0.1)'"
+                                @mouseleave="$event.currentTarget.style.background='rgba(198,161,91,0.08)'"
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0M4 13v3a2 2 0 0 0 2 2h1v-5H6a2 2 0 0 0-2 2zm16 0v3a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2z"/></svg>
                                 Contact Support
                             </button>
                         </div>
                         <!-- Decorative circle -->
-                        <div class="absolute right-4 bottom-4 w-[68px] h-[68px] rounded-full flex items-center justify-center" style="background:linear-gradient(160deg,#efeafc,#e0d7fa);">
-                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#7b63ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0M4 13v3a2 2 0 0 0 2 2h1v-5H6a2 2 0 0 0-2 2zm16 0v3a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2z"/></svg>
+                        <div class="absolute right-4 bottom-4 w-[68px] h-[68px] rounded-full flex items-center justify-center" style="background:linear-gradient(160deg,rgba(198,161,91,0.1),rgba(198,161,91,0.15));">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--hv-gold))" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0M4 13v3a2 2 0 0 0 2 2h1v-5H6a2 2 0 0 0-2 2zm16 0v3a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2z"/></svg>
                         </div>
                     </div>
                 </div>
@@ -506,26 +506,26 @@ function absRem(n) {
             <aside class="hidden xl:flex flex-col gap-4" style="width:310px; flex:none;">
 
                 <!-- Upcoming Payment -->
-                <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-4">Upcoming Payment</h3>
-                    <div v-if="upcoming" class="border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl p-4">
+                    <div v-if="upcoming" class="border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl p-4">
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-extrabold text-foreground">Installment {{ upcoming.installment_number }}</span>
                             <span class="text-xs font-bold px-2.5 py-1 rounded-lg"
                                 :class="upcoming.is_overdue
                                     ? 'bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400'
-                                    : 'bg-[#eef0fe] text-[#3f5bd6]'"
+                                    : 'bg-info/10 text-info'"
                             >{{ upcoming.is_overdue ? 'Overdue' : 'Upcoming' }}</span>
                         </div>
                         <div class="mt-4">
                             <div class="text-xs text-muted-foreground font-semibold">Due Date</div>
                             <div class="text-xl font-extrabold text-foreground mt-1" style="letter-spacing:-0.02em;">{{ upcoming.due_date }}</div>
                         </div>
-                        <div class="mt-3.5 pt-3.5 border-t border-dashed border-[#e6e6ee] dark:border-white/[0.08]">
+                        <div class="mt-3.5 pt-3.5 border-t border-dashed border-[hsl(var(--border))] dark:border-white/[0.08]">
                             <div class="text-xs text-muted-foreground font-semibold">Amount</div>
                             <div class="text-xl font-extrabold text-foreground mt-1" style="letter-spacing:-0.02em;">{{ fmtBDT(upcoming.amount) }}</div>
                         </div>
-                        <div class="mt-3.5 pt-3.5 border-t border-dashed border-[#e6e6ee] dark:border-white/[0.08]">
+                        <div class="mt-3.5 pt-3.5 border-t border-dashed border-[hsl(var(--border))] dark:border-white/[0.08]">
                             <div class="text-xs text-muted-foreground font-semibold">
                                 {{ upcoming.is_overdue ? 'Overdue By' : 'Days Remaining' }}
                             </div>
@@ -533,7 +533,7 @@ function absRem(n) {
                                 :class="upcoming.is_overdue ? 'text-red-500' : 'text-green-600 dark:text-green-400'"
                             >{{ absRem(upcoming.days_remaining) }}</div>
                         </div>
-                        <div v-if="upcoming.project_name !== '—'" class="mt-3.5 pt-3.5 border-t border-[#f0f0f5] dark:border-white/[0.06]">
+                        <div v-if="upcoming.project_name !== '—'" class="mt-3.5 pt-3.5 border-t border-[hsl(var(--muted))] dark:border-white/[0.06]">
                             <div class="text-xs text-muted-foreground font-medium truncate">{{ upcoming.project_name }} – Unit {{ upcoming.unit_number }}</div>
                         </div>
                     </div>
@@ -541,22 +541,22 @@ function absRem(n) {
                         No upcoming installments found.
                     </div>
                     <button class="mt-4 w-full text-sm font-bold py-3 rounded-xl text-white"
-                        style="background:linear-gradient(100deg,#6a4dff,#5132e0); box-shadow:0 10px 22px -8px rgba(81,50,224,.55);">
+                        style="background:linear-gradient(100deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); box-shadow:0 10px 22px -8px rgba(81,50,224,.55);">
                         Make a Payment
                     </button>
-                    <button class="mt-2.5 w-full flex items-center justify-center gap-2 text-sm font-bold py-2.5 rounded-xl border border-[#ededf3] dark:border-white/[0.06] bg-client-surface-card hover:bg-[#faf9fd] dark:hover:bg-white/[0.04] transition-colors text-foreground">
+                    <button class="mt-2.5 w-full flex items-center justify-center gap-2 text-sm font-bold py-2.5 rounded-xl border border-[hsl(var(--border))] dark:border-white/[0.06] bg-client-surface-card hover:bg-[hsl(var(--background))] dark:hover:bg-white/[0.04] transition-colors text-foreground">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-client-accent"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>
                         View Payment Plan
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c2c2cf" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="ml-auto"><path d="M9 6l6 6-6 6"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="ml-auto"><path d="M9 6l6 6-6 6"/></svg>
                     </button>
                 </div>
 
                 <!-- Payment Plan Overview -->
-                <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-4">Payment Plan Overview</h3>
                     <div class="grid grid-cols-2 gap-x-3 gap-y-4">
                         <div class="flex gap-2.5">
-                            <span class="w-8 h-8 flex-none rounded-lg bg-[#efeafc] flex items-center justify-center text-client-accent">
+                            <span class="w-8 h-8 flex-none rounded-lg bg-[rgba(198,161,91,0.1)] flex items-center justify-center text-client-accent">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 13h4"/></svg>
                             </span>
                             <div>
@@ -595,9 +595,9 @@ function absRem(n) {
                         </div>
                     </div>
                     <button class="mt-4 w-full flex items-center justify-center gap-2 text-sm font-bold py-2.5 rounded-xl border transition-colors text-client-accent"
-                        style="border-color:#e6e1fb; background:#f6f3ff;"
-                        @mouseenter="$event.currentTarget.style.background='#efeafc'"
-                        @mouseleave="$event.currentTarget.style.background='#f6f3ff'"
+                        style="border-color:rgba(198,161,91,0.1); background:rgba(198,161,91,0.08);"
+                        @mouseenter="$event.currentTarget.style.background='rgba(198,161,91,0.1)'"
+                        @mouseleave="$event.currentTarget.style.background='rgba(198,161,91,0.08)'"
                     >
                         Download Payment Plan (PDF)
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 20h16"/></svg>
@@ -605,18 +605,18 @@ function absRem(n) {
                 </div>
 
                 <!-- Payment Methods -->
-                <div class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                <div class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-4">Payment Methods We Accept</h3>
                     <div class="flex flex-wrap gap-2.5">
-                        <span class="flex items-center justify-center h-10 px-4 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-sm font-extrabold" style="color:#e2136e;">bKash</span>
-                        <span class="flex items-center justify-center h-10 px-4 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-sm font-extrabold" style="color:#ee7421;">Nagad</span>
-                        <span class="flex items-center justify-center h-10 px-4 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-sm font-extrabold italic" style="color:#1a1f71;">VISA</span>
+                        <span class="flex items-center justify-center h-10 px-4 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-sm font-extrabold" style="color:#e2136e;">bKash</span>
+                        <span class="flex items-center justify-center h-10 px-4 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-sm font-extrabold" style="color:#ee7421;">Nagad</span>
+                        <span class="flex items-center justify-center h-10 px-4 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-sm font-extrabold italic" style="color:#1a1f71;">VISA</span>
                         <!-- Mastercard dots -->
-                        <span class="flex items-center justify-center h-10 px-3.5 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl gap-[-4px]">
+                        <span class="flex items-center justify-center h-10 px-3.5 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl gap-[-4px]">
                             <span class="w-4 h-4 rounded-full" style="background:#eb001b;"></span>
                             <span class="w-4 h-4 rounded-full -ml-2" style="background:#f79e1b;"></span>
                         </span>
-                        <span class="flex items-center gap-2 h-10 px-3.5 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-xs font-bold text-muted-foreground">
+                        <span class="flex items-center gap-2 h-10 px-3.5 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-xs font-bold text-muted-foreground">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10M19 21V10M3 10l9-6 9 6M9 21v-6h6v6"/></svg>
                             Bank Transfer
                         </span>
@@ -627,7 +627,7 @@ function absRem(n) {
         </div>
 
         <!-- ── Footer ─────────────────────────────────────────────── -->
-        <footer class="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] px-5 py-3.5 shadow-sm">
+        <footer class="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] px-5 py-3.5 shadow-sm">
             <div class="text-sm font-bold text-foreground">
                 HomeVerse<sup class="text-xs font-normal text-muted-foreground">™</sup>
                 <span class="text-muted-foreground font-normal ml-2">·</span>

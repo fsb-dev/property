@@ -246,7 +246,7 @@ function statusPill(status) { return STATUS_PILL[status] ?? 'bg-slate-100 text-s
                         </label>
                         <div class="flex gap-2">
                             <button type="button" @click="confirmApply" :disabled="loading"
-                                class="flex-1 rounded-lg bg-admin-accent py-1.5 text-xs font-semibold text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-50">
+                                class="flex-1 rounded-lg bg-admin-accent py-1.5 text-xs font-semibold text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-50">
                                 Confirm Apply
                             </button>
                             <button type="button" @click="showApplyConfirm = false"
@@ -271,8 +271,8 @@ function statusPill(status) { return STATUS_PILL[status] ?? 'bg-slate-100 text-s
                 <button type="button" @click="save" :disabled="!isDirty || loading"
                     :class="['flex flex-1 items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition-colors',
                         isDirty && !loading
-                            ? 'bg-admin-accent text-white hover:bg-admin-accent/90'
-                            : 'bg-admin-accent/30 text-white/60 cursor-not-allowed']">
+                            ? 'bg-admin-accent text-on-gold hover:bg-admin-accent/90'
+                            : 'bg-admin-accent/30 text-on-gold/60 cursor-not-allowed']">
                     <svg v-if="loading" class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                     {{ loading ? 'Saving…' : 'Save Unit' }}
                 </button>

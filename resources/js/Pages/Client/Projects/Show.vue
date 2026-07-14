@@ -282,7 +282,7 @@ const complianceStatus = {
                 <Button v-for="f in unitFilters" :key="f.key" type="button" size="sm" variant="outline"
                     class="rounded-xl text-xs font-bold border-[#ededf3] dark:border-white/[0.08]"
                     :class="activeUnitFilter === f.key
-                        ? 'bg-client-accent text-white border-client-accent hover:bg-client-accent/90 hover:text-white'
+                        ? 'bg-client-accent text-on-gold border-client-accent hover:bg-client-accent/90 hover:text-on-gold'
                         : 'text-muted-foreground hover:text-client-accent'"
                     @click="activeUnitFilter = f.key">
                     {{ f.label }} ({{ f.count }})

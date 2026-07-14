@@ -3,128 +3,169 @@
 @tailwind utilities;
 
 /*
- * ── Theme tokens ──────────────────────────────────────────────────
+ * ── Theme tokens — Homeverse × R1 palette ────────────────────────────
  *
  *  Two independent systems live here:
  *
  *  1. PORTAL VARS (RGB)  — for layout shell (sidebar, topbar, page bg, cards).
  *     Format: R G B  (space-separated for Tailwind opacity modifier support)
  *     Used as: bg-admin-surface-card, text-admin-accent, bg-admin-accent/15 …
+ *     Admin = lifted, higher-contrast dashboard surfaces (read for long sessions).
+ *     Client = richer, more cinematic near-black surfaces (closer to the R1
+ *     marketing DNA) — same champagne gold accent, deeper canvas.
  *
  *  2. SHADCN VARS (HSL)  — consumed by shadcn-vue UI components (buttons,
- *     inputs, dialogs, tables …).
+ *     inputs, dialogs, badges, tables …). Shared "brand master" theme across
+ *     both portals so every primitive speaks the same visual language.
  *     Format: H S% L%  (without hsl() wrapper)
  *     Used as: bg-primary, text-muted-foreground, border-input …
  *
  *  Both are defined per portal and flip automatically when .dark is on <html>.
  *  To retheme: change the numbers here — no component file needs touching.
  *
- *  RGB accent quick-ref:
- *    blue-600  37 99 235  |  indigo-600  79 70 229  |  teal-600   13 148 136
- *    violet-600 124 58 237 |  rose-600  225 29 72   |  emerald-600  5 150 105
- * ─────────────────────────────────────────────────────────────────
- */
+ *  Brand gold — champagne, the R1 accent. Base #C6A15B / bright #E7CE8A /
+ *  deep #A5813F. Gold (and every semantic) fill ALWAYS pairs with dark text
+ *  (--*-foreground below), never white — white on gold measures ~2.4:1 and
+ *  fails WCAG outright.
+ * ─────────────────────────────────────────────────────────────────── */
 
 /* ═══════════════════════════════════════════════════════════════════
    LIGHT MODE
    ═══════════════════════════════════════════════════════════════════ */
 :root {
-    /* ── Admin portal RGB vars ────────────────────────────── */
-    --admin-accent:           91 61 245;      /* #5B3DF5 indigo-purple */
+    /* ── Brand gold (shared, both portals, both modes) ────── */
+    --hv-gold:          198 161 91;   /* #C6A15B */
+    --hv-gold-bright:   231 206 138;  /* #E7CE8A */
+    --hv-gold-deep:     165 129 63;   /* #A5813F */
+    --hv-on-gold:       10 12 16;     /* #0A0C10 — dark text for any gold/semantic fill */
+    --brand-text:       138 106 46;   /* #8A6A2E — mode-aware gold for text/icons/links in shared UI */
 
-    --admin-surface-page:    248 249 252;     /* #F8F9FC near-white    */
-    --admin-surface-sidebar: 10  27  54;      /* #0A1B36 dark navy     */
-    --admin-surface-topbar:  255 255 255;     /* white                 */
-    --admin-surface-card:    255 255 255;     /* white                 */
+    /* ── Data visualisation — supporting palette (mode-invariant) ── */
+    --hv-chart-1:       198 161 91;   /* #C6A15B gold  — series 1: your property / primary metric */
+    --hv-chart-2:       96  165 250;  /* #60A5FA blue  — market / comparison */
+    --hv-chart-3:       52  211 153;  /* #34D399 green — growth / positive */
+    --hv-chart-4:       167 139 250;  /* #A78BFA violet */
+    --hv-chart-5:       244 114 182;  /* #F472B6 pink */
+    --hv-chart-6:       34  211 238;  /* #22D3EE cyan */
+    --hv-chart-grid:    26  22  17;   /* warm-black grid lines on light canvas; use at low alpha */
 
-    /* ── Client portal RGB vars ───────────────────────────── */
-    --client-accent:          91 63 232;      /* purple    */
+    /* ── Admin portal RGB vars (light = lifted dashboard) ─── */
+    --admin-accent:           138 106 46;    /* #8A6A2E — AA-safe gold-ink for text/icons on light bg */
+    --admin-accent-fill:      198 161 91;    /* #C6A15B — true brand gold for solid fills/gradients */
 
-    --client-surface-page:   245 245 250;     /* #f5f5fa   */
-    --client-surface-sidebar:255 255 255;     /* white     */
-    --client-surface-topbar: 255 255 255;     /* white     */
-    --client-surface-card:   255 255 255;     /* white     */
+    --admin-surface-page:    250 248 244;    /* #FAF8F4 warm ivory    */
+    --admin-surface-sidebar: 18  21  28;     /* #12151C — sidebar stays dark in both modes */
+    --admin-surface-topbar:  255 255 255;    /* #FFFFFF                */
+    --admin-surface-card:    255 255 255;    /* #FFFFFF                */
 
-    /* ── shadcn-vue HSL vars (admin theme by default) ─────── */
-    --background:   220 38% 98%;              /* #F8F9FC   */
-    --foreground:   230 37% 13%;              /* #151B2E   */
+    /* ── Client portal RGB vars (light = warmer parchment) ── */
+    --client-accent:          138 106 46;    /* #8A6A2E same ink gold  */
+    --client-accent-fill:     198 161 91;    /* #C6A15B                */
+
+    --client-surface-page:   247 244 236;    /* #F7F4EC deeper cream   */
+    --client-surface-sidebar: 10  11  14;    /* #0A0B0E — darker than admin's, more cinematic */
+    --client-surface-topbar: 255 255 255;    /* #FFFFFF                */
+    --client-surface-card:   255 255 255;    /* #FFFFFF                */
+
+    /* ── shadcn-vue HSL vars (Homeverse master, light) ─────── */
+    --background:   40 37% 97%;               /* #FAF8F4   */
+    --foreground:   33 21% 8%;                /* #1A1611   */
 
     --card:         0 0% 100%;
-    --card-foreground: 230 37% 13%;
+    --card-foreground: 33 21% 8%;
 
     --popover:      0 0% 100%;
-    --popover-foreground: 230 37% 13%;
+    --popover-foreground: 33 21% 8%;
 
-    --primary:      250 90% 60%;              /* #5B3DF5 indigo-purple */
-    --primary-foreground: 0 0% 100%;
+    --primary:      39 48% 57%;               /* #C6A15B brand gold — always paired with dark text */
+    --primary-foreground: 220 23% 5%;         /* #0A0C10   */
 
-    --secondary:    220 30% 96%;
-    --secondary-foreground: 230 37% 13%;
+    --secondary:    42 42% 91%;               /* #F1EBDD   */
+    --secondary-foreground: 33 21% 8%;
 
-    --muted:        220 30% 96%;
-    --muted-foreground: 218 12% 47%;          /* #697386   */
+    --muted:        42 42% 91%;               /* #F1EBDD   */
+    --muted-foreground: 38 11% 38%;           /* #6B6355   */
 
-    --accent:       250 100% 97%;             /* #F1ECFF accent-soft  */
-    --accent-foreground: 250 90% 60%;
+    --accent:       42 45% 96%;               /* #F9F6EF gold-tinted wash */
+    --accent-foreground: 39 50% 36%;          /* #8A6A2E   */
 
-    --destructive:  0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive:  0 91% 71%;                /* #F87171   */
+    --destructive-foreground: 220 23% 5%;     /* #0A0C10 — dark text, same rule as gold */
 
-    --border:       218 38% 95%;              /* #EEF2F8   */
-    --input:        218 38% 95%;
-    --ring:         250 90% 60%;              /* #5B3DF5   */
+    --success:      158 64% 40%;              /* #1F9E6E — deepened for AA on light bg */
+    --success-foreground: 220 23% 5%;         /* #0A0C10 — black text: 5.75:1 vs white's 3.04:1 (fails AA) */
+    --warning:      38 92% 42%;               /* #B87F0B — deepened for AA on light bg */
+    --warning-foreground: 220 23% 5%;         /* #0A0C10 — black text: 5.67:1 vs white's 3.09:1 (fails AA) */
+    --info:         213 80% 52%;              /* #2C7DE8 — deepened for AA on light bg */
+    --info-foreground: 220 23% 5%;            /* #0A0C10 — black text: 4.85:1 vs white's 3.61:1 (fails AA) */
 
-    --radius:       0.5rem;
+    --border:       41 30% 88%;               /* #E9E3D6   */
+    --input:        41 30% 88%;
+    --ring:         39 45% 45%;               /* #A5813F gold-deep — 3.6:1, base gold fails 3:1 on light bg */
+
+    --radius:       0.75rem;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
    DARK MODE
    ═══════════════════════════════════════════════════════════════════ */
 .dark {
-    /* ── Admin portal RGB vars ────────────────────────────── */
-    --admin-accent:          96 165 250;      /* blue-400  */
+    --brand-text:              198 161 91;     /* #C6A15B — full champagne gold reads clearly on dark */
+    --hv-chart-grid:           255 255 255;    /* white grid lines on dark canvas; use at low alpha */
 
-    --admin-surface-page:    10  12  16;      /* #0a0c10 dark charcoal */
-    --admin-surface-sidebar: 15  18  24;      /* #0f1218               */
-    --admin-surface-topbar:  12  15  20;      /* #0c0f14               */
-    --admin-surface-card:    19  22  30;      /* #13161e               */
+    /* ── Admin portal RGB vars (lifted dashboard surfaces) ── */
+    --admin-accent:           198 161 91;     /* #C6A15B champagne gold */
+    --admin-accent-fill:      198 161 91;
 
-    /* ── Client portal RGB vars ───────────────────────────── */
-    --client-accent:         139 111 248;     /* purple-400 */
+    --admin-surface-page:    11  14  19;      /* #0B0E13   */
+    --admin-surface-sidebar: 13  16  22;      /* #0D1016   */
+    --admin-surface-topbar:  15  18  24;      /* #0F1218   */
+    --admin-surface-card:    21  25  34;      /* #151922   */
 
-    --client-surface-page:    14  10  32;
-    --client-surface-sidebar: 24  18  50;
-    --client-surface-topbar:  20  14  44;
-    --client-surface-card:    28  22  58;
+    /* ── Client portal RGB vars (richer, cinematic near-black) ── */
+    --client-accent:          198 161 91;     /* #C6A15B same brand gold */
+    --client-accent-fill:     198 161 91;
 
-    /* ── shadcn-vue HSL vars (admin dark theme) ───────────── */
-    --background:   220 23% 5%;               /* matches admin-surface-page dark */
-    --foreground:   210 40% 98%;
+    --client-surface-page:    8   9  12;      /* #08090C — deeper than admin */
+    --client-surface-sidebar: 8   9  12;      /* #08090C — fully merged, cinematic */
+    --client-surface-topbar:  12  14  18;     /* #0C0E12   */
+    --client-surface-card:    18  20  25;     /* #121419   */
 
-    --card:         220 20% 9%;               /* matches admin-surface-card dark */
-    --card-foreground: 210 40% 98%;
+    /* ── shadcn-vue HSL vars (Homeverse master, dark) ──────── */
+    --background:   218 27% 6%;               /* #0B0E13   */
+    --foreground:   44 35% 94%;               /* #F5F2EA   */
 
-    --popover:      220 20% 9%;
-    --popover-foreground: 210 40% 98%;
+    --card:         222 24% 11%;              /* #151922   */
+    --card-foreground: 44 35% 94%;
 
-    --primary:      213 97% 68%;              /* matches admin-accent blue-400   */
-    --primary-foreground: 222 47% 11%;
+    --popover:      221 22% 14%;              /* #1C212C   */
+    --popover-foreground: 44 35% 94%;
 
-    --secondary:    217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --primary:      39 48% 57%;               /* #C6A15B   */
+    --primary-foreground: 220 23% 5%;         /* #0A0C10   */
 
-    --muted:        217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --secondary:    221 22% 14%;              /* #1C212C   */
+    --secondary-foreground: 44 35% 94%;
 
-    --accent:       217 33% 17%;
-    --accent-foreground: 210 40% 98%;
+    --muted:        221 22% 14%;              /* #1C212C   */
+    --muted-foreground: 42 4% 52%;            /* #8A8780   */
 
-    --destructive:  0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+    --accent:       221 22% 14%;              /* #1C212C   */
+    --accent-foreground: 44 35% 94%;
 
-    --border:       217 33% 17%;
-    --input:        217 33% 17%;
-    --ring:         213 97% 68%;              /* matches admin-accent dark */
+    --destructive:  0 91% 71%;                /* #F87171   */
+    --destructive-foreground: 220 23% 5%;     /* #0A0C10   */
+
+    --success:      158 64% 52%;              /* #34D399   */
+    --success-foreground: 220 23% 5%;
+    --warning:      43 96% 56%;               /* #FBBF24   */
+    --warning-foreground: 220 23% 5%;
+    --info:         213 94% 68%;              /* #60A5FA   */
+    --info-foreground: 220 23% 5%;
+
+    --border:       220 19% 18%;              /* #262C38   */
+    --input:        220 11% 22%;              /* #31353D   */
+    --ring:         39 48% 57%;               /* #C6A15B   */
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -138,18 +179,46 @@
         @apply bg-background text-foreground;
         -webkit-font-smoothing: antialiased;
     }
+    :focus-visible {
+        @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    }
 }
 
-/* ── Prototype card shadow utility ───────────────────────────────────
-   Matches the prototype's "0 8px 24px rgba(0,0,0,0.04)" card shadow.
-   Cards in the admin use .shadow-card via @apply or class="shadow-card"
-─────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   UTILITIES — brand gold gradient, kicker, tabular numerals
+   ═══════════════════════════════════════════════════════════════════ */
 @layer utilities {
+    /* Prototype card shadow (kept for compatibility with existing pages) */
     .shadow-card {
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
     }
     .shadow-card-hover {
         box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
     }
-}
 
+    /* Brand gold gradient — primary buttons, progress fills, chat bubbles.
+       Always pairs with dark text (text-[rgb(var(--hv-on-gold))]). */
+    .bg-gold-gradient {
+        background-image: linear-gradient(135deg, #EAD79A 0%, #C6A15B 100%);
+    }
+    .shadow-gold-glow {
+        box-shadow: 0 0 24px rgba(198, 161, 91, 0.28);
+    }
+
+    /* The R1 signature eyebrow — letter-spaced uppercase kicker */
+    .hv-kicker {
+        @apply text-[11px] font-semibold uppercase text-admin-accent;
+        letter-spacing: 0.14em;
+    }
+    .hv-kicker-client {
+        @apply text-[11px] font-semibold uppercase text-client-accent;
+        letter-spacing: 0.14em;
+    }
+
+    /* Financial figures MUST use tabular numerals so columns align */
+    .hv-num {
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+        letter-spacing: -0.01em;
+    }
+}

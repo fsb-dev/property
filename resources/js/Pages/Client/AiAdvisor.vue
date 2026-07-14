@@ -23,7 +23,7 @@ const PROPERTY = {
 
 const paymentDonutOpts = {
     chart:       { type: 'donut', sparkline: { enabled: true } },
-    colors:      ['#16a34a', '#f59e0b'],
+    colors:      ['hsl(var(--success))', 'hsl(var(--warning))'],
     labels:      ['Paid', 'Outstanding'],
     stroke:      { width: 0 },
     dataLabels:  { enabled: false },
@@ -35,14 +35,14 @@ const paymentDonutOpts = {
 
 // ─── Quick questions ──────────────────────────────────────────────────────────
 const QUICK_QUESTIONS = [
-    { label: 'How much do I still owe?',               icon: '💰', bg: '#e6f7ed' },
-    { label: 'When is my next payment?',               icon: '📅', bg: '#e6effd' },
-    { label: 'Show my payment history',                icon: '📄', bg: '#efeafc' },
-    { label: 'How much if I pay extra BDT 500,000?',   icon: '📊', bg: '#fdefe0' },
-    { label: 'Show my unit details',                   icon: '🏢', bg: '#e6effd' },
-    { label: 'Show construction progress',             icon: '🏗️', bg: '#e6f7ed' },
-    { label: 'Nearby schools and hospitals?',          icon: '📍', bg: '#efeafc' },
-    { label: 'What is my estimated ROI?',              icon: '📈', bg: '#fdefe0' },
+    { label: 'How much do I still owe?',               icon: '💰', bg: 'rgba(52,211,153,0.15)' },
+    { label: 'When is my next payment?',               icon: '📅', bg: 'rgba(96,165,250,0.15)' },
+    { label: 'Show my payment history',                icon: '📄', bg: 'rgba(198,161,91,0.1)' },
+    { label: 'How much if I pay extra BDT 500,000?',   icon: '📊', bg: 'rgba(251,191,36,0.1)' },
+    { label: 'Show my unit details',                   icon: '🏢', bg: 'rgba(96,165,250,0.15)' },
+    { label: 'Show construction progress',             icon: '🏗️', bg: 'rgba(52,211,153,0.15)' },
+    { label: 'Nearby schools and hospitals?',          icon: '📍', bg: 'rgba(198,161,91,0.1)' },
+    { label: 'What is my estimated ROI?',              icon: '📈', bg: 'rgba(251,191,36,0.1)' },
 ];
 
 // ─── Chat state ───────────────────────────────────────────────────────────────
@@ -137,19 +137,19 @@ const STEPS = [
 
             <!-- Breadcrumb + title row -->
             <div style="margin-bottom:18px;">
-                <nav style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:#9a9ab0; margin-bottom:12px;">
-                    <Link :href="route('client.dashboard')" style="color:#9a9ab0; text-decoration:none;" class="hover:text-foreground">Home</Link>
+                <nav style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:hsl(var(--muted-foreground)); margin-bottom:12px;">
+                    <Link :href="route('client.dashboard')" style="color:hsl(var(--muted-foreground)); text-decoration:none;" class="hover:text-foreground">Home</Link>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                    <span style="color:#3d3d55; font-weight:600;">AI Property Advisor</span>
+                    <span style="color:hsl(var(--foreground)); font-weight:600;">AI Property Advisor</span>
                 </nav>
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
                     <div>
-                        <h1 style="font-size:22px; font-weight:800; color:#16162a; letter-spacing:-0.02em; margin:0 0 4px;">AI Property Advisor</h1>
-                        <p style="font-size:13.5px; color:#7a7a90; margin:0;">Your intelligent assistant for all property questions, payments, and guidance.</p>
+                        <h1 style="font-size:22px; font-weight:800; color:hsl(var(--foreground)); letter-spacing:-0.02em; margin:0 0 4px;">AI Property Advisor</h1>
+                        <p style="font-size:13.5px; color:hsl(var(--muted-foreground)); margin:0;">Your intelligent assistant for all property questions, payments, and guidance.</p>
                     </div>
-                    <div style="display:flex; align-items:center; gap:7px; padding:7px 14px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:999px;">
-                        <span style="width:8px; height:8px; border-radius:50%; background:#16a34a; animation:sarapulse 2s ease-in-out infinite;"></span>
-                        <span style="font-size:12.5px; font-weight:700; color:#16a34a;">Sara AI · Online</span>
+                    <div style="display:flex; align-items:center; gap:7px; padding:7px 14px; background:rgba(52,211,153,0.15); border:1px solid rgba(52,211,153,0.15); border-radius:999px;">
+                        <span style="width:8px; height:8px; border-radius:50%; background:hsl(var(--success)); animation:sarapulse 2s ease-in-out infinite;"></span>
+                        <span style="font-size:12.5px; font-weight:700; color:hsl(var(--success));">Sara AI · Online</span>
                     </div>
                 </div>
             </div>
@@ -161,42 +161,42 @@ const STEPS = [
                 <div style="width:272px; flex-shrink:0; display:flex; flex-direction:column; gap:14px;" class="ai-left">
 
                     <!-- Quick Questions -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:18px; padding:18px;">
-                        <div style="font-size:14.5px; font-weight:700; color:#16162a; margin-bottom:3px;">Quick Questions</div>
-                        <div style="font-size:12px; color:#a4a4b4; font-weight:500; margin-bottom:13px;">Tap to get instant answers</div>
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; padding:18px;">
+                        <div style="font-size:14.5px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:3px;">Quick Questions</div>
+                        <div style="font-size:12px; color:hsl(var(--muted-foreground)); font-weight:500; margin-bottom:13px;">Tap to get instant answers</div>
                         <div style="display:flex; flex-direction:column; gap:7px;">
                             <button
                                 v-for="q in QUICK_QUESTIONS" :key="q.label"
                                 @click="sendMessage(q.label)"
-                                style="display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px 11px; border:1px solid #f0f0f5; border-radius:11px; background:#fff; cursor:pointer; font-family:inherit; transition:all .15s;"
-                                class="hover:bg-[#faf9fd] hover:border-[#e6e1fb]"
+                                style="display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px 11px; border:1px solid hsl(var(--muted)); border-radius:11px; background:hsl(var(--card)); cursor:pointer; font-family:inherit; transition:all .15s;"
+                                class="hover:bg-[hsl(var(--background))] hover:border-[rgba(198,161,91,0.1)]"
                             >
                                 <span style="width:30px; height:30px; flex-shrink:0; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px;" :style="{ background: q.bg }">{{ q.icon }}</span>
-                                <span style="font-size:12px; font-weight:600; color:#16162a; line-height:1.35;">{{ q.label }}</span>
+                                <span style="font-size:12px; font-weight:600; color:hsl(var(--foreground)); line-height:1.35;">{{ q.label }}</span>
                             </button>
                         </div>
                     </div>
 
                     <!-- Language + Sara card -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:18px; padding:18px;">
-                        <div style="font-size:13.5px; font-weight:700; color:#16162a; margin-bottom:12px;">Language</div>
-                        <div style="display:flex; align-items:center; gap:9px; height:40px; padding:0 13px; border:1px solid #ededf3; border-radius:10px; font-size:13px; font-weight:600; color:#16162a; cursor:pointer; background:#faf9fd;">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6a4dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; padding:18px;">
+                        <div style="font-size:13.5px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:12px;">Language</div>
+                        <div style="display:flex; align-items:center; gap:9px; height:40px; padding:0 13px; border:1px solid hsl(var(--border)); border-radius:10px; font-size:13px; font-weight:600; color:hsl(var(--foreground)); cursor:pointer; background:hsl(var(--background));">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--hv-gold))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>
                             English (EN)
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b6b6c4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><path d="M6 9l6 6 6-6"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><path d="M6 9l6 6 6-6"/></svg>
                         </div>
-                        <div style="margin-top:16px; padding-top:16px; border-top:1px solid #f0f0f5;">
-                            <div style="font-size:13px; font-weight:700; color:#16162a; margin-bottom:12px;">AI Assistant</div>
+                        <div style="margin-top:16px; padding-top:16px; border-top:1px solid hsl(var(--muted));">
+                            <div style="font-size:13px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:12px;">AI Assistant</div>
                             <div style="display:flex; align-items:center; gap:11px;">
-                                <div style="width:44px; height:44px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,#9a85ff,#6a4dff); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:16px;">S</div>
+                                <div style="width:44px; height:44px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,rgb(var(--hv-gold-bright)),rgb(var(--hv-gold))); display:flex; align-items:center; justify-content:center; color:hsl(var(--card)); font-weight:800; font-size:16px;">S</div>
                                 <div>
-                                    <div style="font-size:14px; font-weight:800; color:#16162a;">Sara AI</div>
-                                    <div style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:#16a34a; font-weight:600; margin-top:2px;">
-                                        <span style="width:6px; height:6px; border-radius:50%; background:#16a34a;"></span> Online
+                                    <div style="font-size:14px; font-weight:800; color:hsl(var(--foreground));">Sara AI</div>
+                                    <div style="display:flex; align-items:center; gap:5px; font-size:11.5px; color:hsl(var(--success)); font-weight:600; margin-top:2px;">
+                                        <span style="width:6px; height:6px; border-radius:50%; background:hsl(var(--success));"></span> Online
                                     </div>
                                 </div>
                             </div>
-                            <button style="margin-top:12px; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:1px solid #e6e1fb; background:#f6f3ff; color:#6a4dff; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:700; padding:10px; border-radius:10px;" class="hover:bg-[#efeafc]">
+                            <button style="margin-top:12px; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:1px solid rgba(198,161,91,0.1); background:rgba(198,161,91,0.08); color:rgb(var(--brand-text)); cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:700; padding:10px; border-radius:10px;" class="hover:bg-[rgba(198,161,91,0.1)]">
                                 Change Assistant
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
                             </button>
@@ -206,25 +206,25 @@ const STEPS = [
                 </div>
 
                 <!-- ── Center: Chat ───────────────────────────────────────── -->
-                <div style="flex:1; min-width:0; display:flex; flex-direction:column; background:#fff; border:1px solid #ededf3; border-radius:18px; overflow:hidden;" class="ai-chat">
+                <div style="flex:1; min-width:0; display:flex; flex-direction:column; background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; overflow:hidden;" class="ai-chat">
 
                     <!-- Sara banner -->
-                    <div style="position:relative; overflow:hidden; display:flex; align-items:center; gap:16px; padding:18px 22px; background:linear-gradient(110deg,#c5b5ff,#a895f0); flex-shrink:0;">
-                        <div style="width:62px; height:62px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,#7b63ff,#4f33d6); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:24px; border:3px solid rgba(255,255,255,.55);">S</div>
+                    <div style="position:relative; overflow:hidden; display:flex; align-items:center; gap:16px; padding:18px 22px; background:linear-gradient(110deg,rgb(var(--hv-gold-bright)),rgb(var(--hv-gold-bright))); flex-shrink:0;">
+                        <div style="width:62px; height:62px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); display:flex; align-items:center; justify-content:center; color:hsl(var(--card)); font-weight:800; font-size:24px; border:3px solid rgba(255,255,255,.55);">S</div>
                         <div style="position:relative; z-index:1;">
-                            <div style="font-size:20px; font-weight:800; color:#241a5c; letter-spacing:-0.02em;">Sara AI</div>
-                            <div style="font-size:13px; color:#3a2a7a; font-weight:600; margin-top:2px;">Your AI Property Advisor</div>
+                            <div style="font-size:20px; font-weight:800; color:rgb(var(--hv-on-gold)); letter-spacing:-0.02em;">Sara AI</div>
+                            <div style="font-size:13px; color:rgb(var(--hv-gold-deep)); font-weight:600; margin-top:2px;">Your AI Property Advisor</div>
                             <div style="margin-top:8px;">
-                                <span style="font-size:11px; font-weight:700; color:#3a2a7a; background:rgba(255,255,255,.5); padding:4px 12px; border-radius:20px;">Smart · Reliable · 24/7</span>
+                                <span style="font-size:11px; font-weight:700; color:rgb(var(--hv-gold-deep)); background:rgba(255,255,255,.5); padding:4px 12px; border-radius:20px;">Smart · Reliable · 24/7</span>
                             </div>
                         </div>
                         <!-- decorative bars -->
                         <div style="position:absolute; right:24px; bottom:0; display:flex; align-items:flex-end; gap:4px; opacity:.25;">
-                            <div style="width:8px; height:28px; border-radius:2px; background:#241a5c;"></div>
-                            <div style="width:8px; height:44px; border-radius:2px; background:#241a5c;"></div>
-                            <div style="width:8px; height:20px; border-radius:2px; background:#241a5c;"></div>
-                            <div style="width:8px; height:36px; border-radius:2px; background:#241a5c;"></div>
-                            <div style="width:8px; height:26px; border-radius:2px; background:#241a5c;"></div>
+                            <div style="width:8px; height:28px; border-radius:2px; background:rgb(var(--hv-on-gold));"></div>
+                            <div style="width:8px; height:44px; border-radius:2px; background:rgb(var(--hv-on-gold));"></div>
+                            <div style="width:8px; height:20px; border-radius:2px; background:rgb(var(--hv-on-gold));"></div>
+                            <div style="width:8px; height:36px; border-radius:2px; background:rgb(var(--hv-on-gold));"></div>
+                            <div style="width:8px; height:26px; border-radius:2px; background:rgb(var(--hv-on-gold));"></div>
                         </div>
                     </div>
 
@@ -235,40 +235,40 @@ const STEPS = [
 
                             <!-- AI message -->
                             <div v-if="msg.role === 'ai'" style="display:flex; gap:10px; align-items:flex-start; max-width:82%;">
-                                <div style="width:30px; height:30px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,#9a85ff,#6a4dff); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px; margin-top:2px;">S</div>
+                                <div style="width:30px; height:30px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,rgb(var(--hv-gold-bright)),rgb(var(--hv-gold))); display:flex; align-items:center; justify-content:center; color:hsl(var(--card)); font-weight:800; font-size:12px; margin-top:2px;">S</div>
                                 <div style="flex:1;">
                                     <!-- Balance card -->
-                                    <div v-if="msg.card === 'balance'" style="background:#fff; border:1px solid #ededf3; border-radius:6px 16px 16px 16px; padding:16px 18px; box-shadow:0 1px 4px rgba(16,24,40,.05);">
-                                        <div style="font-size:13.5px; font-weight:700; color:#16162a; margin-bottom:12px;">{{ msg.text }}</div>
+                                    <div v-if="msg.card === 'balance'" style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:6px 16px 16px 16px; padding:16px 18px; box-shadow:0 1px 4px rgba(16,24,40,.05);">
+                                        <div style="font-size:13.5px; font-weight:700; color:hsl(var(--foreground)); margin-bottom:12px;">{{ msg.text }}</div>
                                         <div style="display:flex; flex-direction:column;">
-                                            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f4f4f8;">
-                                                <span style="font-size:13px; color:#7a7a90;">Total Property Value</span>
-                                                <span style="font-size:13px; font-weight:700; color:#16162a;">{{ fmtBDT(PROPERTY.total_value) }}</span>
+                                            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid hsl(var(--border));">
+                                                <span style="font-size:13px; color:hsl(var(--muted-foreground));">Total Property Value</span>
+                                                <span style="font-size:13px; font-weight:700; color:hsl(var(--foreground));">{{ fmtBDT(PROPERTY.total_value) }}</span>
                                             </div>
-                                            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f4f4f8;">
-                                                <span style="font-size:13px; color:#7a7a90;">Total Paid</span>
-                                                <span style="font-size:13px; font-weight:700; color:#16a34a;">{{ fmtBDT(PROPERTY.total_paid) }}</span>
+                                            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid hsl(var(--border));">
+                                                <span style="font-size:13px; color:hsl(var(--muted-foreground));">Total Paid</span>
+                                                <span style="font-size:13px; font-weight:700; color:hsl(var(--success));">{{ fmtBDT(PROPERTY.total_paid) }}</span>
                                             </div>
-                                            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f4f4f8;">
-                                                <span style="font-size:13px; color:#6a4dff; font-weight:700;">Outstanding Balance</span>
-                                                <span style="font-size:13.5px; font-weight:800; color:#6a4dff;">{{ fmtBDT(PROPERTY.outstanding) }}</span>
+                                            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid hsl(var(--border));">
+                                                <span style="font-size:13px; color:rgb(var(--brand-text)); font-weight:700;">Outstanding Balance</span>
+                                                <span style="font-size:13.5px; font-weight:800; color:rgb(var(--brand-text));">{{ fmtBDT(PROPERTY.outstanding) }}</span>
                                             </div>
                                             <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0;">
-                                                <span style="font-size:13px; color:#7a7a90;">Next Installment</span>
-                                                <span style="font-size:13px; font-weight:700; color:#16162a;">15 Aug 2026</span>
+                                                <span style="font-size:13px; color:hsl(var(--muted-foreground));">Next Installment</span>
+                                                <span style="font-size:13px; font-weight:700; color:hsl(var(--foreground));">15 Aug 2026</span>
                                             </div>
                                         </div>
                                         <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-                                            <Link :href="route('client.payments')" style="font-size:12px; font-weight:700; color:#fff; background:linear-gradient(100deg,#6a4dff,#5132e0); padding:7px 13px; border-radius:9px; text-decoration:none;">Make Payment</Link>
-                                            <Link :href="route('client.payments')" style="font-size:12px; font-weight:700; color:#6a4dff; background:#f6f3ff; border:1px solid #e6e1fb; padding:7px 13px; border-radius:9px; text-decoration:none;">View Schedule</Link>
+                                            <Link :href="route('client.payments')" style="font-size:12px; font-weight:700; color:hsl(var(--card)); background:linear-gradient(100deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); padding:7px 13px; border-radius:9px; text-decoration:none;">Make Payment</Link>
+                                            <Link :href="route('client.payments')" style="font-size:12px; font-weight:700; color:rgb(var(--brand-text)); background:rgba(198,161,91,0.08); border:1px solid rgba(198,161,91,0.1); padding:7px 13px; border-radius:9px; text-decoration:none;">View Schedule</Link>
                                         </div>
-                                        <div style="font-size:10.5px; color:#a4a4b4; margin-top:10px;">{{ msg.time }}</div>
+                                        <div style="font-size:10.5px; color:hsl(var(--muted-foreground)); margin-top:10px;">{{ msg.time }}</div>
                                     </div>
 
                                     <!-- Plain text AI bubble -->
-                                    <div v-else style="background:#f5f4fb; border-radius:6px 16px 16px 16px; padding:13px 16px;">
-                                        <div style="font-size:13.5px; color:#16162a; font-weight:500; line-height:1.6; white-space:pre-line;">{{ msg.text }}</div>
-                                        <div style="font-size:10.5px; color:#a4a4b4; margin-top:8px;">{{ msg.time }}</div>
+                                    <div v-else style="background:hsl(var(--muted)); border-radius:6px 16px 16px 16px; padding:13px 16px;">
+                                        <div style="font-size:13.5px; color:hsl(var(--foreground)); font-weight:500; line-height:1.6; white-space:pre-line;">{{ msg.text }}</div>
+                                        <div style="font-size:10.5px; color:hsl(var(--muted-foreground)); margin-top:8px;">{{ msg.time }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -276,8 +276,8 @@ const STEPS = [
                             <!-- User message -->
                             <div v-else style="display:flex; justify-content:flex-end; max-width:72%; align-self:flex-end;">
                                 <div>
-                                    <div style="background:linear-gradient(100deg,#6a4dff,#5132e0); color:#fff; border-radius:16px 4px 16px 16px; padding:12px 16px; font-size:13.5px; font-weight:500; line-height:1.5;">{{ msg.text }}</div>
-                                    <div style="text-align:right; font-size:10.5px; color:#a4a4b4; margin-top:5px;">{{ msg.time }}</div>
+                                    <div style="background:linear-gradient(100deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); color:hsl(var(--card)); border-radius:16px 4px 16px 16px; padding:12px 16px; font-size:13.5px; font-weight:500; line-height:1.5;">{{ msg.text }}</div>
+                                    <div style="text-align:right; font-size:10.5px; color:hsl(var(--muted-foreground)); margin-top:5px;">{{ msg.time }}</div>
                                 </div>
                             </div>
 
@@ -285,36 +285,36 @@ const STEPS = [
 
                         <!-- Typing indicator -->
                         <div v-if="isTyping" style="display:flex; gap:10px; align-items:flex-start;">
-                            <div style="width:30px; height:30px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,#9a85ff,#6a4dff); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px;">S</div>
-                            <div style="background:#f5f4fb; border-radius:6px 16px 16px 16px; padding:13px 18px; display:flex; align-items:center; gap:5px;">
-                                <span class="dot-bounce" style="width:7px; height:7px; border-radius:50%; background:#9a85ff; display:inline-block;"></span>
-                                <span class="dot-bounce" style="width:7px; height:7px; border-radius:50%; background:#9a85ff; display:inline-block; animation-delay:.18s;"></span>
-                                <span class="dot-bounce" style="width:7px; height:7px; border-radius:50%; background:#9a85ff; display:inline-block; animation-delay:.36s;"></span>
+                            <div style="width:30px; height:30px; flex-shrink:0; border-radius:50%; background:linear-gradient(135deg,rgb(var(--hv-gold-bright)),rgb(var(--hv-gold))); display:flex; align-items:center; justify-content:center; color:hsl(var(--card)); font-weight:800; font-size:12px;">S</div>
+                            <div style="background:hsl(var(--muted)); border-radius:6px 16px 16px 16px; padding:13px 18px; display:flex; align-items:center; gap:5px;">
+                                <span class="dot-bounce" style="width:7px; height:7px; border-radius:50%; background:rgb(var(--hv-gold-bright)); display:inline-block;"></span>
+                                <span class="dot-bounce" style="width:7px; height:7px; border-radius:50%; background:rgb(var(--hv-gold-bright)); display:inline-block; animation-delay:.18s;"></span>
+                                <span class="dot-bounce" style="width:7px; height:7px; border-radius:50%; background:rgb(var(--hv-gold-bright)); display:inline-block; animation-delay:.36s;"></span>
                             </div>
                         </div>
 
                     </div>
 
                     <!-- Input bar -->
-                    <div style="border-top:1px solid #f0f0f5; padding:14px 20px 16px; flex-shrink:0;">
+                    <div style="border-top:1px solid hsl(var(--muted)); padding:14px 20px 16px; flex-shrink:0;">
                         <div style="display:flex; align-items:center; gap:10px;">
                             <input
                                 v-model="inputText"
                                 @keydown="onKey"
                                 placeholder="Type your question here..."
-                                style="flex:1; height:46px; padding:0 16px; border:1.5px solid #ededf3; border-radius:13px; outline:none; background:#faf9fd; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13.5px; color:#16162a; transition:border-color .15s;"
-                                class="focus:border-[#6a4dff]"
+                                style="flex:1; height:46px; padding:0 16px; border:1.5px solid hsl(var(--border)); border-radius:13px; outline:none; background:hsl(var(--background)); font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:13.5px; color:hsl(var(--foreground)); transition:border-color .15s;"
+                                class="focus:border-[rgb(var(--hv-gold))]"
                             />
                             <button
                                 @click="sendMessage()"
                                 :disabled="!inputText.trim() || isTyping"
-                                style="width:46px; height:46px; flex-shrink:0; border:none; cursor:pointer; border-radius:13px; background:linear-gradient(100deg,#6a4dff,#5132e0); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px -6px rgba(81,50,224,.6); transition:opacity .15s;"
+                                style="width:46px; height:46px; flex-shrink:0; border:none; cursor:pointer; border-radius:13px; background:linear-gradient(100deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px -6px rgba(81,50,224,.6); transition:opacity .15s;"
                                 :style="(!inputText.trim() || isTyping) ? 'opacity:.5; cursor:not-allowed;' : ''"
                             >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-8-6 16-3.5-6.5z"/></svg>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--card))" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-8-6 16-3.5-6.5z"/></svg>
                             </button>
                         </div>
-                        <div style="text-align:center; font-size:11px; color:#b6b6c4; margin-top:9px;">Sara AI can make mistakes. Please verify important financial information independently.</div>
+                        <div style="text-align:center; font-size:11px; color:hsl(var(--muted-foreground)); margin-top:9px;">Sara AI can make mistakes. Please verify important financial information independently.</div>
                     </div>
                 </div>
 
@@ -322,20 +322,20 @@ const STEPS = [
                 <div style="width:296px; flex-shrink:0; display:flex; flex-direction:column; gap:14px;" class="ai-rail">
 
                     <!-- My Property -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:18px; padding:18px;">
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; padding:18px;">
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:13px;">
-                            <div style="font-size:14px; font-weight:700; color:#16162a;">My Property</div>
-                            <Link :href="route('client.properties')" style="font-size:12px; font-weight:700; color:#6a4dff; text-decoration:none;">View Details</Link>
+                            <div style="font-size:14px; font-weight:700; color:hsl(var(--foreground));">My Property</div>
+                            <Link :href="route('client.properties')" style="font-size:12px; font-weight:700; color:rgb(var(--brand-text)); text-decoration:none;">View Details</Link>
                         </div>
                         <!-- Property image placeholder -->
                         <div style="display:flex; gap:12px; align-items:center; margin-bottom:14px;">
-                            <div style="width:68px; height:54px; flex-shrink:0; border-radius:11px; background:repeating-linear-gradient(135deg,#e3e8ef,#e3e8ef 7px,#eef1f5 7px,#eef1f5 14px); display:flex; align-items:center; justify-content:center;">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b0b8c4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            <div style="width:68px; height:54px; flex-shrink:0; border-radius:11px; background:repeating-linear-gradient(135deg,hsl(var(--muted)),hsl(var(--muted)) 7px,hsl(var(--muted)) 7px,hsl(var(--muted)) 14px); display:flex; align-items:center; justify-content:center;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                             </div>
                             <div>
-                                <div style="font-size:14px; font-weight:800; color:#16162a;">{{ PROPERTY.name }}</div>
-                                <div style="font-size:12px; color:#9a9ab0; margin-top:2px;">Block {{ PROPERTY.block }} · Floor {{ PROPERTY.floor }}</div>
-                                <span style="display:inline-block; font-size:11px; font-weight:700; color:#6a4dff; background:#f6f3ff; padding:3px 9px; border-radius:6px; margin-top:5px;">Unit {{ PROPERTY.unit }}</span>
+                                <div style="font-size:14px; font-weight:800; color:hsl(var(--foreground));">{{ PROPERTY.name }}</div>
+                                <div style="font-size:12px; color:hsl(var(--muted-foreground)); margin-top:2px;">Block {{ PROPERTY.block }} · Floor {{ PROPERTY.floor }}</div>
+                                <span style="display:inline-block; font-size:11px; font-weight:700; color:rgb(var(--brand-text)); background:rgba(198,161,91,0.08); padding:3px 9px; border-radius:6px; margin-top:5px;">Unit {{ PROPERTY.unit }}</span>
                             </div>
                         </div>
                         <div style="display:flex; flex-direction:column;">
@@ -345,75 +345,75 @@ const STEPS = [
                                 { label:'Size',      value: PROPERTY.size,     highlight: false },
                                 { label:'Handover',  value: PROPERTY.handover, highlight: false },
                             ]" :key="row.label"
-                                style="display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid #f5f4fb;"
+                                style="display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid hsl(var(--muted));"
                             >
-                                <span style="font-size:12.5px; color:#9a9ab0;">{{ row.label }}</span>
-                                <span v-if="row.highlight" style="font-size:11.5px; font-weight:700; color:#16a34a; background:#e6f7ed; padding:2px 9px; border-radius:6px;">{{ row.value }}</span>
-                                <span v-else style="font-size:12.5px; font-weight:700; color:#16162a;">{{ row.value }}</span>
+                                <span style="font-size:12.5px; color:hsl(var(--muted-foreground));">{{ row.label }}</span>
+                                <span v-if="row.highlight" style="font-size:11.5px; font-weight:700; color:hsl(var(--success)); background:rgba(52,211,153,0.15); padding:2px 9px; border-radius:6px;">{{ row.value }}</span>
+                                <span v-else style="font-size:12.5px; font-weight:700; color:hsl(var(--foreground));">{{ row.value }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Payment Overview -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:18px; padding:18px;">
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; padding:18px;">
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-                            <div style="font-size:14px; font-weight:700; color:#16162a;">Payment Overview</div>
-                            <Link :href="route('client.payments')" style="font-size:12px; font-weight:700; color:#6a4dff; text-decoration:none;">Details</Link>
+                            <div style="font-size:14px; font-weight:700; color:hsl(var(--foreground));">Payment Overview</div>
+                            <Link :href="route('client.payments')" style="font-size:12px; font-weight:700; color:rgb(var(--brand-text)); text-decoration:none;">Details</Link>
                         </div>
                         <div style="display:flex; align-items:center; gap:14px;">
                             <!-- Payment donut -->
                             <div style="position:relative; width:96px; height:96px; flex-shrink:0;">
                                 <VueApexCharts type="donut" :height="96" :width="96" :options="paymentDonutOpts" :series="[PROPERTY.total_paid, PROPERTY.outstanding]" />
                                 <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-                                    <div style="font-size:17px; font-weight:900; color:#16162a; line-height:1;">{{ PROPERTY.paid_pct }}%</div>
-                                    <div style="font-size:9.5px; font-weight:600; color:#9a9ab0; margin-top:1px;">Paid</div>
+                                    <div style="font-size:17px; font-weight:900; color:hsl(var(--foreground)); line-height:1;">{{ PROPERTY.paid_pct }}%</div>
+                                    <div style="font-size:9.5px; font-weight:600; color:hsl(var(--muted-foreground)); margin-top:1px;">Paid</div>
                                 </div>
                             </div>
                             <div style="flex:1; display:flex; flex-direction:column; gap:11px;">
                                 <div>
-                                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:#9a9ab0; margin-bottom:3px;">
-                                        <span style="width:7px; height:7px; border-radius:50%; background:#16a34a;"></span> Paid
+                                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:hsl(var(--muted-foreground)); margin-bottom:3px;">
+                                        <span style="width:7px; height:7px; border-radius:50%; background:hsl(var(--success));"></span> Paid
                                     </div>
-                                    <div style="font-size:13px; font-weight:800; color:#16162a;">{{ fmtBDT(PROPERTY.total_paid) }}</div>
+                                    <div style="font-size:13px; font-weight:800; color:hsl(var(--foreground));">{{ fmtBDT(PROPERTY.total_paid) }}</div>
                                 </div>
                                 <div>
-                                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:#9a9ab0; margin-bottom:3px;">
-                                        <span style="width:7px; height:7px; border-radius:50%; background:#f59e0b;"></span> Outstanding
+                                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:hsl(var(--muted-foreground)); margin-bottom:3px;">
+                                        <span style="width:7px; height:7px; border-radius:50%; background:hsl(var(--warning));"></span> Outstanding
                                     </div>
-                                    <div style="font-size:13px; font-weight:800; color:#16162a;">{{ fmtBDT(PROPERTY.outstanding) }}</div>
+                                    <div style="font-size:13px; font-weight:800; color:hsl(var(--foreground));">{{ fmtBDT(PROPERTY.outstanding) }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Construction Progress -->
-                    <div style="background:#fff; border:1px solid #ededf3; border-radius:18px; padding:18px;">
+                    <div style="background:hsl(var(--card)); border:1px solid hsl(var(--border)); border-radius:18px; padding:18px;">
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-                            <div style="font-size:14px; font-weight:700; color:#16162a;">Construction</div>
-                            <Link :href="route('client.construction')" style="font-size:12px; font-weight:700; color:#6a4dff; text-decoration:none;">Details</Link>
+                            <div style="font-size:14px; font-weight:700; color:hsl(var(--foreground));">Construction</div>
+                            <Link :href="route('client.construction')" style="font-size:12px; font-weight:700; color:rgb(var(--brand-text)); text-decoration:none;">Details</Link>
                         </div>
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-                            <span style="font-size:12.5px; color:#9a9ab0;">Overall Progress</span>
-                            <span style="font-size:15px; font-weight:800; color:#6a4dff;">{{ PROPERTY.construction_pct }}%</span>
+                            <span style="font-size:12.5px; color:hsl(var(--muted-foreground));">Overall Progress</span>
+                            <span style="font-size:15px; font-weight:800; color:rgb(var(--brand-text));">{{ PROPERTY.construction_pct }}%</span>
                         </div>
-                        <div style="height:8px; border-radius:5px; background:#f0eef9; overflow:hidden; margin-bottom:16px;">
-                            <div :style="{ width: PROPERTY.construction_pct + '%' }" style="height:100%; border-radius:5px; background:linear-gradient(90deg,#7b63ff,#5132e0); transition:width .4s;"></div>
+                        <div style="height:8px; border-radius:5px; background:rgba(198,161,91,0.08); overflow:hidden; margin-bottom:16px;">
+                            <div :style="{ width: PROPERTY.construction_pct + '%' }" style="height:100%; border-radius:5px; background:linear-gradient(90deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); transition:width .4s;"></div>
                         </div>
                         <!-- Steps -->
                         <div style="display:flex; align-items:center; justify-content:space-between;">
                             <div v-for="(step, i) in STEPS" :key="step.label" style="display:flex; flex-direction:column; align-items:center; gap:5px; flex:1;">
                                 <div v-if="step.done"
-                                    style="width:28px; height:28px; border-radius:50%; background:#16a34a; display:flex; align-items:center; justify-content:center;">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
+                                    style="width:28px; height:28px; border-radius:50%; background:hsl(var(--success)); display:flex; align-items:center; justify-content:center;">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--card))" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
                                 </div>
                                 <div v-else-if="step.active"
-                                    style="width:28px; height:28px; border-radius:50%; border:2.5px solid #6a4dff; display:flex; align-items:center; justify-content:center;">
-                                    <span style="width:8px; height:8px; border-radius:50%; background:#6a4dff;"></span>
+                                    style="width:28px; height:28px; border-radius:50%; border:2.5px solid rgb(var(--hv-gold)); display:flex; align-items:center; justify-content:center;">
+                                    <span style="width:8px; height:8px; border-radius:50%; background:rgb(var(--hv-gold));"></span>
                                 </div>
                                 <div v-else
-                                    style="width:28px; height:28px; border-radius:50%; border:2px solid #e2e0ec;">
+                                    style="width:28px; height:28px; border-radius:50%; border:2px solid rgba(198,161,91,0.08);">
                                 </div>
-                                <span style="font-size:9.5px; font-weight:600;" :style="step.active ? 'color:#6a4dff;' : step.done ? 'color:#9a9ab0;' : 'color:#c2c2cf;'">{{ step.label }}</span>
+                                <span style="font-size:9.5px; font-weight:600;" :style="step.active ? 'color:rgb(var(--brand-text));' : step.done ? 'color:hsl(var(--muted-foreground));' : 'color:hsl(var(--muted-foreground));'">{{ step.label }}</span>
                                 <!-- connector line between steps -->
                                 <div v-if="i < STEPS.length - 1" style="position:absolute;"></div>
                             </div>
@@ -421,13 +421,13 @@ const STEPS = [
                     </div>
 
                     <!-- Pro Tip -->
-                    <div style="background:linear-gradient(135deg,#efeafc,#e7e0ff); border:1px solid #e3daff; border-radius:18px; padding:16px 18px;">
-                        <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; color:#3a25b0; margin-bottom:9px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6a4dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13c0-3 2.5-5 6-5s6 2 6 5a4 4 0 0 1-1.5 3.2V18a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-1.8A4 4 0 0 1 5 13Z"/></svg>
+                    <div style="background:linear-gradient(135deg,rgba(198,161,91,0.1),rgba(198,161,91,0.08)); border:1px solid rgba(198,161,91,0.08); border-radius:18px; padding:16px 18px;">
+                        <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; color:rgb(var(--hv-gold-deep)); margin-bottom:9px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--hv-gold))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13c0-3 2.5-5 6-5s6 2 6 5a4 4 0 0 1-1.5 3.2V18a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-1.8A4 4 0 0 1 5 13Z"/></svg>
                             Pro Tip from Sara AI
                         </div>
-                        <p style="font-size:12.5px; color:#6a5fae; font-weight:500; line-height:1.55; margin:0 0 12px;">Paying a small extra amount monthly can significantly reduce your total interest and shorten your payment tenure.</p>
-                        <Link :href="route('client.mortgage')" style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; color:#6a4dff; text-decoration:none;">
+                        <p style="font-size:12.5px; color:rgb(var(--brand-text)); font-weight:500; line-height:1.55; margin:0 0 12px;">Paying a small extra amount monthly can significantly reduce your total interest and shorten your payment tenure.</p>
+                        <Link :href="route('client.mortgage')" style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; color:rgb(var(--brand-text)); text-decoration:none;">
                             See Savings Calculator
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
                         </Link>

@@ -194,7 +194,7 @@ const displayValue = computed(() => {
                             :class="[
                                 'flex h-7 w-full items-center justify-center rounded-md text-xs transition-colors',
                                 !cell.current && 'pointer-events-none opacity-25 text-muted-foreground',
-                                cell.current && isSelected(cell) && 'bg-admin-accent text-white font-semibold',
+                                cell.current && isSelected(cell) && 'bg-admin-accent text-on-gold font-semibold',
                                 cell.current && !isSelected(cell) && isToday(cell) && 'text-admin-accent font-semibold ring-1 ring-admin-accent/30',
                                 cell.current && !isSelected(cell) && !isToday(cell) && 'text-foreground hover:bg-muted',
                             ]"

@@ -58,7 +58,7 @@
 
     "security": [
         {
-            "key": "password", "title": "Password Policy", "desc": "Strong password required", "icon": "lock", "bg": "#F1ECFF", "color": "#5B3DF5",
+            "key": "password", "title": "Password Policy", "desc": "Strong password required", "icon": "lock", "bg": "rgba(198,161,91,0.12)", "color": "#C6A15B",
             "detail": "Enforce complexity rules for every account password.",
             "rules": [
                 { "key": "uppercase", "label": "Require at least one uppercase letter", "value": true },
@@ -68,12 +68,12 @@
             "minLength": 8
         },
         {
-            "key": "twofa", "title": "Two-Factor Authentication", "desc": "Enabled for admin users", "icon": "shield", "bg": "#E6F7EE", "color": "#22C55E",
+            "key": "twofa", "title": "Two-Factor Authentication", "desc": "Enabled for admin users", "icon": "shield", "bg": "rgba(52,211,153,0.15)", "color": "#34D399",
             "detail": "Require a one-time code from an authenticator app in addition to a password.",
             "value": true
         },
         {
-            "key": "sessions", "title": "Login Session Management", "desc": "Manage active user sessions", "icon": "users", "bg": "#E8F0FF", "color": "#3B82F6",
+            "key": "sessions", "title": "Login Session Management", "desc": "Manage active user sessions", "icon": "users", "bg": "rgba(96,165,250,0.15)", "color": "#60A5FA",
             "detail": "Sessions currently signed in across the platform.",
             "activeSessions": [
                 { "key": "s1", "device": "Chrome on Windows", "location": "Dhaka, Bangladesh", "lastActive": "Active now", "current": true },
@@ -82,13 +82,13 @@
             ]
         },
         {
-            "key": "ipWhitelist", "title": "IP Whitelist", "desc": "Restrict access by IP address", "icon": "globe", "bg": "#FFF3E0", "color": "#F59E0B",
+            "key": "ipWhitelist", "title": "IP Whitelist", "desc": "Restrict access by IP address", "icon": "globe", "bg": "rgba(251,191,36,0.15)", "color": "#FBBF24",
             "detail": "Only requests from these IP addresses will be able to reach the admin panel.",
             "value": false,
             "ips": ["103.106.226.10", "202.4.96.15"]
         },
         {
-            "key": "lockout", "title": "Account Lockout Policy", "desc": "5 failed attempts • 15 min lockout", "icon": "lockAlert", "bg": "#FDE8E8", "color": "#EF4444",
+            "key": "lockout", "title": "Account Lockout Policy", "desc": "5 failed attempts • 15 min lockout", "icon": "lockAlert", "bg": "rgba(248,113,113,0.15)", "color": "#F87171",
             "detail": "Temporarily lock an account after repeated failed sign-in attempts.",
             "maxAttempts": 5,
             "lockoutMinutes": 15
@@ -96,10 +96,10 @@
     ],
 
     "notifications": [
-        { "key": "emailNotif",   "title": "Email Notifications",   "desc": "Receive email notifications",        "icon": "mail",     "iconBg": "#F1ECFF", "iconColor": "#5B3DF5", "value": true },
-        { "key": "browserNotif", "title": "Browser Notifications", "desc": "Receive browser push notifications", "icon": "bell",     "iconBg": "#E8F0FF", "iconColor": "#3B82F6", "value": true },
-        { "key": "smsNotif",     "title": "SMS Notifications",     "desc": "Receive SMS notifications",          "icon": "sms",      "iconBg": "#E6F7EE", "iconColor": "#22C55E", "value": false },
-        { "key": "marketing",    "title": "Marketing Updates",     "desc": "Receive product updates and tips",   "icon": "megaphone","iconBg": "#FFF3E0", "iconColor": "#F59E0B", "value": false }
+        { "key": "emailNotif",   "title": "Email Notifications",   "desc": "Receive email notifications",        "icon": "mail",     "iconBg": "rgba(198,161,91,0.12)", "iconColor": "#C6A15B", "value": true },
+        { "key": "browserNotif", "title": "Browser Notifications", "desc": "Receive browser push notifications", "icon": "bell",     "iconBg": "rgba(96,165,250,0.15)", "iconColor": "#60A5FA", "value": true },
+        { "key": "smsNotif",     "title": "SMS Notifications",     "desc": "Receive SMS notifications",          "icon": "sms",      "iconBg": "rgba(52,211,153,0.15)", "iconColor": "#34D399", "value": false },
+        { "key": "marketing",    "title": "Marketing Updates",     "desc": "Receive product updates and tips",   "icon": "megaphone","iconBg": "rgba(251,191,36,0.15)", "iconColor": "#FBBF24", "value": false }
     ],
 
     "emailSettings": {
@@ -119,10 +119,10 @@
     },
 
     "integrations": [
-        { "key": "payment",   "title": "Payment Gateway",   "provider": "SSLCommerz", "connected": true, "icon": "card",     "bg": "#F1ECFF", "color": "#5B3DF5" },
-        { "key": "sms",       "title": "SMS Gateway",       "provider": "Twilio",     "connected": true, "icon": "sms",      "bg": "#FFF3E0", "color": "#F59E0B" },
-        { "key": "storage",   "title": "Cloud Storage",     "provider": "AWS S3",     "connected": true, "icon": "cloud",    "bg": "#E8F0FF", "color": "#3B82F6" },
-        { "key": "analytics", "title": "Google Analytics",  "provider": "UA-123456789-1", "connected": true, "icon": "bar", "bg": "#FFF3E0", "color": "#F59E0B" }
+        { "key": "payment",   "title": "Payment Gateway",   "provider": "SSLCommerz", "connected": true, "icon": "card",     "bg": "rgba(198,161,91,0.12)", "color": "#C6A15B" },
+        { "key": "sms",       "title": "SMS Gateway",       "provider": "Twilio",     "connected": true, "icon": "sms",      "bg": "rgba(251,191,36,0.15)", "color": "#FBBF24" },
+        { "key": "storage",   "title": "Cloud Storage",     "provider": "AWS S3",     "connected": true, "icon": "cloud",    "bg": "rgba(96,165,250,0.15)", "color": "#60A5FA" },
+        { "key": "analytics", "title": "Google Analytics",  "provider": "UA-123456789-1", "connected": true, "icon": "bar", "bg": "rgba(251,191,36,0.15)", "color": "#FBBF24" }
     ],
 
     "apiKeys": [

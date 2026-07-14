@@ -2,6 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, watch, nextTick } from 'vue';
+import { useTheme } from '@/composables/useTheme';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
@@ -105,8 +106,7 @@ const liveKpis = computed(() => props.kpis.map((k) => {
 }));
 
 // ── Knowledge Health donut — "Review Outdated Articles" moves counts live ────
-const donutR = 54;
-const donutC = 2 * Math.PI * donutR;
+const { isDark } = useTheme();
 const liveHealthSegments = computed(() => {
     const segs = props.knowledgeHealth.segments.map(s => ({ ...s }));
     const accurate = segs.find(s => s.key === 'accurate');
@@ -131,15 +131,35 @@ const healthOverallPct = computed(() => {
     const accurate = liveHealthSegments.value.find(s => s.key === 'accurate');
     return healthTotal.value ? Math.round((accurate.count / healthTotal.value) * 100) : 0;
 });
-const healthDonutSegments = computed(() => {
-    let cursor = 0;
-    return liveHealthSegments.value.map((s) => {
-        const filled = (s.pct / 100) * donutC;
-        const seg = { ...s, dasharray: `${filled.toFixed(1)} ${(donutC - filled).toFixed(1)}`, dashoffset: -cursor };
-        cursor += filled;
-        return seg;
-    });
-});
+// ── Knowledge Health — ApexCharts donut ──────────────────────────────────────
+const healthChartSeries = computed(() => liveHealthSegments.value.map(s => s.count));
+const healthChartOptions = computed(() => ({
+    chart: { type: 'donut', fontFamily: 'Plus Jakarta Sans, sans-serif' },
+    labels: liveHealthSegments.value.map(s => s.label),
+    colors: liveHealthSegments.value.map(s => s.color),
+    legend: { show: false },
+    dataLabels: { enabled: false },
+    stroke: { show: true, width: 2, colors: [isDark.value ? '#151922' : '#FFFFFF'] },
+    plotOptions: {
+        pie: {
+            donut: {
+                size: '74%',
+                labels: {
+                    show: true,
+                    total: {
+                        show: true,
+                        label: 'Overall Health',
+                        color: isDark.value ? '#A8A399' : '#6B6355',
+                        fontSize: '10px',
+                        formatter: () => `${healthOverallPct.value}%`,
+                    },
+                    value: { color: isDark.value ? '#F5F2EA' : '#1A1611', fontSize: '24px', fontWeight: 800, offsetY: -4 },
+                },
+            },
+        },
+    },
+    tooltip: { theme: isDark.value ? 'dark' : 'light', y: { formatter: (v) => `${v} articles` } },
+}));
 
 // ── Ask Sera AI — client-side canned answers, logged into Recent Interactions ─
 const askQuery = ref('');
@@ -147,11 +167,11 @@ const askInputEl = ref(null);
 const askPanelEl = ref(null);
 
 const tagPool = [
-    { tag: 'Payments',     tagBg: '#F1ECFF', tagColor: '#5B3DF5' },
-    { tag: 'Construction', tagBg: '#E8F0FF', tagColor: '#3B82F6' },
-    { tag: 'Documents',    tagBg: '#E8F0FF', tagColor: '#3B82F6' },
-    { tag: 'Reports',      tagBg: '#FDE8E8', tagColor: '#EF4444' },
-    { tag: 'General',      tagBg: '#E6F7EE', tagColor: '#16A34A' },
+    { tag: 'Payments',     tagBg: 'rgba(198,161,91,0.12)', tagColor: '#C6A15B' },
+    { tag: 'Construction', tagBg: 'rgba(96,165,250,0.15)', tagColor: '#60A5FA' },
+    { tag: 'Documents',    tagBg: 'rgba(96,165,250,0.15)', tagColor: '#60A5FA' },
+    { tag: 'Reports',      tagBg: 'rgba(248,113,113,0.15)', tagColor: '#F87171' },
+    { tag: 'General',      tagBg: 'rgba(52,211,153,0.15)', tagColor: '#34D399' },
 ];
 function pickTag(query) {
     const q = query.toLowerCase();
@@ -322,12 +342,12 @@ function submitAddArticle() {
 // ── Manage Categories dialog — add / remove custom categories ────────────────
 const showManageCategories = ref(false);
 const colorChoices = [
-    { bg: '#F1ECFF', color: '#5B3DF5' },
-    { bg: '#E6F7EE', color: '#22C55E' },
-    { bg: '#E8F0FF', color: '#3B82F6' },
-    { bg: '#FFF3E0', color: '#F59E0B' },
-    { bg: '#FDE8E8', color: '#EF4444' },
-    { bg: '#CCFBF1', color: '#0D9488' },
+    { bg: 'rgba(198,161,91,0.12)', color: '#C6A15B' },
+    { bg: 'rgba(52,211,153,0.15)', color: '#34D399' },
+    { bg: 'rgba(96,165,250,0.15)', color: '#60A5FA' },
+    { bg: 'rgba(251,191,36,0.15)', color: '#FBBF24' },
+    { bg: 'rgba(248,113,113,0.15)', color: '#F87171' },
+    { bg: 'rgba(34,211,238,0.15)', color: '#22D3EE' },
 ];
 const newCategoryForm = ref({ name: '', color: colorChoices[0] });
 
@@ -452,7 +472,7 @@ const showAllSuggestions = ref(false);
                 <p class="mt-1 text-sm text-muted-foreground">AI-powered knowledge base for smarter insights, faster answers, and intelligent assistance.</p>
             </div>
             <div class="flex items-center gap-3">
-                <Button @click="focusAskPanel" class="gap-2 rounded-xl bg-admin-accent px-[18px] py-[11px] text-[13.5px] font-semibold text-white hover:bg-admin-accent/90">
+                <Button @click="focusAskPanel" class="gap-2 rounded-xl bg-admin-accent px-[18px] py-[11px] text-[13.5px] font-semibold text-on-gold hover:bg-admin-accent/90">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
                     Ask Sera AI
                 </Button>
@@ -474,8 +494,8 @@ const showAllSuggestions = ref(false);
                 </div>
                 <div class="text-2xl font-extrabold leading-none tracking-tight text-foreground">{{ k.value }}</div>
                 <div class="mt-2.5 flex items-center justify-between text-[11px]">
-                    <span class="text-slate-400">{{ k.sub }}</span>
-                    <span class="flex items-center gap-0.5 font-bold text-green-500">
+                    <span class="text-muted-foreground">{{ k.sub }}</span>
+                    <span class="flex items-center gap-0.5 font-bold text-success">
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                         {{ k.change }}%
                     </span>
@@ -496,7 +516,7 @@ const showAllSuggestions = ref(false);
                         class="min-w-0 flex-1 border-none bg-transparent text-[13px] text-foreground outline-none"
                         @keydown.enter="askSera()"
                     />
-                    <button type="button" @click="askSera()" class="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-[11px] bg-admin-accent text-white shadow-lg transition-transform hover:-translate-y-0.5">
+                    <button type="button" @click="askSera()" class="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-[11px] bg-admin-accent text-on-gold shadow-lg transition-transform hover:-translate-y-0.5">
                         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.send" />
                     </button>
                 </div>
@@ -539,19 +559,12 @@ const showAllSuggestions = ref(false);
                 <div class="mb-2 flex items-center justify-between">
                     <div class="text-[17px] font-bold text-foreground">Knowledge Health</div>
                     <span class="flex items-center gap-1.5 rounded-[9px] border border-border px-2.5 py-1.5 text-[11px] font-semibold text-foreground/80">This Month
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA3B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.chevron_down" />
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="stroke-muted-foreground" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.chevron_down" />
                     </span>
                 </div>
                 <div class="mt-2 flex flex-wrap items-center justify-center gap-[18px]">
-                    <div class="relative h-[140px] w-[140px] flex-none">
-                        <svg width="140" height="140" viewBox="0 0 140 140" style="transform:rotate(-90deg);">
-                            <circle cx="70" cy="70" r="54" fill="none" stroke="#F1F4F9" stroke-width="15"/>
-                            <circle v-for="seg in healthDonutSegments" :key="seg.key" cx="70" cy="70" r="54" fill="none" :stroke="seg.color" stroke-width="15" stroke-linecap="round" :stroke-dasharray="seg.dasharray" :stroke-dashoffset="seg.dashoffset"/>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <div class="text-[26px] font-extrabold tracking-[-1px] text-foreground">{{ healthOverallPct }}%</div>
-                            <div class="text-[10px] text-muted-foreground">Overall Health</div>
-                        </div>
+                    <div class="w-[140px] flex-none">
+                        <apexchart type="donut" height="140" :series="healthChartSeries" :options="healthChartOptions" />
                     </div>
                     <div class="flex min-w-[150px] flex-1 flex-col gap-3.5">
                         <div v-for="s in liveHealthSegments" :key="s.key" class="flex items-center justify-between text-[12.5px]">
@@ -614,7 +627,7 @@ const showAllSuggestions = ref(false);
                                 </TableCell>
                                 <TableCell class="whitespace-nowrap text-xs text-foreground/80">{{ a.cat }}</TableCell>
                                 <TableCell class="text-[12.5px] font-semibold text-foreground">{{ a.views }}</TableCell>
-                                <TableCell class="text-[12.5px] font-bold text-green-600">{{ a.helpful }}</TableCell>
+                                <TableCell class="text-[12.5px] font-bold text-success">{{ a.helpful }}</TableCell>
                                 <TableCell>
                                     <span class="flex items-center gap-1">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#F5B100"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.8L12 17.3 5.8 20.7l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>
@@ -640,7 +653,7 @@ const showAllSuggestions = ref(false);
                             <button
                                 v-else type="button" @click="goToArticlesPage(p)"
                                 class="flex h-[30px] w-[30px] items-center justify-center rounded-lg text-[12.5px] font-semibold transition-colors"
-                                :class="p === articlesPage ? 'bg-admin-accent text-white font-bold' : 'border border-border text-foreground/80 hover:bg-muted'"
+                                :class="p === articlesPage ? 'bg-admin-accent text-on-gold font-bold' : 'border border-border text-foreground/80 hover:bg-muted'"
                             >
                                 {{ p }}
                             </button>
@@ -677,7 +690,7 @@ const showAllSuggestions = ref(false);
                     <div class="mb-3.5 flex items-center justify-between">
                         <div class="text-base font-bold text-foreground">AI Performance Insights</div>
                         <span class="flex items-center gap-1.5 rounded-[9px] border border-border px-2.5 py-[5px] text-[11px] font-semibold text-foreground/80">This Month
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA3B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.chevron_down" />
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="stroke-muted-foreground" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.chevron_down" />
                         </span>
                     </div>
                     <div class="flex flex-col gap-3.5">
@@ -687,7 +700,7 @@ const showAllSuggestions = ref(false);
                             </div>
                             <div class="min-w-0 flex-1 text-xs font-semibold text-foreground">{{ p.label }}</div>
                             <div class="text-right text-sm font-extrabold text-foreground">{{ p.value }}</div>
-                            <span class="flex flex-none items-center gap-0.5 text-[11px] font-bold text-green-500">
+                            <span class="flex flex-none items-center gap-0.5 text-[11px] font-bold text-success">
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9l-6 6-6-6"/></svg>
                                 {{ p.change }}%
                             </span>
@@ -749,7 +762,7 @@ const showAllSuggestions = ref(false);
                     </div>
                     <div class="text-[13px] font-bold leading-tight text-foreground">{{ s.title }}</div>
                     <div class="flex-1 text-[11.5px] text-muted-foreground">{{ s.desc }}</div>
-                    <button type="button" @click="openAddArticle(s)" class="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-admin-accent/10 py-[9px] text-xs font-bold text-admin-accent transition-all hover:bg-admin-accent hover:text-white">
+                    <button type="button" @click="openAddArticle(s)" class="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-admin-accent/10 py-[9px] text-xs font-bold text-admin-accent transition-all hover:bg-admin-accent hover:text-on-gold">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.plus" />
                         Create Article
                     </button>
@@ -822,7 +835,7 @@ const showAllSuggestions = ref(false);
                     </div>
                     <DialogFooter class="!px-0 pt-2">
                         <Button type="button" variant="outline" @click="showSettings = false">Cancel</Button>
-                        <Button type="submit" class="bg-admin-accent text-white hover:bg-admin-accent/90">Save Settings</Button>
+                        <Button type="submit" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90">Save Settings</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -876,7 +889,7 @@ const showAllSuggestions = ref(false);
                     </div>
                     <DialogFooter class="!px-0 pt-2">
                         <Button type="button" variant="outline" @click="showAddArticle = false">Cancel</Button>
-                        <Button type="submit" class="bg-admin-accent text-white hover:bg-admin-accent/90">Create Article</Button>
+                        <Button type="submit" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90">Create Article</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -894,7 +907,7 @@ const showAllSuggestions = ref(false);
                             <Label class="text-xs font-medium text-muted-foreground">New Category</Label>
                             <Input v-model="newCategoryForm.name" placeholder="e.g. Marketing & Ads" required />
                         </div>
-                        <Button type="submit" class="bg-admin-accent text-white hover:bg-admin-accent/90">Add</Button>
+                        <Button type="submit" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90">Add</Button>
                     </form>
                     <Separator />
                     <div class="max-h-[45vh] space-y-2 overflow-y-auto">
@@ -906,7 +919,7 @@ const showAllSuggestions = ref(false);
                                 <div class="truncate text-xs font-semibold text-foreground">{{ c.name }}</div>
                                 <div class="text-[11px] text-muted-foreground">{{ c.count }}</div>
                             </div>
-                            <button v-if="customCategories.some(cc => cc.name === c.name)" type="button" @click="removeCategory(c.name)" class="flex h-7 w-7 flex-none items-center justify-center rounded-lg text-red-500 hover:bg-red-50">
+                            <button v-if="customCategories.some(cc => cc.name === c.name)" type="button" @click="removeCategory(c.name)" class="flex h-7 w-7 flex-none items-center justify-center rounded-lg text-destructive hover:bg-destructive/10">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.trash" />
                             </button>
                         </div>
@@ -931,8 +944,8 @@ const showAllSuggestions = ref(false);
                             <div class="truncate text-[13px] font-semibold text-foreground">{{ a.name }}</div>
                             <div class="mt-0.5 text-[11px] text-muted-foreground">{{ a.cat }} · Updated {{ a.lastUpdated }}</div>
                         </div>
-                        <Badge variant="outline" class="flex-none rounded-full border-transparent text-[11px] font-bold" :style="a.status === 'Outdated' ? { background: '#FDE8E8', color: '#EF4444' } : { background: '#FFF3E0', color: '#F59E0B' }">{{ a.status }}</Badge>
-                        <Button type="button" size="sm" class="flex-none bg-admin-accent text-white hover:bg-admin-accent/90" @click="markReviewed(a)">Mark Reviewed</Button>
+                        <Badge variant="outline" class="flex-none rounded-full border-transparent text-[11px] font-bold" :style="a.status === 'Outdated' ? { background: 'rgba(248,113,113,0.15)', color: '#F87171' } : { background: 'rgba(251,191,36,0.15)', color: '#FBBF24' }">{{ a.status }}</Badge>
+                        <Button type="button" size="sm" class="flex-none bg-admin-accent text-on-gold hover:bg-admin-accent/90" @click="markReviewed(a)">Mark Reviewed</Button>
                     </div>
                 </div>
                 <DialogFooter class="px-6 pb-4">
@@ -962,7 +975,7 @@ const showAllSuggestions = ref(false);
                                 <div class="truncate text-xs font-semibold text-foreground">{{ d.name }}</div>
                                 <div class="text-[11px] text-muted-foreground">{{ d.size }} · {{ d.date }}</div>
                             </div>
-                            <button type="button" @click="removeDoc(d.name)" class="flex h-7 w-7 flex-none items-center justify-center rounded-lg text-red-500 hover:bg-red-50">
+                            <button type="button" @click="removeDoc(d.name)" class="flex h-7 w-7 flex-none items-center justify-center rounded-lg text-destructive hover:bg-destructive/10">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.trash" />
                             </button>
                         </div>
@@ -984,7 +997,7 @@ const showAllSuggestions = ref(false);
                     <form @submit.prevent="addTrainingSnippet" class="space-y-2">
                         <Label class="text-xs font-medium text-muted-foreground">Add a Q&amp;A or knowledge snippet</Label>
                         <Textarea v-model="newTrainingSnippet" rows="3" placeholder="e.g. Refunds are processed within 7 business days after approval." />
-                        <Button type="submit" class="w-full bg-admin-accent text-white hover:bg-admin-accent/90">Add Snippet</Button>
+                        <Button type="submit" class="w-full bg-admin-accent text-on-gold hover:bg-admin-accent/90">Add Snippet</Button>
                     </form>
                     <Separator />
                     <div v-if="trainingSnippets.length" class="max-h-[30vh] space-y-2 overflow-y-auto">
@@ -993,7 +1006,7 @@ const showAllSuggestions = ref(false);
                                 <div class="text-xs leading-snug text-foreground">{{ t.text }}</div>
                                 <div class="mt-1 text-[11px] text-muted-foreground">{{ t.date }}</div>
                             </div>
-                            <button type="button" @click="removeTrainingSnippet(idx)" class="flex h-7 w-7 flex-none items-center justify-center rounded-lg text-red-500 hover:bg-red-50">
+                            <button type="button" @click="removeTrainingSnippet(idx)" class="flex h-7 w-7 flex-none items-center justify-center rounded-lg text-destructive hover:bg-destructive/10">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.trash" />
                             </button>
                         </div>
@@ -1062,7 +1075,7 @@ const showAllSuggestions = ref(false);
                             <div class="truncate text-[13px] font-bold text-foreground">{{ s.title }}</div>
                             <div class="truncate text-[11px] text-muted-foreground">{{ s.desc }}</div>
                         </div>
-                        <Button type="button" size="sm" class="flex-none bg-admin-accent text-white hover:bg-admin-accent/90" @click="showAllSuggestions = false; openAddArticle(s);">Create</Button>
+                        <Button type="button" size="sm" class="flex-none bg-admin-accent text-on-gold hover:bg-admin-accent/90" @click="showAllSuggestions = false; openAddArticle(s);">Create</Button>
                     </div>
                 </div>
                 <DialogFooter class="px-6 pb-4">

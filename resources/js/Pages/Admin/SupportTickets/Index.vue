@@ -135,11 +135,11 @@ function exportCsv() {
 // ── New Ticket dialog — client-side only, nothing is sent to the server ──────
 const categoryOptions = ['Payments', 'Documents', 'Site Visit', 'Financing', 'General', 'Reservations', 'Projects'];
 const priorityOptions = [
-    { value: 'High',   bg: '#FDE8E8', color: '#EF4444' },
-    { value: 'Medium', bg: '#FFF3E0', color: '#F59E0B' },
-    { value: 'Low',    bg: '#E6F7EE', color: '#16A34A' },
+    { value: 'High',   bg: 'rgba(248,113,113,0.15)', color: '#F87171' },
+    { value: 'Medium', bg: 'rgba(251,191,36,0.15)', color: '#FBBF24' },
+    { value: 'Low',    bg: 'rgba(52,211,153,0.15)', color: '#34D399' },
 ];
-const avatarColors = ['#5B3DF5', '#0D9488', '#F59E0B', '#9333EA', '#3B82F6', '#6366F1', '#0EA5E9', '#EC4899'];
+const avatarColors = ['#A78BFA', '#22D3EE', '#FBBF24', '#F472B6', '#60A5FA', '#A78BFA', '#60A5FA', '#F472B6'];
 
 const showNewTicket = ref(false);
 const newTicketForm = ref({ subject: '', cust: '', phone: '', dept: categoryOptions[0], prio: 'Medium' });
@@ -174,12 +174,12 @@ function submitNewTicket() {
         prioBg: prio.bg,
         prioColor: prio.color,
         status: 'Open',
-        statusBg: '#E8F0FF',
-        statusColor: '#3B82F6',
+        statusBg: 'rgba(96,165,250,0.15)',
+        statusColor: '#60A5FA',
         agent: 'Unassigned',
         role: '—',
         agAv: '—',
-        agBg: '#94A3B8',
+        agBg: '#8A8780',
         date: now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
         time: now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
     });
@@ -190,11 +190,11 @@ function submitNewTicket() {
 
 // ── Assign Agent dialog — client-side only, nothing is sent to the server ────
 const agentOptions = [
-    { name: 'Jannatul Islam', role: 'Support Agent', av: 'JI', bg: '#EC4899' },
-    { name: 'Fahim Ahmed',    role: 'Support Lead',  av: 'FA', bg: '#5B3DF5' },
-    { name: 'Tanvir Hasan',   role: 'Support Agent', av: 'TH', bg: '#3B82F6' },
-    { name: 'Rasel Hossain',  role: 'Support Agent', av: 'RH', bg: '#0D9488' },
-    { name: 'Nusrat Jahan',   role: 'Support Lead',  av: 'NJ', bg: '#EC4899' },
+    { name: 'Jannatul Islam', role: 'Support Agent', av: 'JI', bg: '#F472B6' },
+    { name: 'Fahim Ahmed',    role: 'Support Lead',  av: 'FA', bg: '#C6A15B' },
+    { name: 'Tanvir Hasan',   role: 'Support Agent', av: 'TH', bg: '#60A5FA' },
+    { name: 'Rasel Hossain',  role: 'Support Agent', av: 'RH', bg: '#22D3EE' },
+    { name: 'Nusrat Jahan',   role: 'Support Lead',  av: 'NJ', bg: '#F472B6' },
 ];
 
 const showAssign = ref(false);
@@ -218,8 +218,8 @@ function submitAssign() {
         t.agBg = agent.bg;
         if (t.status === 'Open') {
             t.status = 'In Progress';
-            t.statusBg = '#EEF0FF';
-            t.statusColor = '#5B3DF5';
+            t.statusBg = 'rgba(167,139,250,0.15)';
+            t.statusColor = '#A78BFA';
         }
     }
     showAssign.value = false;
@@ -293,7 +293,7 @@ function runQuickAction(action) {
                 <p class="mt-0.5 text-sm text-muted-foreground">Manage customer support requests and ensure timely resolutions.</p>
             </div>
             <div class="flex items-center gap-3">
-                <button @click="openNewTicket" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90">
+                <button @click="openNewTicket" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                     New Ticket
                 </button>
@@ -315,7 +315,7 @@ function runQuickAction(action) {
                 </div>
                 <div class="text-2xl font-extrabold leading-none tracking-tight text-foreground">{{ k.value }}</div>
                 <div class="mt-2.5 flex items-center justify-between text-[11px]">
-                    <span class="text-slate-400">{{ k.sub }}</span>
+                    <span class="text-muted-foreground">{{ k.sub }}</span>
                     <span class="flex items-center gap-0.5 font-bold" :style="{ color: k.changeColor }">
                         <svg v-if="k.dir === 'up'" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                         <svg v-else width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9l-6 6-6-6"/></svg>
@@ -338,7 +338,7 @@ function runQuickAction(action) {
                         <div class="flex flex-1 flex-wrap items-center justify-center gap-4">
                             <div class="relative h-[150px] w-[150px] flex-none">
                                 <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">
-                                    <circle cx="75" cy="75" r="54" fill="none" stroke="#F1F4F9" stroke-width="16"/>
+                                    <circle cx="75" cy="75" r="54" fill="none" class="stroke-muted" stroke-width="16"/>
                                     <circle v-for="seg in overviewSegments" :key="seg.key" cx="75" cy="75" r="54" fill="none" :stroke="seg.color" stroke-width="16" :stroke-dasharray="seg.dasharray" :stroke-dashoffset="seg.dashoffset"/>
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -368,30 +368,30 @@ function runQuickAction(action) {
                         <div class="mb-1.5 flex items-center justify-between gap-2">
                             <div class="text-base font-bold text-foreground">Tickets Trend</div>
                             <span class="flex items-center gap-1.5 rounded-[9px] border border-border px-2.5 py-1.5 text-[11px] font-semibold text-foreground/80">This Year
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA3B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" class="stroke-muted-foreground" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                             </span>
                         </div>
                         <div class="mb-1.5 flex items-center gap-4 text-[11.5px]">
                             <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2 w-2 rounded-full bg-admin-accent"></span>Opened</span>
-                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2 w-2 rounded-full" style="background:#22C55E;"></span>Resolved</span>
+                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2 w-2 rounded-full" style="background:#34D399;"></span>Resolved</span>
                         </div>
                         <div class="relative min-h-[200px] flex-1">
                             <svg viewBox="0 0 460 220" preserveAspectRatio="none" class="block h-full w-full">
-                                <defs><linearGradient id="stResG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22C55E" stop-opacity="0.18"/><stop offset="100%" stop-color="#22C55E" stop-opacity="0"/></linearGradient></defs>
-                                <line x1="36" y1="20" x2="36" y2="186" stroke="#EEF1F6" stroke-width="1"/>
-                                <line x1="36" y1="186" x2="450" y2="186" stroke="#EEF1F6" stroke-width="1"/>
-                                <line v-for="y in [145,104,63]" :key="y" x1="36" :y1="y" x2="450" :y2="y" stroke="#F4F6FA" stroke-width="1"/>
-                                <text x="26" y="190" font-size="9" fill="#AEB6C4" text-anchor="end">100</text>
-                                <text x="26" y="149" font-size="9" fill="#AEB6C4" text-anchor="end">200</text>
-                                <text x="26" y="108" font-size="9" fill="#AEB6C4" text-anchor="end">300</text>
-                                <text x="26" y="67" font-size="9" fill="#AEB6C4" text-anchor="end">400</text>
-                                <text x="26" y="26" font-size="9" fill="#AEB6C4" text-anchor="end">500</text>
+                                <defs><linearGradient id="stResG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34D399" stop-opacity="0.18"/><stop offset="100%" stop-color="#34D399" stop-opacity="0"/></linearGradient></defs>
+                                <line x1="36" y1="20" x2="36" y2="186" class="stroke-chart-grid/[0.08]" stroke-width="1"/>
+                                <line x1="36" y1="186" x2="450" y2="186" class="stroke-chart-grid/[0.08]" stroke-width="1"/>
+                                <line v-for="y in [145,104,63]" :key="y" x1="36" :y1="y" x2="450" :y2="y" class="stroke-chart-grid/[0.06]" stroke-width="1"/>
+                                <text x="26" y="190" font-size="9" class="fill-muted-foreground" text-anchor="end">100</text>
+                                <text x="26" y="149" font-size="9" class="fill-muted-foreground" text-anchor="end">200</text>
+                                <text x="26" y="108" font-size="9" class="fill-muted-foreground" text-anchor="end">300</text>
+                                <text x="26" y="67" font-size="9" class="fill-muted-foreground" text-anchor="end">400</text>
+                                <text x="26" y="26" font-size="9" class="fill-muted-foreground" text-anchor="end">500</text>
                                 <polygon :points="resolvedAreaPoints" fill="url(#stResG)"/>
-                                <polyline :points="openedPolyline" fill="none" stroke="#5B3DF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <polyline :points="resolvedPolyline" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <circle v-for="p in trendPoints" :key="'o-'+p.label" :cx="p.x" :cy="p.openedY" r="3" fill="#5B3DF5"/>
-                                <circle v-for="p in trendPoints" :key="'r-'+p.label" :cx="p.x" :cy="p.resolvedY" r="3" fill="#22C55E"/>
-                                <text v-for="p in trendPoints" :key="'l-'+p.label" :x="p.x" y="202" font-size="9" fill="#9AA3B4" text-anchor="middle">{{ p.label }}</text>
+                                <polyline :points="openedPolyline" fill="none" stroke="#C6A15B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline :points="resolvedPolyline" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle v-for="p in trendPoints" :key="'o-'+p.label" :cx="p.x" :cy="p.openedY" r="3" fill="#C6A15B"/>
+                                <circle v-for="p in trendPoints" :key="'r-'+p.label" :cx="p.x" :cy="p.resolvedY" r="3" fill="#34D399"/>
+                                <text v-for="p in trendPoints" :key="'l-'+p.label" :x="p.x" y="202" font-size="9" class="fill-muted-foreground" text-anchor="middle">{{ p.label }}</text>
                             </svg>
                         </div>
                     </div>
@@ -402,7 +402,7 @@ function runQuickAction(action) {
                         <div class="flex flex-1 flex-wrap items-center justify-center gap-4">
                             <div class="relative h-[150px] w-[150px] flex-none">
                                 <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">
-                                    <circle cx="75" cy="75" r="54" fill="none" stroke="#F1F4F9" stroke-width="16"/>
+                                    <circle cx="75" cy="75" r="54" fill="none" class="stroke-muted" stroke-width="16"/>
                                     <circle v-for="seg in prioritySegments" :key="seg.key" cx="75" cy="75" r="54" fill="none" :stroke="seg.color" stroke-width="16" :stroke-dasharray="seg.dasharray" :stroke-dashoffset="seg.dashoffset"/>
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -436,7 +436,7 @@ function runQuickAction(action) {
                             <button type="button" @click="showFilters = true" class="relative inline-flex items-center gap-1.5 rounded-[10px] border border-border px-3 py-1.5 text-xs font-semibold text-foreground/80 transition-colors hover:bg-muted">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
                                 Filters
-                                <span v-if="activeFilterCount > 0" class="flex h-4 w-4 items-center justify-center rounded-full bg-admin-accent text-[10px] font-bold text-white">{{ activeFilterCount }}</span>
+                                <span v-if="activeFilterCount > 0" class="flex h-4 w-4 items-center justify-center rounded-full bg-admin-accent text-[10px] font-bold text-on-gold">{{ activeFilterCount }}</span>
                             </button>
                             <button type="button" @click="exportCsv" class="inline-flex items-center gap-1.5 rounded-[10px] border border-border px-3 py-1.5 text-xs font-semibold text-foreground/80 transition-colors hover:bg-muted">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
@@ -534,7 +534,7 @@ function runQuickAction(action) {
                             <button class="flex h-8 w-8 items-center justify-center rounded-[9px] border border-border text-muted-foreground transition-colors hover:bg-muted">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
                             </button>
-                            <span class="flex h-8 w-8 items-center justify-center rounded-[9px] bg-admin-accent text-xs font-bold text-white">1</span>
+                            <span class="flex h-8 w-8 items-center justify-center rounded-[9px] bg-admin-accent text-xs font-bold text-on-gold">1</span>
                             <button class="flex h-8 w-8 items-center justify-center rounded-[9px] border border-border text-xs font-semibold text-foreground/80 transition-colors hover:bg-muted">2</button>
                             <button class="flex h-8 w-8 items-center justify-center rounded-[9px] border border-border text-xs font-semibold text-foreground/80 transition-colors hover:bg-muted">3</button>
                             <span class="flex h-8 w-8 items-center justify-center text-xs text-muted-foreground">…</span>
@@ -580,7 +580,7 @@ function runQuickAction(action) {
                                     <div class="text-xs text-muted-foreground">{{ r.label }}</div>
                                     <div class="text-[15px] font-extrabold text-foreground">{{ r.value }}</div>
                                 </div>
-                                <span class="flex items-center gap-0.5 text-[11px] font-bold text-green-500">
+                                <span class="flex items-center gap-0.5 text-[11px] font-bold text-success">
                                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9l-6 6-6-6"/></svg>
                                     {{ r.change }}%
                                 </span>
@@ -681,7 +681,7 @@ function runQuickAction(action) {
 
                     <DialogFooter class="!px-0 pt-2">
                         <Button type="button" variant="outline" @click="showNewTicket = false">Cancel</Button>
-                        <Button type="submit" class="bg-admin-accent text-white hover:bg-admin-accent/90">Create Ticket</Button>
+                        <Button type="submit" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90">Create Ticket</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -711,7 +711,7 @@ function runQuickAction(action) {
 
                     <DialogFooter class="!px-0 pt-2">
                         <Button type="button" variant="outline" @click="showAssign = false">Cancel</Button>
-                        <Button type="submit" class="bg-admin-accent text-white hover:bg-admin-accent/90" :disabled="!assignAgentName">Assign</Button>
+                        <Button type="submit" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90" :disabled="!assignAgentName">Assign</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -772,7 +772,7 @@ function runQuickAction(action) {
 
                 <DialogFooter class="px-6 pb-4">
                     <Button type="button" variant="outline" @click="showView = false">Close</Button>
-                    <Button type="button" class="bg-admin-accent text-white hover:bg-admin-accent/90" @click="assignFromView">
+                    <Button type="button" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90" @click="assignFromView">
                         {{ viewingTicket.agent === 'Unassigned' ? 'Assign Ticket' : 'Reassign Ticket' }}
                     </Button>
                 </DialogFooter>
@@ -943,7 +943,7 @@ function runQuickAction(action) {
 
                 <DialogFooter class="px-6 pb-4">
                     <Button type="button" variant="outline" @click="clearFilters">Clear</Button>
-                    <Button type="button" class="bg-admin-accent text-white hover:bg-admin-accent/90" @click="showFilters = false">Apply</Button>
+                    <Button type="button" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90" @click="showFilters = false">Apply</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

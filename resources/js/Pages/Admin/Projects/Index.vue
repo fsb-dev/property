@@ -44,22 +44,27 @@ function submitDelete() {
     });
 }
 
-// ── Status badge styles ────────────────────────────────────────
-const statusStyle = {
-    planning: { color: '#1D4ED8', bg: '#E8F0FF' },
-    under_construction: { color: '#15803D', bg: '#E6F7EE' },
-    completed: { color: '#15803D', bg: '#ECFDF3', border: '#BBF7D0' },
-    on_hold: { color: '#B45309', bg: '#FFF3E0' },
-    land: { color: '#6D28D9', bg: '#EDE9FE' },
-    mixed_use: { color: '#0369A1', bg: '#E0F2FE' },
+// ── Status badge styles — planning=info, under_construction=warning,
+//    completed=success, on_hold=warning; land/mixed_use are project TYPES
+//    reusing this same map, given the supporting chart palette. ─────
+const statusClass = {
+    planning: 'bg-info/15 text-info',
+    under_construction: 'bg-warning/15 text-warning',
+    completed: 'bg-success/15 text-success',
+    on_hold: 'bg-warning/15 text-warning',
+    land: 'bg-chart-4/15 text-chart-4',
+    mixed_use: 'bg-chart-6/15 text-chart-6',
+};
+function badgeClass(s) {
+    return statusClass[s] ?? 'bg-muted text-muted-foreground';
+}
+const statusDotColor = {
+    planning: '#60A5FA',
+    under_construction: '#FBBF24',
+    completed: '#34D399',
 };
 
-function badgeStyle(s) {
-    const st = statusStyle[s] ?? { color: '#697386', bg: '#F1F4F9' };
-    return `color:${st.color}; background:${st.bg}; ${st.border ? `border:1px solid ${st.border};` : ''}`;
-}
-
-// ── Avatar gradient per project index ─────────────────────────
+// ── Avatar gradient per project index (decorative, cover fallback) ─
 const gradients = [
     'linear-gradient(140deg,#C7D2FE,#818CF8)',
     'linear-gradient(140deg,#BBF7D0,#34D399)',
@@ -77,9 +82,9 @@ const CIRC = 351.86; // 2π × 56
 const donutSegments = computed(() => {
     const total = props.stats.total || 1;
     const raw = [
-        { label: 'Planning', count: props.stats.planning ?? 0, color: '#3B82F6' },
-        { label: 'Under Construction', count: props.stats.under_construction ?? 0, color: '#22C55E' },
-        { label: 'Completed', count: props.stats.completed ?? 0, color: '#5B3DF5' },
+        { label: 'Planning', count: props.stats.planning ?? 0, color: statusDotColor.planning },
+        { label: 'Under Construction', count: props.stats.under_construction ?? 0, color: statusDotColor.under_construction },
+        { label: 'Completed', count: props.stats.completed ?? 0, color: statusDotColor.completed },
     ];
     let offset = 0;
     return raw.map(s => {
@@ -106,10 +111,10 @@ const topProjects = [
 ];
 
 const recentActivities = [
-    { icon: 'project', color: '#5B3DF5', bg: '#F1ECFF', text: 'New project "Lakeside Residences" created', time: '2 hours ago' },
-    { icon: 'unit', color: '#3B82F6', bg: '#E8F0FF', text: 'Unit A-102 added to Lakeside Residences', time: '5 hours ago' },
-    { icon: 'build', color: '#F59E0B', bg: '#FFF3E0', text: 'Construction progress updated to 65% on Skyline Heights', time: '1 day ago' },
-    { icon: 'client', color: '#22C55E', bg: '#E6F7EE', text: 'Client Md. Rahim registered from referral source', time: '2 days ago' },
+    { icon: 'project', class: 'bg-gold/10 text-gold', text: 'New project "Lakeside Residences" created', time: '2 hours ago' },
+    { icon: 'unit', class: 'bg-info/10 text-info', text: 'Unit A-102 added to Lakeside Residences', time: '5 hours ago' },
+    { icon: 'build', class: 'bg-warning/10 text-warning', text: 'Construction progress updated to 65% on Skyline Heights', time: '1 day ago' },
+    { icon: 'client', class: 'bg-success/10 text-success', text: 'Client Md. Rahim registered from referral source', time: '2 days ago' },
 ];
 </script>
 
@@ -122,14 +127,11 @@ const recentActivities = [
         <!-- ── Page Header ─────────────────────────────────────────── -->
         <div class="mb-6 flex items-start justify-between gap-6">
             <div>
-                <h1 style="font-size:28px; font-weight:800; letter-spacing:-0.5px; color:#151B2E; line-height:1.1;">
-                    Projects</h1>
-                <p style="font-size:14px; color:#697386; margin-top:5px;">Manage all your real estate projects in one
-                    place.</p>
+                <h1 class="text-[28px] font-extrabold tracking-tight text-foreground leading-none">Projects</h1>
+                <p class="mt-1.5 text-sm text-muted-foreground">Manage all your real estate projects in one place.</p>
             </div>
             <Link :href="route('admin.projects.create')"
-                class="inline-flex flex-shrink-0 items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
-                style="background:linear-gradient(135deg,#5B3DF5,#7C5CFF); box-shadow:0 8px 20px rgba(91,61,245,0.35);">
+                class="inline-flex flex-shrink-0 items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-on-gold bg-gold-gradient shadow-[0_8px_20px_rgba(198,161,91,0.30)] transition-all hover:-translate-y-0.5 hover:shadow-gold-glow">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 5v14M5 12h14" />
@@ -142,11 +144,9 @@ const recentActivities = [
         <div class="mb-6 grid grid-cols-2 gap-5 lg:grid-cols-5">
 
             <!-- Total Projects -->
-            <div
-                class="rounded-[18px] border border-border bg-white px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <div class="rounded-[18px] border border-border bg-card px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
                 <div class="mb-3.5 flex items-center gap-2.5">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl"
-                        style="background:#F1ECFF; color:#5B3DF5;">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10 text-gold">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 11l9-7 9 7" />
@@ -154,93 +154,81 @@ const recentActivities = [
                             <path d="M9 21v-5h6v5" />
                         </svg>
                     </div>
-                    <span style="font-size:12.5px; font-weight:600; color:#697386;">Total Projects</span>
+                    <span class="text-[12.5px] font-semibold text-muted-foreground">Total Projects</span>
                 </div>
-                <div style="font-size:30px; font-weight:800; letter-spacing:-1px; line-height:1; color:#151B2E;">{{
-                    stats.total }}</div>
-                <div style="font-size:12px; color:#697386; margin-top:8px;">
-                    Active: <b style="color:#151B2E;">{{ (stats.under_construction ?? 0) + (stats.planning ?? 0) }}</b>
+                <div class="text-[30px] font-extrabold tracking-tight leading-none text-foreground hv-num">{{ stats.total }}</div>
+                <div class="mt-2 text-xs text-muted-foreground">
+                    Active: <b class="text-foreground">{{ (stats.under_construction ?? 0) + (stats.planning ?? 0) }}</b>
                     &nbsp;·&nbsp;
-                    Completed: <b style="color:#151B2E;">{{ stats.completed ?? 0 }}</b>
+                    Completed: <b class="text-foreground">{{ stats.completed ?? 0 }}</b>
                 </div>
             </div>
 
             <!-- Total Units (static for now) -->
-            <div
-                class="rounded-[18px] border border-border bg-white px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <div class="rounded-[18px] border border-border bg-card px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
                 <div class="mb-3.5 flex items-center gap-2.5">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl"
-                        style="background:#E8F0FF; color:#3B82F6;">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-info/10 text-info">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8" />
                         </svg>
                     </div>
-                    <span style="font-size:12.5px; font-weight:600; color:#697386;">Total Units</span>
+                    <span class="text-[12.5px] font-semibold text-muted-foreground">Total Units</span>
                 </div>
-                <div style="font-size:30px; font-weight:800; letter-spacing:-1px; line-height:1; color:#151B2E;">155
-                </div>
-                <div style="font-size:12px; color:#697386; margin-top:8px;">
-                    Sold: <b style="color:#151B2E;">0</b>
+                <div class="text-[30px] font-extrabold tracking-tight leading-none text-foreground hv-num">155</div>
+                <div class="mt-2 text-xs text-muted-foreground">
+                    Sold: <b class="text-foreground">0</b>
                     &nbsp;·&nbsp;
-                    Available: <b style="color:#151B2E;">155</b>
+                    Available: <b class="text-foreground">155</b>
                 </div>
             </div>
 
             <!-- Total Sales Value (static) -->
-            <div
-                class="rounded-[18px] border border-border bg-white px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <div class="rounded-[18px] border border-border bg-card px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
                 <div class="mb-3.5 flex items-center gap-2.5">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl"
-                        style="background:#EDE9FE; color:#6D28D9;">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-success/10 text-success">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 21h18M5 21V8l7-5 7 5v13M10 21v-5h4v5" />
                         </svg>
                     </div>
-                    <span style="font-size:12.5px; font-weight:600; color:#697386;">Total Sales Value</span>
+                    <span class="text-[12.5px] font-semibold text-muted-foreground">Total Sales Value</span>
                 </div>
-                <div style="font-size:22px; font-weight:800; letter-spacing:-0.5px; line-height:1; color:#151B2E;">BDT 0
-                </div>
-                <div style="font-size:12px; color:#697386; margin-top:8px;">From <b style="color:#151B2E;">0</b> Sold
-                    Units</div>
+                <div class="text-[22px] font-extrabold tracking-tight leading-none text-foreground hv-num">BDT 0</div>
+                <div class="mt-2 text-xs text-muted-foreground">From <b class="text-foreground">0</b> Sold Units</div>
             </div>
 
             <!-- Avg. Progress (static) -->
-            <div
-                class="rounded-[18px] border border-border bg-white px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <div class="rounded-[18px] border border-border bg-card px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
                 <div class="mb-3.5 flex items-center gap-2.5">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl"
-                        style="background:#E6F7EE; color:#22C55E;">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-chart-4/10 text-chart-4">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 17l6-6 4 4 7-7M14 8h6v6" />
                         </svg>
                     </div>
-                    <span style="font-size:12.5px; font-weight:600; color:#697386;">Avg. Progress</span>
+                    <span class="text-[12.5px] font-semibold text-muted-foreground">Avg. Progress</span>
                 </div>
-                <div style="font-size:30px; font-weight:800; letter-spacing:-1px; line-height:1; color:#151B2E;">—</div>
-                <div style="font-size:12px; color:#697386; margin-top:8px;">Across All Projects</div>
+                <div class="text-[30px] font-extrabold tracking-tight leading-none text-foreground">—</div>
+                <div class="mt-2 text-xs text-muted-foreground">Across All Projects</div>
             </div>
 
             <!-- Upcoming Handover (static) -->
-            <div
-                class="rounded-[18px] border border-border bg-white px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
+            <div class="rounded-[18px] border border-border bg-card px-5 py-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover">
                 <div class="mb-3.5 flex items-center gap-2.5">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl"
-                        style="background:#FFF3E0; color:#F59E0B;">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-warning/10 text-warning">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="9" />
                             <path d="M12 7v5l3 2" />
                         </svg>
                     </div>
-                    <span style="font-size:12.5px; font-weight:600; color:#697386;">Upcoming Handover</span>
+                    <span class="text-[12.5px] font-semibold text-muted-foreground">Upcoming Handover</span>
                 </div>
-                <div style="font-size:30px; font-weight:800; letter-spacing:-1px; line-height:1; color:#151B2E;">
-                    0 <span style="font-size:18px; font-weight:600; color:#697386;">Projects</span>
+                <div class="text-[30px] font-extrabold tracking-tight leading-none text-foreground">
+                    0 <span class="text-lg font-semibold text-muted-foreground">Projects</span>
                 </div>
-                <div style="font-size:12px; color:#697386; margin-top:8px;">In Next 6 Months</div>
+                <div class="mt-2 text-xs text-muted-foreground">In Next 6 Months</div>
             </div>
 
         </div>
@@ -257,29 +245,28 @@ const recentActivities = [
                     <!-- Status tabs -->
                     <div class="flex items-center gap-1">
                         <button v-for="tab in tabs" :key="tab.value" @click="setTab(tab.value)"
-                            class="rounded-xl px-3.5 py-2 text-sm font-medium transition-all duration-150" :style="status === tab.value
-                                ? 'background:linear-gradient(135deg,#5B3DF5,#7C5CFF); color:#fff; box-shadow:0 6px 16px rgba(91,61,245,0.35);'
-                                : 'color:#697386; background:transparent;'"
-                            :class="status !== tab.value && 'hover:bg-white hover:text-foreground hover:shadow-sm'">{{
-                                tab.label }}</button>
+                            class="rounded-xl px-3.5 py-2 text-sm font-medium transition-all duration-150"
+                            :class="status === tab.value
+                                ? 'bg-gold-gradient text-on-gold shadow-[0_6px_16px_rgba(198,161,91,0.30)]'
+                                : 'text-muted-foreground bg-transparent hover:bg-card hover:text-foreground hover:shadow-sm'">
+                            {{ tab.label }}
+                        </button>
                     </div>
 
                     <!-- Type filter + Filter btn -->
                     <div class="flex items-center gap-2">
                         <div class="relative">
-                            <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
-                                style="color:#A0A8B8;" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                                width="14" height="14" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2">
                                 <circle cx="11" cy="11" r="8" />
                                 <path d="m21 21-4-4" />
                             </svg>
                             <input v-model="search" type="text" placeholder="Search..."
-                                class="h-9 rounded-xl border border-border bg-white pl-9 pr-3 text-sm outline-none transition-colors focus:border-admin-accent focus:ring-2 focus:ring-admin-accent/20"
-                                style="width:180px; box-shadow:0 2px 6px rgba(0,0,0,0.03);" />
+                                class="h-9 w-[180px] rounded-xl border border-border bg-background pl-9 pr-3 text-sm text-foreground outline-none transition-colors focus:border-gold focus:ring-2 focus:ring-ring/25" />
                         </div>
                         <Select :model-value="type || undefined" @update:model-value="type = $event ?? ''">
-                            <SelectTrigger class="h-9 w-36 rounded-xl border-border bg-white text-sm"
-                                style="box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                            <SelectTrigger class="h-9 w-36 rounded-xl border-border bg-background text-sm">
                                 <SelectValue placeholder="All types" />
                             </SelectTrigger>
                             <SelectContent>
@@ -288,7 +275,7 @@ const recentActivities = [
                             </SelectContent>
                         </Select>
                         <button v-if="type" @click="type = ''"
-                            class="flex h-9 items-center gap-1.5 rounded-xl border border-border bg-white px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500">
+                            class="flex h-9 items-center gap-1.5 rounded-xl border border-border bg-background px-3 text-xs font-medium text-muted-foreground transition-colors hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2.5">
                                 <path d="M18 6L6 18M6 6l12 12" />
@@ -299,55 +286,43 @@ const recentActivities = [
                 </div>
 
                 <!-- Table card -->
-                <div class="overflow-hidden rounded-[20px] border border-border bg-white shadow-card">
+                <div class="overflow-hidden rounded-[20px] border border-border bg-card shadow-card">
                     <div class="overflow-x-auto">
-                        <table style="width:100%; min-width:640px; border-collapse:collapse;">
+                        <table class="w-full min-w-[640px] border-collapse">
                             <thead>
-                                <tr style="text-align:left;">
-                                    <th
-                                        style="font-size:11.5px; font-weight:600; color:#9AA3B4; text-transform:uppercase; letter-spacing:0.4px; padding:14px 16px;">
-                                        Project</th>
-                                    <th
-                                        style="font-size:11.5px; font-weight:600; color:#9AA3B4; text-transform:uppercase; letter-spacing:0.4px; padding:14px 12px;">
-                                        Type</th>
-                                    <th
-                                        style="font-size:11.5px; font-weight:600; color:#9AA3B4; text-transform:uppercase; letter-spacing:0.4px; padding:14px 12px;">
-                                        Units</th>
-                                    <th
-                                        style="font-size:11.5px; font-weight:600; color:#9AA3B4; text-transform:uppercase; letter-spacing:0.4px; padding:14px 12px;">
-                                        Progress</th>
-                                    <th
-                                        style="font-size:11.5px; font-weight:600; color:#9AA3B4; text-transform:uppercase; letter-spacing:0.4px; padding:14px 12px;">
-                                        Status</th>
-                                    <th
-                                        style="font-size:11.5px; font-weight:600; color:#9AA3B4; text-transform:uppercase; letter-spacing:0.4px; padding:14px 16px; text-align:right;">
-                                    </th>
+                                <tr class="text-left">
+                                    <th class="px-4 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-muted-foreground">Project</th>
+                                    <th class="px-3 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-muted-foreground">Type</th>
+                                    <th class="px-3 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-muted-foreground">Units</th>
+                                    <th class="px-3 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-muted-foreground">Progress</th>
+                                    <th class="px-3 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
+                                    <th class="px-4 py-3.5 text-right text-[11.5px] font-semibold uppercase tracking-wider text-muted-foreground"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Empty state -->
                                 <tr v-if="projects.data.length === 0">
-                                    <td colspan="6" style="padding:48px 16px; text-align:center; color:#9AA3B4;">
-                                        <svg style="margin:0 auto 12px; color:#D6DBE6;" width="40" height="40"
+                                    <td colspan="6" class="px-4 py-12 text-center text-muted-foreground">
+                                        <svg class="mx-auto mb-3 text-muted-foreground/50" width="40" height="40"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
                                             <path d="M2 20h20M6 20V10l6-7 6 7v10" />
                                             <path d="M10 20v-5h4v5" />
                                         </svg>
-                                        <div style="font-size:14px; font-weight:600;">No projects found</div>
-                                        <div style="font-size:12px; margin-top:4px;">Try adjusting your filters</div>
+                                        <div class="text-sm font-semibold">No projects found</div>
+                                        <div class="mt-1 text-xs">Try adjusting your filters</div>
                                     </td>
                                 </tr>
 
                                 <!-- Project rows -->
                                 <tr v-for="(project, i) in projects.data" :key="project.id"
-                                    style="transition:background .15s; cursor:pointer;" class="hover:bg-[#FAFBFE]">
+                                    class="cursor-pointer transition-colors hover:bg-muted">
                                     <!-- Project name + location -->
-                                    <td style="padding:14px 16px; border-top:1px solid #F5F7FB;">
-                                        <div style="display:flex; align-items:center; gap:13px;">
-                                            <div style="width:50px; height:50px; border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;"
+                                    <td class="border-t border-border px-4 py-3.5">
+                                        <div class="flex items-center gap-3.5">
+                                            <div class="flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center overflow-hidden rounded-xl"
                                                 :style="project.cover ? '' : `background:${projectGradient(project.id)}`">
                                                 <img v-if="project.cover" :src="project.cover" :alt="project.name"
-                                                    style="width:100%; height:100%; object-fit:cover;" />
+                                                    class="h-full w-full object-cover" />
                                                 <svg v-else width="22" height="22" viewBox="0 0 24 24" fill="none"
                                                     stroke="#fff" stroke-width="1.6" stroke-linecap="round"
                                                     stroke-linejoin="round">
@@ -357,59 +332,46 @@ const recentActivities = [
                                             </div>
                                             <div>
                                                 <Link :href="route('admin.projects.edit', project.id)"
-                                                    style="font-size:14px; font-weight:700; color:#5B3DF5; text-decoration:none;"
-                                                    class="hover:underline">{{ project.name }}</Link>
-                                                <div v-if="project.location"
-                                                    style="font-size:12px; color:#9AA3B4; margin-top:2px;">{{
-                                                        project.location }}</div>
+                                                    class="text-sm font-bold text-brand hover:underline">{{ project.name }}</Link>
+                                                <div v-if="project.location" class="mt-0.5 text-xs text-muted-foreground">{{ project.location }}</div>
                                             </div>
                                         </div>
                                     </td>
 
                                     <!-- Type -->
-                                    <td style="padding:14px 12px; border-top:1px solid #F5F7FB;">
-                                        <span style="font-size:12px; color:#697386; font-weight:500;">{{
-                                            project.type_label }}</span>
+                                    <td class="border-t border-border px-3 py-3.5">
+                                        <span class="text-xs font-medium text-muted-foreground">{{ project.type_label }}</span>
                                     </td>
 
                                     <!-- Units count -->
-                                    <td
-                                        style="padding:14px 12px; border-top:1px solid #F5F7FB; font-size:14px; font-weight:600; color:#151B2E;">
+                                    <td class="border-t border-border px-3 py-3.5 text-sm font-semibold text-foreground hv-num">
                                         {{ project.units_count }}
-                                        <span v-if="project.total_units"
-                                            style="color:#9AA3B4; font-size:12px; font-weight:400;"> / {{
-                                                project.total_units }}</span>
+                                        <span v-if="project.total_units" class="text-xs font-normal text-muted-foreground"> / {{ project.total_units }}</span>
                                     </td>
 
                                     <!-- Progress bar -->
-                                    <td style="padding:14px 12px; border-top:1px solid #F5F7FB;">
-                                        <div style="display:flex; align-items:center; gap:9px;">
-                                            <div
-                                                style="width:72px; height:6px; background:#F1F4F9; border-radius:4px; overflow:hidden;">
-                                                <div
-                                                    :style="`height:100%; width:${project.overall_progress ?? 0}%; background:#5B3DF5; border-radius:4px;`" />
+                                    <td class="border-t border-border px-3 py-3.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <div class="h-1.5 w-[72px] overflow-hidden rounded bg-muted">
+                                                <div class="h-full rounded bg-gold-gradient" :style="`width:${project.overall_progress ?? 0}%`" />
                                             </div>
-                                            <span style="font-size:12px; font-weight:700; color:#3A4256;">{{
-                                                project.overall_progress ?? 0 }}%</span>
+                                            <span class="text-xs font-bold text-foreground hv-num">{{ project.overall_progress ?? 0 }}%</span>
                                         </div>
                                     </td>
 
                                     <!-- Status badge -->
-                                    <td style="padding:14px 12px; border-top:1px solid #F5F7FB;">
-                                        <span
-                                            style="font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:20px; white-space:nowrap;"
-                                            :style="badgeStyle(project.status)">{{ project.status_label }}</span>
+                                    <td class="border-t border-border px-3 py-3.5">
+                                        <span class="whitespace-nowrap rounded-full px-2.5 py-1 text-[11.5px] font-bold" :class="badgeClass(project.status)">{{ project.status_label }}</span>
                                     </td>
 
                                     <!-- Actions -->
-                                    <td style="padding:14px 16px; border-top:1px solid #F5F7FB; text-align:right;">
-                                        <div
-                                            style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
+                                    <td class="border-t border-border px-4 py-3.5 text-right">
+                                        <div class="flex items-center justify-end gap-1">
 
                                             <!-- Blueprint -->
                                             <Link :href="route('admin.blueprint.show', project.id)"
-                                                style="height:28px; border-radius:8px; display:inline-flex; align-items:center; gap:5px; padding:0 10px; font-size:11px; font-weight:600; color:#5B3DF5; background:#EEF2FF; text-decoration:none; transition:all .15s; white-space:nowrap;"
-                                                class="hover:bg-[#5B3DF5] hover:!text-white" title="Unit Blueprint">
+                                                class="inline-flex h-7 items-center gap-1.5 whitespace-nowrap rounded-lg bg-gold/10 px-2.5 text-[11px] font-semibold text-brand transition-all hover:bg-gold-gradient hover:text-on-gold"
+                                                title="Unit Blueprint">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                                     <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
                                                     <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
@@ -418,8 +380,7 @@ const recentActivities = [
                                             </Link>
 
                                             <Link :href="route('admin.projects.edit', project.id)"
-                                                style="width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#9AA3B4; text-decoration:none; transition:all .15s;"
-                                                class="hover:bg-[#F1F4F9] hover:text-[#5B3DF5]" title="Edit">
+                                                class="flex h-[30px] w-[30px] items-center justify-center rounded-lg text-muted-foreground transition-all hover:bg-muted hover:text-gold" title="Edit">
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round">
@@ -429,8 +390,7 @@ const recentActivities = [
                                                 </svg>
                                             </Link>
                                             <button @click="confirmDelete(project)"
-                                                style="width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#9AA3B4; border:none; background:transparent; cursor:pointer; transition:all .15s;"
-                                                class="hover:bg-red-50 hover:text-red-500" title="Delete">
+                                                class="flex h-[30px] w-[30px] items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive" title="Delete">
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                     stroke-linejoin="round">
@@ -450,28 +410,24 @@ const recentActivities = [
                     <!-- Pagination -->
                     <div v-if="projects.last_page > 1"
                         class="flex items-center justify-between border-t border-border px-4 py-3">
-                        <span style="font-size:12.5px; color:#697386;">
+                        <span class="text-[12.5px] text-muted-foreground">
                             Showing {{ projects.from }}–{{ projects.to }} of {{ projects.total }} projects
                         </span>
                         <div class="flex items-center gap-1.5">
                             <template v-for="link in projects.links" :key="link.label">
                                 <span v-if="!link.url"
-                                    class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-[9px] px-2 text-xs pointer-events-none"
-                                    style="color:#9AA3B4; border:1px solid #EEF2F8; background:#fff;"><span
-                                        v-html="link.label" /></span>
+                                    class="pointer-events-none inline-flex h-8 min-w-[2rem] items-center justify-center rounded-[9px] border border-border bg-card px-2 text-xs text-muted-foreground"><span v-html="link.label" /></span>
                                 <Link v-else :href="link.url" :preserve-state="true"
                                     class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-[9px] px-2 text-xs transition-colors"
-                                    :style="link.active
-                                        ? 'background:#5B3DF5; color:#fff; border:none;'
-                                        : 'background:#fff; color:#9AA3B4; border:1px solid #EEF2F8;'"><span
-                                        v-html="link.label" /></Link>
+                                    :class="link.active
+                                        ? 'bg-gold-gradient text-on-gold'
+                                        : 'border border-border bg-card text-muted-foreground hover:bg-muted'"><span v-html="link.label" /></Link>
                             </template>
                         </div>
                     </div>
                     <!-- Showing count when only 1 page -->
                     <div v-else-if="projects.total > 0" class="border-t border-border px-4 py-3">
-                        <span style="font-size:12.5px; color:#697386;">Showing {{ projects.total }} of {{ projects.total
-                        }} projects</span>
+                        <span class="text-[12.5px] text-muted-foreground">Showing {{ projects.total }} of {{ projects.total }} projects</span>
                     </div>
                 </div>
             </div>
@@ -480,86 +436,74 @@ const recentActivities = [
             <div class="flex flex-col gap-6" style="position:sticky; top:0;">
 
                 <!-- Project Status Overview -->
-                <div class="rounded-[20px] border border-border bg-white shadow-card" style="padding:24px;">
-                    <div style="font-size:16px; font-weight:700; color:#151B2E; margin-bottom:16px;">Project Status
-                        Overview</div>
-                    <div style="display:flex; align-items:center; gap:16px;">
+                <div class="rounded-[20px] border border-border bg-card p-6 shadow-card">
+                    <div class="mb-4 text-base font-bold text-foreground">Project Status Overview</div>
+                    <div class="flex items-center gap-4">
 
                         <!-- SVG Donut -->
-                        <div style="position:relative; width:130px; height:130px; flex-shrink:0;">
+                        <div class="relative h-[130px] w-[130px] flex-shrink-0">
                             <svg width="130" height="130" viewBox="0 0 140 140" style="transform:rotate(-90deg);">
-                                <circle cx="70" cy="70" r="56" fill="none" stroke="#F1F4F9" stroke-width="16" />
+                                <circle cx="70" cy="70" r="56" fill="none" class="stroke-muted" stroke-width="16" />
                                 <circle v-for="seg in donutSegments" :key="seg.label" cx="70" cy="70" r="56" fill="none"
                                     :stroke="seg.color" stroke-width="16" :stroke-dasharray="seg.dasharray"
                                     :stroke-dashoffset="seg.dashoffset" />
                             </svg>
-                            <div
-                                style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                                <div style="font-size:24px; font-weight:800; color:#151B2E;">{{ stats.total }}</div>
-                                <div style="font-size:10px; color:#697386;">Total</div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <div class="text-2xl font-extrabold text-foreground hv-num">{{ stats.total }}</div>
+                                <div class="text-[10px] text-muted-foreground">Total</div>
                             </div>
                         </div>
 
                         <!-- Legend -->
-                        <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
-                            <div
-                                style="display:flex; align-items:center; justify-content:space-between; font-size:12.5px;">
-                                <span style="display:flex; align-items:center; gap:7px; color:#697386;">
-                                    <span
-                                        style="width:8px; height:8px; border-radius:50%; background:#22C55E; flex-shrink:0;"></span>
+                        <div class="flex flex-1 flex-col gap-2.5">
+                            <div class="flex items-center justify-between text-[12.5px]">
+                                <span class="flex items-center gap-1.5 text-muted-foreground">
+                                    <span class="h-2 w-2 flex-shrink-0 rounded-full" :style="`background:${statusDotColor.under_construction}`"></span>
                                     Under Construction
                                 </span>
-                                <span style="font-weight:700; color:#151B2E;">{{ stats.under_construction ?? 0 }}</span>
+                                <span class="font-bold text-foreground hv-num">{{ stats.under_construction ?? 0 }}</span>
                             </div>
-                            <div
-                                style="display:flex; align-items:center; justify-content:space-between; font-size:12.5px;">
-                                <span style="display:flex; align-items:center; gap:7px; color:#697386;">
-                                    <span
-                                        style="width:8px; height:8px; border-radius:50%; background:#5B3DF5; flex-shrink:0;"></span>
+                            <div class="flex items-center justify-between text-[12.5px]">
+                                <span class="flex items-center gap-1.5 text-muted-foreground">
+                                    <span class="h-2 w-2 flex-shrink-0 rounded-full" :style="`background:${statusDotColor.completed}`"></span>
                                     Completed
                                 </span>
-                                <span style="font-weight:700; color:#151B2E;">{{ stats.completed ?? 0 }}</span>
+                                <span class="font-bold text-foreground hv-num">{{ stats.completed ?? 0 }}</span>
                             </div>
-                            <div
-                                style="display:flex; align-items:center; justify-content:space-between; font-size:12.5px;">
-                                <span style="display:flex; align-items:center; gap:7px; color:#697386;">
-                                    <span
-                                        style="width:8px; height:8px; border-radius:50%; background:#3B82F6; flex-shrink:0;"></span>
+                            <div class="flex items-center justify-between text-[12.5px]">
+                                <span class="flex items-center gap-1.5 text-muted-foreground">
+                                    <span class="h-2 w-2 flex-shrink-0 rounded-full" :style="`background:${statusDotColor.planning}`"></span>
                                     Planning
                                 </span>
-                                <span style="font-weight:700; color:#151B2E;">{{ stats.planning ?? 0 }}</span>
+                                <span class="font-bold text-foreground hv-num">{{ stats.planning ?? 0 }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Top Performing Projects -->
-                <div class="rounded-[20px] border border-border bg-white shadow-card" style="padding:24px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                        <div style="font-size:16px; font-weight:700; color:#151B2E;">Top Performing</div>
-                        <a style="font-size:12.5px; font-weight:600; color:#5B3DF5; cursor:pointer;">View All</a>
+                <div class="rounded-[20px] border border-border bg-card p-6 shadow-card">
+                    <div class="mb-4 flex items-center justify-between">
+                        <div class="text-base font-bold text-foreground">Top Performing</div>
+                        <a class="cursor-pointer text-[12.5px] font-semibold text-brand hover:underline">View All</a>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:16px;">
-                        <div v-for="p in topProjects" :key="p.name" style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:44px; height:44px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;"
+                    <div class="flex flex-col gap-4">
+                        <div v-for="p in topProjects" :key="p.name" class="flex items-center gap-3">
+                            <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl"
                                 :style="`background:${p.gradient}`">
                                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff"
                                     stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 21V5a1 1 0 011-1h6a1 1 0 011 1v16M13 9h5a1 1 0 011 1v11" />
                                 </svg>
                             </div>
-                            <div style="flex:1; min-width:0;">
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <span
-                                        style="font-size:13px; font-weight:700; color:#151B2E; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px;">{{
-                                            p.name }}</span>
-                                    <span style="font-size:12.5px; font-weight:700; color:#22C55E;">{{ p.salesRate
-                                    }}%</span>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="max-w-[150px] truncate text-[13px] font-bold text-foreground">{{ p.name }}</span>
+                                    <span class="text-[12.5px] font-bold text-success hv-num">{{ p.salesRate }}%</span>
                                 </div>
-                                <div style="font-size:11px; color:#9AA3B4; margin:3px 0 6px;">Sales Rate</div>
-                                <div style="height:5px; background:#F1F4F9; border-radius:3px; overflow:hidden;">
-                                    <div
-                                        :style="`height:100%; width:${p.salesRate}%; background:#5B3DF5; border-radius:3px;`" />
+                                <div class="my-1 text-[11px] text-muted-foreground">Sales Rate</div>
+                                <div class="h-[5px] overflow-hidden rounded bg-muted">
+                                    <div class="h-full rounded bg-gold-gradient" :style="`width:${p.salesRate}%`" />
                                 </div>
                             </div>
                         </div>
@@ -567,17 +511,15 @@ const recentActivities = [
                 </div>
 
                 <!-- Recent Activities -->
-                <div class="rounded-[20px] border border-border bg-white shadow-card" style="padding:24px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                        <div style="font-size:16px; font-weight:700; color:#151B2E;">Recent Activities</div>
-                        <a style="font-size:12.5px; font-weight:600; color:#5B3DF5; cursor:pointer;">View All</a>
+                <div class="rounded-[20px] border border-border bg-card p-6 shadow-card">
+                    <div class="mb-4 flex items-center justify-between">
+                        <div class="text-base font-bold text-foreground">Recent Activities</div>
+                        <a class="cursor-pointer text-[12.5px] font-semibold text-brand hover:underline">View All</a>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:2px;">
+                    <div class="flex flex-col gap-0.5">
                         <div v-for="(act, i) in recentActivities" :key="i"
-                            style="display:flex; gap:11px; padding:10px 6px; border-radius:11px; cursor:pointer; transition:background .15s;"
-                            class="hover:bg-[#FAFBFE]">
-                            <div style="width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;"
-                                :style="`background:${act.bg}; color:${act.color};`">
+                            class="flex cursor-pointer gap-2.5 rounded-xl p-2.5 transition-colors hover:bg-muted">
+                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full" :class="act.class">
                                 <!-- project icon -->
                                 <svg v-if="act.icon === 'project'" width="15" height="15" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
@@ -604,9 +546,8 @@ const recentActivities = [
                                 </svg>
                             </div>
                             <div>
-                                <div style="font-size:12.5px; font-weight:600; color:#151B2E; line-height:1.4;">{{
-                                    act.text }}</div>
-                                <div style="font-size:11px; color:#9AA3B4; margin-top:2px;">{{ act.time }}</div>
+                                <div class="text-[12.5px] font-semibold leading-snug text-foreground">{{ act.text }}</div>
+                                <div class="mt-0.5 text-[11px] text-muted-foreground">{{ act.time }}</div>
                             </div>
                         </div>
                     </div>
@@ -620,10 +561,10 @@ const recentActivities = [
             <Transition name="fade">
                 <div v-if="confirmingDelete" class="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="cancelDelete" />
-                    <div class="relative z-10 w-full max-w-sm rounded-2xl border border-border bg-white p-6 shadow-xl">
-                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+                    <div class="relative z-10 w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl">
+                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/15">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600">
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-destructive">
                                 <polyline points="3 6 5 6 21 6" />
                                 <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                                 <path d="M10 11v6M14 11v6" />
@@ -639,7 +580,7 @@ const recentActivities = [
                             <button @click="cancelDelete"
                                 class="rounded-xl border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
                             <button @click="submitDelete" :disabled="deleteForm.processing"
-                                class="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-60">
+                                class="inline-flex items-center gap-2 rounded-xl bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-60">
                                 <svg v-if="deleteForm.processing" class="animate-spin" width="13" height="13"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path

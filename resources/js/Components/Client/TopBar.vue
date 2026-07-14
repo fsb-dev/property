@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
 import { useTheme } from '@/composables/useTheme';
 
 defineProps({
@@ -29,10 +30,10 @@ const { isDark, toggle } = useTheme();
         <div class="flex flex-1 min-w-0 items-center gap-2">
             <template v-if="breadcrumbs.length">
                 <template v-for="(crumb, i) in breadcrumbs" :key="i">
-                    <a v-if="crumb.href" :href="crumb.href"
+                    <Link v-if="crumb.href" :href="crumb.href"
                         class="truncate text-sm font-medium text-muted-foreground transition-colors hover:text-client-accent">
                         {{ crumb.label }}
-                    </a>
+                    </Link>
                     <span v-else class="truncate text-sm font-semibold text-foreground">{{ crumb.label }}</span>
                     <svg v-if="i < breadcrumbs.length - 1"
                         width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

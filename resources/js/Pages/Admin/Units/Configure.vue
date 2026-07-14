@@ -282,7 +282,7 @@ const STATUS_COLORS = {
                     Cancel
                 </Link>
                 <button @click="submit" :disabled="form.processing"
-                    class="inline-flex h-9 items-center gap-1.5 rounded-xl bg-admin-accent px-5 text-sm font-semibold text-white hover:bg-admin-accent/90 transition-colors disabled:opacity-60 shadow-sm">
+                    class="inline-flex h-9 items-center gap-1.5 rounded-xl bg-admin-accent px-5 text-sm font-semibold text-on-gold hover:bg-admin-accent/90 transition-colors disabled:opacity-60 shadow-sm">
                     <svg v-if="form.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                     <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v14a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
                     Save Unit
@@ -323,7 +323,7 @@ const STATUS_COLORS = {
                     <!-- Quick save in sidebar -->
                     <div class="border-t border-border p-3">
                         <button @click="submit" :disabled="form.processing"
-                            class="w-full inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-admin-accent text-xs font-semibold text-white hover:bg-admin-accent/90 transition-colors disabled:opacity-60">
+                            class="w-full inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-admin-accent text-xs font-semibold text-on-gold hover:bg-admin-accent/90 transition-colors disabled:opacity-60">
                             <svg v-if="form.processing" class="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                             Save Changes
                         </button>
@@ -1001,7 +1001,7 @@ const STATUS_COLORS = {
                                 </button>
                             </div>
                             <button type="submit" :disabled="form.processing"
-                                class="inline-flex h-9 items-center gap-1.5 rounded-xl bg-admin-accent px-5 text-sm font-semibold text-white hover:bg-admin-accent/90 transition-colors disabled:opacity-60 shadow-sm">
+                                class="inline-flex h-9 items-center gap-1.5 rounded-xl bg-admin-accent px-5 text-sm font-semibold text-on-gold hover:bg-admin-accent/90 transition-colors disabled:opacity-60 shadow-sm">
                                 <svg v-if="form.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                                 <svg v-else width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v14a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
                                 Save Unit

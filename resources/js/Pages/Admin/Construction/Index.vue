@@ -40,16 +40,16 @@ watch(search, () => {
 
 // ── Icon colour cycling (visual only — mirrors the source design) ─
 const iconPairs = [
-    ['#E8F0FF', '#3B82F6'], ['#E6F7EE', '#22C55E'], ['#EDE9FE', '#7C3AED'],
-    ['#FFF3E0', '#F59E0B'], ['#FDE8E8', '#EF4444'], ['#CCFBF1', '#0D9488'],
+    ['rgba(96,165,250,0.15)', '#60A5FA'], ['rgba(52,211,153,0.15)', '#34D399'], ['rgba(167,139,250,0.15)', '#A78BFA'],
+    ['rgba(251,191,36,0.15)', '#FBBF24'], ['rgba(248,113,113,0.15)', '#F87171'], ['rgba(34,211,238,0.15)', '#22D3EE'],
 ];
 const activityPairs = [
-    ['#E6F7EE', '#15803D'], ['#E8F0FF', '#2563EB'], ['#EDE9FE', '#6D28D9'],
-    ['#FFF3E0', '#B45309'], ['#CCFBF1', '#0D9488'],
+    ['rgba(52,211,153,0.15)', '#34D399'], ['rgba(96,165,250,0.15)', '#60A5FA'], ['rgba(167,139,250,0.15)', '#A78BFA'],
+    ['rgba(251,191,36,0.15)', '#FBBF24'], ['rgba(34,211,238,0.15)', '#22D3EE'],
 ];
 const milestonePairs = [
-    ['#E6F7EE', '#15803D'], ['#FFF3E0', '#B45309'], ['#E8F0FF', '#2563EB'],
-    ['#FDE8E8', '#DC2626'], ['#EDE9FE', '#6D28D9'],
+    ['rgba(52,211,153,0.15)', '#34D399'], ['rgba(251,191,36,0.15)', '#FBBF24'], ['rgba(96,165,250,0.15)', '#60A5FA'],
+    ['rgba(248,113,113,0.15)', '#F87171'], ['rgba(167,139,250,0.15)', '#A78BFA'],
 ];
 const pair = (arr, i) => arr[i % arr.length];
 
@@ -62,10 +62,10 @@ function formatBDT(amount) {
 }
 
 function qualityColor(score) {
-    if (score >= 85) return '#22C55E';
-    if (score >= 70) return '#22C55E';
-    if (score >= 50) return '#F59E0B';
-    return '#EF4444';
+    if (score >= 85) return '#34D399';
+    if (score >= 70) return '#34D399';
+    if (score >= 50) return '#FBBF24';
+    return '#F87171';
 }
 
 function qualityLabel(score) {
@@ -86,43 +86,43 @@ const kpiCards = computed(() => ([
     {
         label: 'Active Projects', value: props.kpis.active_projects,
         sub: `${props.kpis.active_pct}% of all projects`,
-        bg: '#F1ECFF', color: '#5B3DF5',
+        bg: 'rgba(198,161,91,0.12)', color: '#C6A15B',
         path: 'M7 21V5l11-2v18M7 9l11-2M3 21h18M11 21v-4h3v4',
     },
     {
         label: 'Buildings Under Construction', value: props.kpis.buildings,
         sub: `Across ${props.kpis.active_projects} active projects`,
-        bg: '#E8F0FF', color: '#3B82F6',
+        bg: 'rgba(96,165,250,0.15)', color: '#60A5FA',
         path: 'M3 21h18M5 21V7h6v14M11 21V3h8v18M8 10h.01M8 14h.01M15 7h.01M15 11h.01M15 15h.01',
     },
     {
         label: 'Overall Progress', value: `${props.kpis.overall_progress}%`,
         sub: 'Avg. across active projects',
-        bg: '#E6F7EE', color: '#22C55E',
+        bg: 'rgba(52,211,153,0.15)', color: '#34D399',
         circle: true,
     },
     {
         label: 'On Time Projects', value: props.kpis.on_time,
         sub: `${props.kpis.on_time_pct}% of total`,
-        bg: '#FFF3E0', color: '#F59E0B',
+        bg: 'rgba(251,191,36,0.15)', color: '#FBBF24',
         path: null, rect: true,
     },
     {
         label: 'Delayed Projects', value: props.kpis.delayed,
         sub: `${props.kpis.delayed_pct}% of total`,
-        bg: '#FDE8E8', color: '#EF4444', valueColor: '#EF4444',
+        bg: 'rgba(248,113,113,0.15)', color: '#F87171', valueColor: '#F87171',
         clock: true,
     },
     {
         label: 'Milestones Completed', value: props.kpis.milestones_done,
         sub: `${props.kpis.milestones_pending} pending`,
-        bg: '#EDE9FE', color: '#7C3AED',
+        bg: 'rgba(167,139,250,0.15)', color: '#A78BFA',
         check: true,
     },
     {
         label: 'Budget Utilized', value: formatBDT(props.kpis.budget_used),
         sub: `${props.kpis.budget_used_pct}% of total budget`,
-        bg: '#CCFBF1', color: '#0D9488',
+        bg: 'rgba(34,211,238,0.15)', color: '#22D3EE',
         wallet: true,
     },
 ]));
@@ -132,10 +132,10 @@ const donutR = 58;
 const donutC = 2 * Math.PI * donutR;
 const donutSegments = computed(() => {
     const segs = [
-        { key: 'completed',   color: '#22C55E', value: props.progressOverview.completed },
-        { key: 'in_progress', color: '#3B82F6', value: props.progressOverview.in_progress },
-        { key: 'pending',     color: '#F59E0B', value: props.progressOverview.pending },
-        { key: 'delayed',     color: '#EF4444', value: props.progressOverview.delayed },
+        { key: 'completed',   color: '#34D399', value: props.progressOverview.completed },
+        { key: 'in_progress', color: '#60A5FA', value: props.progressOverview.in_progress },
+        { key: 'pending',     color: '#FBBF24', value: props.progressOverview.pending },
+        { key: 'delayed',     color: '#F87171', value: props.progressOverview.delayed },
     ];
     let cursor = 0;
     return segs.map((s) => {
@@ -283,7 +283,7 @@ function submitDeleteStatus() {
             </div>
             <button
                 @click="openAddUpdate"
-                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90"
+                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90"
             >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                 Add Site Update
@@ -318,7 +318,7 @@ function submitDeleteStatus() {
                 <div class="mt-4 flex flex-1 items-center gap-4">
                     <div class="relative h-[130px] w-[130px] flex-none">
                         <svg width="130" height="130" viewBox="0 0 150 150" style="transform:rotate(-90deg);">
-                            <circle cx="75" cy="75" r="58" fill="none" stroke="#F1F4F9" stroke-width="18"/>
+                            <circle cx="75" cy="75" r="58" fill="none" class="stroke-muted" stroke-width="18"/>
                             <circle
                                 v-for="seg in donutSegments" :key="seg.key"
                                 cx="75" cy="75" r="58" fill="none" :stroke="seg.color" stroke-width="18"
@@ -332,19 +332,19 @@ function submitDeleteStatus() {
                     </div>
                     <div class="flex flex-1 flex-col gap-2.5 text-xs">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#22C55E;"></span>Completed</span>
+                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#34D399;"></span>Completed</span>
                             <b>{{ progressOverview.completed }}%</b>
                         </div>
                         <div class="flex items-center justify-between gap-2">
-                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#3B82F6;"></span>In Progress</span>
+                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#60A5FA;"></span>In Progress</span>
                             <b>{{ progressOverview.in_progress }}%</b>
                         </div>
                         <div class="flex items-center justify-between gap-2">
-                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#F59E0B;"></span>Pending</span>
+                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#FBBF24;"></span>Pending</span>
                             <b>{{ progressOverview.pending }}%</b>
                         </div>
                         <div class="flex items-center justify-between gap-2">
-                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#EF4444;"></span>Delayed</span>
+                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 flex-none rounded-full" style="background:#F87171;"></span>Delayed</span>
                             <b>{{ progressOverview.delayed }}%</b>
                         </div>
                     </div>
@@ -359,11 +359,11 @@ function submitDeleteStatus() {
                 </div>
                 <div class="relative mt-3 min-h-[220px] flex-1">
                     <svg viewBox="0 0 640 270" preserveAspectRatio="none" class="block h-full w-full">
-                        <defs><linearGradient id="cArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5B3DF5" stop-opacity="0.22"/><stop offset="100%" stop-color="#5B3DF5" stop-opacity="0"/></linearGradient></defs>
-                        <line v-for="y in [24,69,114,159,204,250]" :key="y" x1="40" :y1="y" x2="640" :y2="y" stroke="#F1F1F6" stroke-width="1"/>
+                        <defs><linearGradient id="cArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C6A15B" stop-opacity="0.22"/><stop offset="100%" stop-color="#C6A15B" stop-opacity="0"/></linearGradient></defs>
+                        <line v-for="y in [24,69,114,159,204,250]" :key="y" x1="40" :y1="y" x2="640" :y2="y" class="stroke-chart-grid/[0.08]" stroke-width="1"/>
                         <polygon :points="trendAreaPoints" fill="url(#cArea)"/>
-                        <polyline :points="trendPolyline" fill="none" stroke="#5B3DF5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle v-for="p in trendPoints" :key="p.label" :cx="p.x" :cy="p.y" r="4" fill="#fff" stroke="#5B3DF5" stroke-width="2.5"/>
+                        <polyline :points="trendPolyline" fill="none" stroke="#C6A15B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle v-for="p in trendPoints" :key="p.label" :cx="p.x" :cy="p.y" r="4" fill="#fff" stroke="#C6A15B" stroke-width="2.5"/>
                     </svg>
                     <div class="absolute left-0 top-[14px] text-[9.5px] text-muted-foreground">100%</div>
                     <div class="absolute bottom-0 left-0 text-[9.5px] text-muted-foreground">0%</div>
@@ -434,7 +434,7 @@ function submitDeleteStatus() {
                         </div>
                         <button
                             @click="openAddStatus"
-                            class="inline-flex flex-none items-center gap-1.5 rounded-lg bg-admin-accent px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-admin-accent/90"
+                            class="inline-flex flex-none items-center gap-1.5 rounded-lg bg-admin-accent px-3 py-2 text-xs font-medium text-on-gold transition-colors hover:bg-admin-accent/90"
                         >
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                             Add Status
@@ -485,7 +485,7 @@ function submitDeleteStatus() {
                             <TableCell>
                                 <div class="flex items-center gap-2">
                                     <svg width="28" height="28" viewBox="0 0 36 36" style="transform:rotate(-90deg);">
-                                        <circle cx="18" cy="18" r="15" fill="none" stroke="#F1F4F9" stroke-width="4"/>
+                                        <circle cx="18" cy="18" r="15" fill="none" class="stroke-muted" stroke-width="4"/>
                                         <circle cx="18" cy="18" r="15" fill="none" :stroke="qualityColor(row.quality)" stroke-width="4" stroke-linecap="round" :stroke-dasharray="qualityDash(row.quality)"/>
                                     </svg>
                                     <div class="leading-tight">
@@ -513,7 +513,7 @@ function submitDeleteStatus() {
                                     </button>
                                     <button
                                         @click="confirmDeleteStatus(row)"
-                                        class="flex h-7 w-7 flex-none items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-500"
+                                        class="flex h-7 w-7 flex-none items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                                         title="Reset construction status"
                                     >
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
@@ -530,7 +530,7 @@ function submitDeleteStatus() {
                     <div class="flex items-center gap-1">
                         <template v-for="link in table.links" :key="link.label">
                             <span v-if="!link.url" class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs pointer-events-none text-muted-foreground/40"><span v-html="link.label" /></span>
-                            <Link v-else :href="link.url" preserve-scroll preserve-state :class="['inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs transition-colors', link.active ? 'bg-admin-accent text-white' : 'text-muted-foreground hover:bg-muted']"><span v-html="link.label" /></Link>
+                            <Link v-else :href="link.url" preserve-scroll preserve-state :class="['inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs transition-colors', link.active ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:bg-muted']"><span v-html="link.label" /></Link>
                         </template>
                     </div>
                 </div>
@@ -568,39 +568,39 @@ function submitDeleteStatus() {
                     @click="openAddUpdate"
                     class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center transition-all hover:-translate-y-0.5 hover:border-admin-accent hover:bg-admin-accent/5"
                 >
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#F1ECFF; color:#5B3DF5;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(198,161,91,0.12); color:#C6A15B;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Add Site Update</span>
                 </button>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#E8F0FF; color:#3B82F6;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M3 17l5-4 4 3 3-2 6 5"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(96,165,250,0.15); color:#60A5FA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M3 17l5-4 4 3 3-2 6 5"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Upload Photos</span>
                 </div>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#EDE9FE; color:#7C3AED;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l7-4 7 4V3z"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(167,139,250,0.15); color:#A78BFA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l7-4 7 4V3z"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Add Milestone</span>
                 </div>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#E6F7EE; color:#22C55E;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(52,211,153,0.15); color:#34D399;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Inspect Quality</span>
                 </div>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#FFF3E0; color:#F59E0B;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7M14 8h6v6"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(251,191,36,0.15); color:#FBBF24;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7M14 8h6v6"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Update Progress</span>
                 </div>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#E6F4FB; color:#0EA5E9;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(96,165,250,0.15); color:#60A5FA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Manage Documents</span>
                 </div>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#CCFBF1; color:#0D9488;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(34,211,238,0.15); color:#22D3EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Create Report</span>
                 </div>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#FDE8E8; color:#EF4444;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(248,113,113,0.15); color:#F87171;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Safety Audit</span>
                 </div>
                 <div class="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:#F1ECFF; color:#5B3DF5;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/></svg></div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-[10px]" style="background:rgba(198,161,91,0.12); color:#C6A15B;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/></svg></div>
                     <span class="text-[11px] font-semibold text-foreground/80">Resource Planner</span>
                 </div>
             </div>
@@ -652,7 +652,7 @@ function submitDeleteStatus() {
                                 <span
                                     v-if="selectedProjectBaseline !== null && form.progress !== selectedProjectBaseline"
                                     class="flex items-center gap-0.5 text-[11px] font-semibold"
-                                    :class="form.progress > selectedProjectBaseline ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
+                                    :class="form.progress > selectedProjectBaseline ? 'text-success' : 'text-destructive'"
                                 >
                                     <svg v-if="form.progress > selectedProjectBaseline" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                                     <svg v-else width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
@@ -689,19 +689,19 @@ function submitDeleteStatus() {
                                 <span
                                     v-if="selectedProjectTimeBaseline !== null && form.time_progress !== selectedProjectTimeBaseline"
                                     class="flex items-center gap-0.5 text-[11px] font-semibold"
-                                    :class="form.time_progress > selectedProjectTimeBaseline ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
+                                    :class="form.time_progress > selectedProjectTimeBaseline ? 'text-success' : 'text-destructive'"
                                 >
                                     <svg v-if="form.time_progress > selectedProjectTimeBaseline" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                                     <svg v-else width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                                     {{ Math.abs(form.time_progress - selectedProjectTimeBaseline) }}%
                                 </span>
-                                <span class="text-xl font-extrabold leading-none tabular-nums tracking-tight text-blue-600 dark:text-blue-400">{{ form.time_progress }}<span class="text-sm font-bold">%</span></span>
+                                <span class="text-xl font-extrabold leading-none tabular-nums tracking-tight text-info">{{ form.time_progress }}<span class="text-sm font-bold">%</span></span>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-3">
                             <div class="h-2.5 flex-1 overflow-hidden rounded-full bg-muted">
-                                <div class="h-full rounded-full bg-blue-500 transition-all duration-200" :style="{ width: form.time_progress + '%' }"></div>
+                                <div class="h-full rounded-full bg-info transition-all duration-200" :style="{ width: form.time_progress + '%' }"></div>
                             </div>
                             <input
                                 type="number" min="0" max="100" step="1"
@@ -722,11 +722,11 @@ function submitDeleteStatus() {
                     <div class="space-y-2.5 rounded-xl border border-border bg-muted/30 p-4" :class="!form.project_id && 'opacity-50'">
                         <div class="flex items-center justify-between">
                             <Label class="text-xs font-medium text-muted-foreground">Budget</Label>
-                            <span class="text-xs font-semibold text-teal-600 dark:text-teal-400">{{ budgetUsedPct }}% used</span>
+                            <span class="text-xs font-semibold text-chart-6">{{ budgetUsedPct }}% used</span>
                         </div>
 
                         <div class="h-2.5 w-full overflow-hidden rounded-full bg-muted">
-                            <div class="h-full rounded-full bg-teal-500 transition-all duration-200" :style="{ width: budgetUsedPct + '%' }"></div>
+                            <div class="h-full rounded-full bg-chart-6 transition-all duration-200" :style="{ width: budgetUsedPct + '%' }"></div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
@@ -784,7 +784,7 @@ function submitDeleteStatus() {
 
                     <DialogFooter class="shrink-0 border-t border-border px-6 py-4">
                         <button type="button" @click="showAddUpdate = false" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
-                        <button type="submit" :disabled="form.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
+                        <button type="submit" :disabled="form.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
                             <svg v-if="form.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                             Save Update
                         </button>
@@ -884,7 +884,7 @@ function submitDeleteStatus() {
 
                     <DialogFooter class="shrink-0 border-t border-border px-6 py-4">
                         <button type="button" @click="showStatusDialog = false" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
-                        <button type="submit" :disabled="statusForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
+                        <button type="submit" :disabled="statusForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
                             <svg v-if="statusForm.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                             Save Status
                         </button>
@@ -908,7 +908,7 @@ function submitDeleteStatus() {
                     <button type="button" @click="confirmingStatusDelete = null" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
                     <button
                         type="button" @click="submitDeleteStatus" :disabled="deleteStatusForm.processing"
-                        class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-60"
+                        class="inline-flex items-center gap-2 rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-60"
                     >
                         <svg v-if="deleteStatusForm.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                         Reset

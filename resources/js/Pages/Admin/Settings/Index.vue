@@ -183,7 +183,7 @@ const showApiKeys = ref(false);
 // ── System Information / Logs ─────────────────────────────────────────────────
 const showLogs = ref(false);
 
-const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warning: 'text-amber-500' };
+const logLevelColor = { info: 'text-info', success: 'text-success', warning: 'text-warning' };
 </script>
 
 <template>
@@ -221,7 +221,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                         <div class="text-sm font-bold text-foreground">Need Help?</div>
                     </div>
                     <p class="mb-3.5 text-xs leading-relaxed text-muted-foreground">Visit our help center or contact support for assistance.</p>
-                    <Link :href="route('admin.support-tickets.index')" class="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-admin-accent px-3 py-2.5 text-xs font-semibold text-white transition-transform hover:-translate-y-0.5">
+                    <Link :href="route('admin.support-tickets.index')" class="flex w-full items-center justify-center gap-1.5 rounded-[10px] bg-admin-accent px-3 py-2.5 text-xs font-semibold text-on-gold transition-transform hover:-translate-y-0.5">
                         Go to Help Center
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
                     </Link>
@@ -237,7 +237,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                             <div class="text-lg font-bold text-foreground">General Settings</div>
                             <div class="mt-0.5 text-[13px] text-muted-foreground">Configure basic system settings and platform preferences.</div>
                         </div>
-                        <Button @click="saveGeneral" class="gap-1.5 bg-admin-accent text-white hover:bg-admin-accent/90">
+                        <Button @click="saveGeneral" class="gap-1.5 bg-admin-accent text-on-gold hover:bg-admin-accent/90">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
                             Save Changes
                         </Button>
@@ -416,15 +416,15 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                     <div class="text-lg font-bold text-foreground">Backup &amp; Restore</div>
                     <div class="mb-4 mt-0.5 text-[13px] text-muted-foreground">Manage system backups and restore points.</div>
 
-                    <div class="flex items-center gap-3 rounded-[13px] border border-emerald-200 bg-emerald-50 p-3.5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
-                        <div class="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[9px] bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15">
+                    <div class="flex items-center gap-3 rounded-[13px] border border-success/25 bg-success/10 p-3.5">
+                        <div class="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[9px] bg-success/15 text-success">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="icons.check" />
                         </div>
                         <div class="min-w-0 flex-1">
-                            <div class="text-[13px] font-bold text-emerald-700 dark:text-emerald-400">{{ backupState.lastBackupStatus }}</div>
-                            <div class="text-[11.5px] text-emerald-700/70 dark:text-emerald-400/70">{{ backupState.lastBackupTime }}</div>
+                            <div class="text-[13px] font-bold text-success">{{ backupState.lastBackupStatus }}</div>
+                            <div class="text-[11.5px] text-success/70">{{ backupState.lastBackupTime }}</div>
                         </div>
-                        <Button type="button" size="sm" variant="outline" @click="backupNow" :disabled="backingUp" class="flex-none gap-1.5 border-emerald-300 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-500/30 dark:text-emerald-400">
+                        <Button type="button" size="sm" variant="outline" @click="backupNow" :disabled="backingUp" class="flex-none gap-1.5 border-success/30 text-success hover:bg-success/10">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17.6A5 5 0 0018 8h-1.26A8 8 0 104 16.25"/><path d="M8 16l4 4 4-4M12 12v8"/></svg>
                             {{ backingUp ? 'Backing up…' : 'Backup Now' }}
                         </Button>
@@ -436,7 +436,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                                 <div class="text-[13px] font-bold text-foreground">Automatic Backups</div>
                                 <div class="text-[11.5px] text-muted-foreground">{{ backupState.automaticSchedule }}</div>
                             </div>
-                            <span class="text-[12.5px] font-bold" :class="backupState.automaticEnabled ? 'text-emerald-500' : 'text-muted-foreground'">{{ backupState.automaticEnabled ? 'On' : 'Off' }}</span>
+                            <span class="text-[12.5px] font-bold" :class="backupState.automaticEnabled ? 'text-success' : 'text-muted-foreground'">{{ backupState.automaticEnabled ? 'On' : 'Off' }}</span>
                         </div>
                         <button type="button" @click="showRetention = true" class="flex items-center justify-between gap-3 border-b border-border py-3.5 text-left transition-colors hover:bg-muted">
                             <div>
@@ -471,7 +471,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                             <div class="min-w-0 flex-1">
                                 <div class="text-[13px] font-bold text-foreground">{{ i.title }}</div>
                                 <div class="flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
-                                    <span class="h-1.5 w-1.5 flex-none rounded-full" :class="i.connected ? 'bg-emerald-500' : 'bg-muted-foreground/40'" />
+                                    <span class="h-1.5 w-1.5 flex-none rounded-full" :class="i.connected ? 'bg-success' : 'bg-muted-foreground/40'" />
                                     {{ i.connected ? 'Connected' : 'Disconnected' }} • {{ i.provider }}
                                 </div>
                             </div>
@@ -575,7 +575,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                         <div class="space-y-1">
                             <div v-for="s in activeSecurity.activeSessions" :key="s.key" class="flex items-center justify-between gap-3 border-b border-border/60 py-2.5 last:border-b-0">
                                 <div class="min-w-0">
-                                    <div class="truncate text-[13px] font-semibold text-foreground">{{ s.device }} <span v-if="s.current" class="ml-1 text-[10.5px] font-bold text-emerald-500">(this device)</span></div>
+                                    <div class="truncate text-[13px] font-semibold text-foreground">{{ s.device }} <span v-if="s.current" class="ml-1 text-[10.5px] font-bold text-success">(this device)</span></div>
                                     <div class="truncate text-[11.5px] text-muted-foreground">{{ s.location }} · {{ s.lastActive }}</div>
                                 </div>
                                 <Button v-if="!s.current" type="button" size="sm" variant="outline" class="flex-none" @click="revokeSession(activeSecurity, s)">Revoke</Button>
@@ -614,7 +614,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
 
                 <DialogFooter class="px-6 pb-4">
                     <Button type="button" variant="outline" @click="showSecurityDetail = false">Cancel</Button>
-                    <Button type="button" class="bg-admin-accent text-white hover:bg-admin-accent/90" @click="saveSecurity">Save</Button>
+                    <Button type="button" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90" @click="saveSecurity">Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -636,7 +636,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                 </div>
                 <DialogFooter class="px-6 pb-4">
                     <Button type="button" variant="outline" @click="showRetention = false">Cancel</Button>
-                    <Button type="button" class="bg-admin-accent text-white hover:bg-admin-accent/90" @click="saveRetention">Save</Button>
+                    <Button type="button" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90" @click="saveRetention">Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -652,7 +652,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                 </p>
                 <DialogFooter class="px-6 pb-4">
                     <Button type="button" variant="outline" @click="showRestoreConfirm = false">Cancel</Button>
-                    <Button type="button" class="bg-red-500 text-white hover:bg-red-600" @click="confirmRestore">Restore Now</Button>
+                    <Button type="button" class="bg-destructive text-destructive-foreground hover:bg-destructive/90" @click="confirmRestore">Restore Now</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -677,8 +677,8 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
                     </div>
                     <div class="flex items-center justify-between text-xs">
                         <span class="text-muted-foreground">Status</span>
-                        <span class="flex items-center gap-1.5 font-semibold" :class="activeIntegration.connected ? 'text-emerald-500' : 'text-muted-foreground'">
-                            <span class="h-1.5 w-1.5 rounded-full" :class="activeIntegration.connected ? 'bg-emerald-500' : 'bg-muted-foreground/40'" />
+                        <span class="flex items-center gap-1.5 font-semibold" :class="activeIntegration.connected ? 'text-success' : 'text-muted-foreground'">
+                            <span class="h-1.5 w-1.5 rounded-full" :class="activeIntegration.connected ? 'bg-success' : 'bg-muted-foreground/40'" />
                             {{ activeIntegration.connected ? 'Connected' : 'Disconnected' }}
                         </span>
                     </div>
@@ -686,7 +686,7 @@ const logLevelColor = { info: 'text-blue-500', success: 'text-emerald-500', warn
 
                 <DialogFooter class="px-6 pb-4">
                     <Button type="button" variant="outline" @click="showIntegrationDetail = false">Close</Button>
-                    <Button type="button" :class="activeIntegration.connected ? 'bg-red-500 hover:bg-red-600' : 'bg-admin-accent hover:bg-admin-accent/90'" class="text-white" @click="toggleIntegration(activeIntegration)">
+                    <Button type="button" :class="activeIntegration.connected ? 'bg-destructive hover:bg-destructive/90' : 'bg-admin-accent hover:bg-admin-accent/90'" class="text-on-gold" @click="toggleIntegration(activeIntegration)">
                         {{ activeIntegration.connected ? 'Disconnect' : 'Reconnect' }}
                     </Button>
                 </DialogFooter>

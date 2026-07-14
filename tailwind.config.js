@@ -20,14 +20,32 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                sans: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
             },
 
             colors: {
+                // ── Brand gold (RGB, shared across both portals/modes) ─────
+                gold:        'rgb(var(--hv-gold)        / <alpha-value>)',
+                'gold-bright': 'rgb(var(--hv-gold-bright) / <alpha-value>)',
+                'gold-deep': 'rgb(var(--hv-gold-deep)   / <alpha-value>)',
+                'on-gold':   'rgb(var(--hv-on-gold)     / <alpha-value>)',
+                brand:       'rgb(var(--brand-text)     / <alpha-value>)', /* mode-aware gold for shared UI text/icons */
+
+                // ── Data visualisation — supporting chart palette ──────────
+                'chart-1': 'rgb(var(--hv-chart-1) / <alpha-value>)',
+                'chart-2': 'rgb(var(--hv-chart-2) / <alpha-value>)',
+                'chart-3': 'rgb(var(--hv-chart-3) / <alpha-value>)',
+                'chart-4': 'rgb(var(--hv-chart-4) / <alpha-value>)',
+                'chart-5': 'rgb(var(--hv-chart-5) / <alpha-value>)',
+                'chart-6': 'rgb(var(--hv-chart-6) / <alpha-value>)',
+                'chart-grid': 'rgb(var(--hv-chart-grid) / <alpha-value>)',
+
                 // ── Portal tokens (RGB, wired to app.css vars) ─────────────
                 // Accent — supports opacity modifier: bg-admin-accent/15
-                'admin-accent':  'rgb(var(--admin-accent)  / <alpha-value>)',
-                'client-accent': 'rgb(var(--client-accent) / <alpha-value>)',
+                'admin-accent':      'rgb(var(--admin-accent)      / <alpha-value>)',
+                'admin-accent-fill': 'rgb(var(--admin-accent-fill) / <alpha-value>)',
+                'client-accent':      'rgb(var(--client-accent)      / <alpha-value>)',
+                'client-accent-fill': 'rgb(var(--client-accent-fill) / <alpha-value>)',
 
                 // Surface backgrounds — no dark: prefix needed in components
                 'admin-surface-page':    'rgb(var(--admin-surface-page)    / <alpha-value>)',
@@ -58,6 +76,18 @@ export default {
                 destructive: {
                     DEFAULT:    'hsl(var(--destructive))',
                     foreground: 'hsl(var(--destructive-foreground))',
+                },
+                success: {
+                    DEFAULT:    'hsl(var(--success))',
+                    foreground: 'hsl(var(--success-foreground))',
+                },
+                warning: {
+                    DEFAULT:    'hsl(var(--warning))',
+                    foreground: 'hsl(var(--warning-foreground))',
+                },
+                info: {
+                    DEFAULT:    'hsl(var(--info))',
+                    foreground: 'hsl(var(--info-foreground))',
                 },
                 muted: {
                     DEFAULT:    'hsl(var(--muted))',

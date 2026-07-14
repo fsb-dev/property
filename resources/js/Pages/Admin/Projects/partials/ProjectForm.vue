@@ -232,14 +232,14 @@ function removeCompliance(idx) {
                     <button v-for="(step, idx) in STEPS" :key="step.key" type="button" @click="goTo(idx)" :class="[
                         'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
                         stepState(idx) === 'active'
-                            ? 'bg-[#F1ECFF] dark:bg-admin-accent/10'
+                            ? 'bg-admin-accent/10'
                             : 'hover:bg-slate-50 dark:hover:bg-white/[0.03]',
                     ]">
                         <!-- Circle -->
                         <div :class="[
                             'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors',
-                            stepState(idx) === 'active' ? 'bg-admin-accent text-white' :
-                                stepState(idx) === 'done' ? 'bg-green-500 text-white' :
+                            stepState(idx) === 'active' ? 'bg-admin-accent text-on-gold' :
+                                stepState(idx) === 'done' ? 'bg-success text-on-gold' :
                                     'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400',
                         ]">
                             <svg v-if="stepState(idx) === 'done'" width="11" height="11" viewBox="0 0 24 24" fill="none"
@@ -801,10 +801,10 @@ function removeCompliance(idx) {
                             <Label class="text-xs font-medium text-slate-500 dark:text-slate-400">Developer</Label>
                             <div class="flex overflow-hidden rounded-lg border border-border text-xs">
                                 <button type="button" @click="setDevMode('select')"
-                                    :class="['px-3 py-1.5 font-medium transition-colors', devMode === 'select' ? 'bg-admin-accent text-white' : 'text-muted-foreground hover:text-foreground']">From
+                                    :class="['px-3 py-1.5 font-medium transition-colors', devMode === 'select' ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:text-foreground']">From
                                     List</button>
                                 <button type="button" @click="setDevMode('type')"
-                                    :class="['px-3 py-1.5 font-medium transition-colors', devMode === 'type' ? 'bg-admin-accent text-white' : 'text-muted-foreground hover:text-foreground']">Type
+                                    :class="['px-3 py-1.5 font-medium transition-colors', devMode === 'type' ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:text-foreground']">Type
                                     Name</button>
                             </div>
                         </div>
@@ -857,7 +857,7 @@ function removeCompliance(idx) {
                                 <div class="flex overflow-hidden rounded-lg border border-border shrink-0">
                                     <button v-for="bt in enums.booking_amount_types" :key="bt.value" type="button"
                                         @click="form.booking_amount_type = bt.value"
-                                        :class="['px-3 text-xs font-semibold transition-colors', form.booking_amount_type === bt.value ? 'bg-admin-accent text-white' : 'text-muted-foreground hover:text-foreground']">{{
+                                        :class="['px-3 text-xs font-semibold transition-colors', form.booking_amount_type === bt.value ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:text-foreground']">{{
                                             bt.value === 'fixed' ? 'BDT' : '%' }}</button>
                                 </div>
                             </div>
@@ -1121,7 +1121,7 @@ function removeCompliance(idx) {
 
                         <!-- Next (not last step) -->
                         <button v-if="!isLast" type="button" @click="goNext"
-                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-4 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90">
+                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-gold-gradient px-4 text-sm font-medium text-on-gold transition-all hover:shadow-gold-glow">
                             Next
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1132,7 +1132,7 @@ function removeCompliance(idx) {
 
                         <!-- Publish (last step) -->
                         <button v-else type="submit" :disabled="form.processing"
-                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-admin-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
+                            class="inline-flex h-9 items-center gap-2 rounded-lg bg-gold-gradient px-5 text-sm font-semibold text-on-gold transition-all hover:shadow-gold-glow disabled:opacity-60">
                             <svg v-if="form.processing" class="animate-spin" width="14" height="14" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2">
                                 <path

@@ -110,14 +110,14 @@ const projectionOptions = computed(() => ({
         gradient: { type: 'vertical', opacityFrom: 0.12, opacityTo: 0.01 },
         opacity: [1, 1, 0],
     },
-    colors: ['#5b3fe8', '#16a34a', '#c2c2cf'],
+    colors: ['#5b3fe8', 'hsl(var(--success))', 'hsl(var(--muted-foreground))'],
     dataLabels: { enabled: false },
     markers: { size: 0 },
     xaxis: {
         categories: Array.from({ length: calc.years + 1 }, (_, i) => i === 0 ? 'Start' : 'Yr ' + i),
         tickAmount: Math.min(calc.years, 10),
         labels: {
-            style: { colors: '#b0b0c0', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+            style: { colors: 'hsl(var(--muted-foreground))', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
         },
         axisBorder: { show: false },
         axisTicks:  { show: false },
@@ -125,7 +125,7 @@ const projectionOptions = computed(() => ({
     yaxis: {
         labels: {
             formatter: (val) => val >= 1000000 ? (val / 1000000).toFixed(0) + 'M' : val >= 1000 ? (val / 1000).toFixed(0) + 'K' : '0',
-            style: { colors: '#b0b0c0', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+            style: { colors: 'hsl(var(--muted-foreground))', fontSize: '11px', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
         },
     },
     grid: {
@@ -144,7 +144,7 @@ const amortizationDonutOptions = {
     plotOptions: {
         pie: { donut: { size: '68%', labels: { show: false } } },
     },
-    colors: ['#5b3fe8', '#16a34a'],
+    colors: ['#5b3fe8', 'hsl(var(--success))'],
     labels: ['Principal', 'Total Interest'],
     legend: { show: false },
     dataLabels: { enabled: false },
@@ -194,7 +194,7 @@ const statusCls = {
                 </svg>
                 Mortgage &amp; Financing
             </Link>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c2c2cf" stroke-width="2.2"
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 6l6 6-6 6" />
             </svg>
@@ -205,14 +205,14 @@ const statusCls = {
 
         <!-- ── Property context bar ───────────────────────────────── -->
         <div v-if="property"
-            class="flex items-center gap-4 p-4 rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] mb-3 shadow-sm">
+            class="flex items-center gap-4 p-4 rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] mb-3 shadow-sm">
             <!-- Thumbnail -->
             <div class="relative w-[68px] h-[52px] flex-none rounded-xl overflow-hidden"
                 style="background:linear-gradient(135deg,#e8e3fb,#d8d0f5);">
                 <img v-if="property.cover_image" :src="property.cover_image" :alt="property.project_name"
                     class="w-full h-full object-cover" />
                 <svg v-else class="absolute inset-0 m-auto opacity-60" width="26" height="26" viewBox="0 0 24 24"
-                    fill="none" stroke="#8b6df0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    fill="none" stroke="rgb(var(--hv-gold))" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 10.5 12 3l9 7.5" />
                     <path d="M5 9.5V21h14V9.5" />
                 </svg>
@@ -228,7 +228,7 @@ const statusCls = {
                         property.bedrooms }} Bed</span>
                     <span v-if="property.size_sqft" class="text-xs text-muted-foreground font-medium">{{
                         Number(property.size_sqft).toLocaleString() }} sqft</span>
-                    <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[#efeafc] text-client-accent">{{
+                    <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[rgba(198,161,91,0.1)] text-client-accent">{{
                         property.type_label }}</span>
                 </div>
             </div>
@@ -243,8 +243,8 @@ const statusCls = {
 
         <!-- Demo notice -->
         <div v-else class="flex items-center gap-3 px-4 py-3 rounded-xl border"
-            style="background:#fffbeb; border-color:#fde68a;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2"
+            style="background:rgba(251,191,36,0.1); border-color:#fde68a;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--warning))" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round" class="flex-none">
                 <circle cx="12" cy="12" r="9" />
                 <path d="M12 8v4M12 16h.01" />
@@ -257,9 +257,9 @@ const statusCls = {
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-3">
             <!-- Property Price -->
             <div
-                class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
-                    <div class="h-11 w-11 flex-none flex items-center justify-center rounded-xl bg-[#efeafc]">
+                    <div class="h-11 w-11 flex-none flex items-center justify-center rounded-xl bg-[rgba(198,161,91,0.1)]">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b3fe8" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 10.5 12 3l9 7.5" />
@@ -274,11 +274,11 @@ const statusCls = {
             </div>
             <!-- Down Payment -->
             <div
-                class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
                     <div
                         class="h-11 w-11 flex-none flex items-center justify-center rounded-xl bg-green-100 dark:bg-green-500/15">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--success))" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="7" width="18" height="13" rx="2.5" />
                             <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7" />
@@ -294,9 +294,9 @@ const statusCls = {
             </div>
             <!-- Loan Amount -->
             <div
-                class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
-                    <div class="h-11 w-11 flex-none flex items-center justify-center rounded-xl bg-[#efeafc]">
+                    <div class="h-11 w-11 flex-none flex items-center justify-center rounded-xl bg-[rgba(198,161,91,0.1)]">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b3fe8" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 11 12 4l9 7" />
@@ -312,7 +312,7 @@ const statusCls = {
             </div>
             <!-- Interest Rate -->
             <div
-                class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
                     <div
                         class="h-11 w-11 flex-none flex items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-500/15">
@@ -331,7 +331,7 @@ const statusCls = {
             </div>
             <!-- Loan Tenure -->
             <div
-                class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                 <div class="flex items-center gap-2.5">
                     <div
                         class="h-11 w-11 flex-none flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-500/15">
@@ -357,7 +357,7 @@ const statusCls = {
 
                 <!-- Calculator card -->
                 <div
-                    class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-5">Mortgage Calculator</h3>
 
                     <!-- Two columns: sliders | result -->
@@ -414,15 +414,15 @@ const statusCls = {
                                         class="flex-1 py-2 rounded-xl text-xs font-bold border cursor-pointer transition-all"
                                         :class="calc.years === yr
                                             ? 'text-white border-transparent'
-                                            : 'text-muted-foreground border-[#ededf3] dark:border-white/[0.08] bg-client-surface-card hover:border-client-accent/40 hover:text-client-accent'"
-                                        :style="calc.years === yr ? 'background:linear-gradient(100deg,#6a4dff,#5132e0); box-shadow:0 6px 14px -5px rgba(81,50,224,.5);' : ''"
+                                            : 'text-muted-foreground border-[hsl(var(--border))] dark:border-white/[0.08] bg-client-surface-card hover:border-client-accent/40 hover:text-client-accent'"
+                                        :style="calc.years === yr ? 'background:linear-gradient(100deg,rgb(var(--hv-gold)),rgb(var(--hv-gold-deep))); box-shadow:0 6px 14px -5px rgba(81,50,224,.5);' : ''"
                                         @click="calc.years = yr">{{ yr }}yr</button>
                                 </div>
                             </div>
 
                             <!-- Reset -->
                             <button
-                                class="self-start inline-flex items-center gap-2 border border-[#ededf3] dark:border-white/[0.08] bg-client-surface-card text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer text-xs font-bold px-4 py-2.5 rounded-xl transition-colors"
+                                class="self-start inline-flex items-center gap-2 border border-[hsl(var(--border))] dark:border-white/[0.08] bg-client-surface-card text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer text-xs font-bold px-4 py-2.5 rounded-xl transition-colors"
                                 @click="resetCalc">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -437,9 +437,9 @@ const statusCls = {
                         <div class="flex flex-col gap-4">
                             <!-- Dark result card -->
                             <div class="rounded-2xl p-5"
-                                style="background:linear-gradient(150deg,#3a2a8f,#241a5c); box-shadow:0 14px 30px -14px rgba(36,26,92,.5);">
+                                style="background:linear-gradient(150deg,#1C212C,#0B0E13); box-shadow:0 14px 30px -14px rgba(0,0,0,.5);">
                                 <div class="flex items-start justify-between gap-2 mb-1">
-                                    <span class="text-xs font-semibold leading-tight" style="color:#b3a9f0;">Estimated
+                                    <span class="text-xs font-semibold leading-tight" style="color:rgb(var(--hv-gold-bright));">Estimated
                                         Monthly Payment</span>
                                     <span
                                         class="flex-none inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap"
@@ -455,27 +455,27 @@ const statusCls = {
                                 <div class="flex flex-col gap-0">
                                     <div class="flex items-center justify-between py-3 border-b"
                                         style="border-color:rgba(255,255,255,.1);">
-                                        <span class="text-xs font-medium" style="color:#bcb2ec;">Principal Amount</span>
+                                        <span class="text-xs font-medium" style="color:rgba(245,242,234,0.65);">Principal Amount</span>
                                         <span class="text-xs font-bold text-white">{{ fmtBDT(calcLoan) }}</span>
                                     </div>
                                     <div class="flex items-center justify-between py-3 border-b"
                                         style="border-color:rgba(255,255,255,.1);">
-                                        <span class="text-xs font-medium" style="color:#bcb2ec;">Total Interest</span>
+                                        <span class="text-xs font-medium" style="color:rgba(245,242,234,0.65);">Total Interest</span>
                                         <span class="text-xs font-bold text-white">{{ fmtBDT(calcTotalInterest)
                                         }}</span>
                                     </div>
                                     <div class="flex items-center justify-between pt-3">
                                         <span class="text-sm font-bold text-white">Total Payment</span>
-                                        <span class="text-sm font-extrabold" style="color:#ffc24a;">{{
+                                        <span class="text-sm font-extrabold" style="color:rgb(var(--hv-gold-bright));">{{
                                             fmtBDT(calcTotalPay) }}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- AI tip -->
-                            <div class="flex items-start gap-3 p-4 rounded-xl border border-[#efeafc] bg-[#f7f6fd]">
+                            <div class="flex items-start gap-3 p-4 rounded-xl border border-[rgba(198,161,91,0.1)] bg-[rgba(198,161,91,0.08)]">
                                 <div
-                                    class="w-9 h-9 flex-none rounded-lg bg-[#efeafc] flex items-center justify-center text-client-accent">
+                                    class="w-9 h-9 flex-none rounded-lg bg-[rgba(198,161,91,0.1)] flex items-center justify-center text-client-accent">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                         <path
@@ -483,7 +483,7 @@ const statusCls = {
                                         <circle cx="17.5" cy="9.5" r="1" />
                                     </svg>
                                 </div>
-                                <p class="text-xs font-medium leading-relaxed text-[#5a4fa0] mt-0.5">{{ aiSuggestion }}
+                                <p class="text-xs font-medium leading-relaxed text-brand mt-0.5">{{ aiSuggestion }}
                                 </p>
                             </div>
                         </div>
@@ -492,7 +492,7 @@ const statusCls = {
 
                 <!-- Projection chart -->
                 <div
-                    class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
                         <h3 class="text-base font-bold text-foreground">Payment Projection Over Tenure</h3>
                         <div class="flex items-center gap-4 text-xs font-semibold text-muted-foreground flex-wrap">
@@ -506,7 +506,7 @@ const statusCls = {
                             </span>
                             <span class="inline-flex items-center gap-1.5">
                                 <svg width="14" height="4" viewBox="0 0 14 4" fill="none" class="flex-none">
-                                    <line x1="0" y1="2" x2="14" y2="2" stroke="#c2c2cf" stroke-width="2.5"
+                                    <line x1="0" y1="2" x2="14" y2="2" stroke="hsl(var(--muted-foreground))" stroke-width="2.5"
                                         stroke-dasharray="4 3" />
                                 </svg>
                                 Total Payment
@@ -524,9 +524,9 @@ const statusCls = {
 
                 <!-- Tips banner -->
                 <div
-                    class="flex items-center gap-4 rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    class="flex items-center gap-4 rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <div
-                        class="w-11 h-11 flex-none rounded-xl bg-[#efeafc] flex items-center justify-center text-client-accent">
+                        class="w-11 h-11 flex-none rounded-xl bg-[rgba(198,161,91,0.1)] flex items-center justify-center text-client-accent">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path
@@ -540,7 +540,7 @@ const statusCls = {
                     </div>
                     <button
                         class="hidden sm:inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border flex-none transition-colors text-client-accent"
-                        style="border-color:#e6e1fb; background:#f6f3ff;">
+                        style="border-color:rgba(198,161,91,0.1); background:rgba(198,161,91,0.08);">
                         View Details
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -556,7 +556,7 @@ const statusCls = {
 
                 <!-- Amortization donut -->
                 <div
-                    class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-4">Amortization Overview</h3>
                     <div class="flex items-center gap-4">
                         <!-- ApexCharts donut with Vue-reactive center label overlaid -->
@@ -596,9 +596,9 @@ const statusCls = {
 
                 <!-- Mortgage Summary -->
                 <div
-                    class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-1">Mortgage Summary</h3>
-                    <div class="flex flex-col divide-y divide-[#f4f4f8] dark:divide-white/[0.05]">
+                    <div class="flex flex-col divide-y divide-[hsl(var(--border))] dark:divide-white/[0.05]">
                         <div class="flex items-center justify-between py-3">
                             <span class="text-xs font-medium text-muted-foreground">Monthly Payment</span>
                             <span class="text-xs font-bold text-foreground">BDT {{ fmt(calcMonthly) }}</span>
@@ -624,23 +624,23 @@ const statusCls = {
 
                 <!-- Quick Actions -->
                 <div
-                    class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <h3 class="text-base font-bold text-foreground mb-3">Quick Actions</h3>
                     <div class="flex flex-col gap-0.5">
                         <a v-for="(action, i) in [
-                            { label: 'Apply for Financing', bg: 'bg-[#efeafc]', stroke: '#5b3fe8', path: 'M3 11 12 4l9 7 M5 10v10h14V10' },
-                            { label: 'Compare Loan Offers', bg: 'bg-green-100 dark:bg-green-500/15', stroke: '#16a34a', path: 'M9 4v16M15 4v16M4 9h16M4 15h16' },
+                            { label: 'Apply for Financing', bg: 'bg-[rgba(198,161,91,0.1)]', stroke: '#5b3fe8', path: 'M3 11 12 4l9 7 M5 10v10h14V10' },
+                            { label: 'Compare Loan Offers', bg: 'bg-green-100 dark:bg-green-500/15', stroke: 'hsl(var(--success))', path: 'M9 4v16M15 4v16M4 9h16M4 15h16' },
                             { label: 'Download Loan Summary', bg: 'bg-amber-100 dark:bg-amber-500/15', stroke: '#f08a1d', path: 'M12 3v12M7 10l5 5 5-5 M4 20h16' },
                             { label: 'Talk to Finance Advisor', bg: 'bg-blue-100 dark:bg-blue-500/15', stroke: '#2f6bdb', path: 'M4 5h16v11H9l-4 4z' },
                         ]" :key="i" href="#"
-                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#faf9fd] dark:hover:bg-white/[0.04] transition-colors text-foreground">
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[hsl(var(--background))] dark:hover:bg-white/[0.04] transition-colors text-foreground">
                             <span :class="['w-8 h-8 flex-none rounded-lg flex items-center justify-center', action.bg]">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" :stroke="action.stroke"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                     v-html="action.path.split(' ').map(p => `<path d='${p}'/>`).join('')" />
                             </span>
                             <span class="flex-1 text-xs font-semibold">{{ action.label }}</span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c2c2cf"
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--muted-foreground))"
                                 stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M9 6l6 6-6 6" />
                             </svg>
@@ -650,16 +650,16 @@ const statusCls = {
 
                 <!-- Banking Partners -->
                 <div
-                    class="rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] p-5 shadow-sm">
+                    class="rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] p-5 shadow-sm">
                     <div class="flex items-center justify-between mb-3.5">
                         <h3 class="text-base font-bold text-foreground">Banking Partners</h3>
                         <a href="#" class="text-xs font-bold text-client-accent hover:underline">View All</a>
                     </div>
                     <div v-if="property?.eligible_banks?.length" class="flex flex-col gap-2">
                         <div v-for="bank in property.eligible_banks" :key="bank"
-                            class="flex items-center gap-2.5 px-3 py-2.5 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl">
+                            class="flex items-center gap-2.5 px-3 py-2.5 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl">
                             <span
-                                class="w-7 h-7 flex-none rounded-lg bg-[#efeafc] flex items-center justify-center text-client-accent">
+                                class="w-7 h-7 flex-none rounded-lg bg-[rgba(198,161,91,0.1)] flex items-center justify-center text-client-accent">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M3 21h18M5 21V10M19 21V10M3 10l9-6 9 6" />
@@ -669,17 +669,17 @@ const statusCls = {
                         </div>
                     </div>
                     <div v-else class="grid grid-cols-2 gap-2">
-                        <div class="flex items-center justify-center h-11 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
+                        <div class="flex items-center justify-center h-11 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
                             style="color:#1b3a6b;">BRAC Bank</div>
-                        <div class="flex items-center justify-center h-11 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
+                        <div class="flex items-center justify-center h-11 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
                             style="color:#c0392b;">City Bank</div>
-                        <div class="flex items-center justify-center h-11 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
+                        <div class="flex items-center justify-center h-11 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
                             style="color:#1d7a46;">Islami Bank</div>
-                        <div class="flex items-center justify-center h-11 border border-[#f0f0f5] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
+                        <div class="flex items-center justify-center h-11 border border-[hsl(var(--muted))] dark:border-white/[0.06] rounded-xl text-xs font-extrabold"
                             style="color:#2c3e8c;">Prime Bank</div>
                     </div>
                     <div v-if="property?.max_loan_amount > 0"
-                        class="mt-3.5 pt-3.5 border-t border-[#f0f0f5] dark:border-white/[0.06]">
+                        class="mt-3.5 pt-3.5 border-t border-[hsl(var(--muted))] dark:border-white/[0.06]">
                         <div class="text-xs font-semibold text-muted-foreground">Max Loan Available</div>
                         <div class="text-sm font-extrabold text-foreground mt-0.5">{{ fmtBDT(property.max_loan_amount)
                         }}</div>
@@ -691,7 +691,7 @@ const statusCls = {
 
         <!-- ── Footer ─────────────────────────────────────────────── -->
         <footer
-            class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border bg-client-surface-card border-[#ededf3] dark:border-white/[0.06] px-5 py-3.5 shadow-sm">
+            class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border bg-client-surface-card border-[hsl(var(--border))] dark:border-white/[0.06] px-5 py-3.5 shadow-sm">
             <div class="text-sm font-bold text-foreground">
                 HomeVerse<sup class="text-xs font-normal text-muted-foreground">™</sup>
                 <span class="text-muted-foreground font-normal ml-2">·</span>
@@ -714,7 +714,7 @@ const statusCls = {
     width: 100%;
     height: 6px;
     border-radius: 4px;
-    background: #ece9f6;
+    background: hsl(var(--muted));
     outline: none;
     cursor: pointer;
     display: block;
@@ -727,7 +727,7 @@ const statusCls = {
     height: 20px;
     border-radius: 50%;
     background: #5b3fe8;
-    border: 3px solid #fff;
+    border: 3px solid hsl(var(--card));
     box-shadow: 0 2px 6px rgba(81, 50, 224, 0.4);
     cursor: pointer;
 }
@@ -737,7 +737,7 @@ const statusCls = {
     height: 14px;
     border-radius: 50%;
     background: #5b3fe8;
-    border: 3px solid #fff;
+    border: 3px solid hsl(var(--card));
     box-shadow: 0 2px 6px rgba(81, 50, 224, 0.4);
     cursor: pointer;
 }

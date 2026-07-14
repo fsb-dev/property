@@ -102,7 +102,7 @@ const f = 'rounded-lg bg-slate-50 dark:bg-white/[0.04] border-slate-200 dark:bor
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
+                        class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-5 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
                     >
                         <svg v-if="form.processing" class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                         {{ mode === 'create' ? 'Create User' : 'Save Changes' }}

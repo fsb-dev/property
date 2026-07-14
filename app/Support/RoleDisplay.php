@@ -6,13 +6,13 @@ trait RoleDisplay
 {
     /** Display color per role name, with a fallback for unseeded/custom roles. */
     private const ROLE_COLORS = [
-        'super_admin'   => ['bg' => '#F1ECFF', 'color' => '#5B3DF5'],
-        'company_admin' => ['bg' => '#E8F0FF', 'color' => '#3B82F6'],
-        'sales_manager' => ['bg' => '#FFF3E0', 'color' => '#F59E0B'],
-        'accountant'    => ['bg' => '#E6F7EE', 'color' => '#22C55E'],
-        'site_engineer' => ['bg' => '#E0F2FE', 'color' => '#0EA5E9'],
+        'super_admin'   => ['bg' => 'rgba(198,161,91,0.12)', 'color' => '#C6A15B'],
+        'company_admin' => ['bg' => 'rgba(96,165,250,0.15)', 'color' => '#60A5FA'],
+        'sales_manager' => ['bg' => 'rgba(251,191,36,0.15)', 'color' => '#FBBF24'],
+        'accountant'    => ['bg' => 'rgba(52,211,153,0.15)', 'color' => '#34D399'],
+        'site_engineer' => ['bg' => 'rgba(34,211,238,0.15)', 'color' => '#22D3EE'],
     ];
-    private const FALLBACK_COLOR = ['bg' => '#EEF1F6', 'color' => '#64748B'];
+    private const FALLBACK_COLOR = ['bg' => 'rgba(138,135,128,0.15)', 'color' => '#8A8780'];
 
     private function roleColor(?string $name): array
     {

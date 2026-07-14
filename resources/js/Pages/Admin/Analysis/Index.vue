@@ -2,6 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import { useTheme } from '@/composables/useTheme';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
@@ -36,73 +37,130 @@ const icons = {
     doc:      '<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
 };
 
-// ── Revenue Overview line/area chart (viewBox 0 0 460 230, scale 0-500M) — year switcher ─
+// ── ApexCharts shared theming (mode-aware chrome; series colours stay fixed) ─
+const { isDark } = useTheme();
+const chartMuted = computed(() => (isDark.value ? '#A8A399' : '#6B6355'));
+const chartGrid  = computed(() => (isDark.value ? 'rgba(255,255,255,0.06)' : 'rgba(26,22,17,0.08)'));
+const chartTheme = computed(() => (isDark.value ? 'dark' : 'light'));
+
+function donutChartOptions(labels, colors, totalLabel, totalValue, valueFmt) {
+    return {
+        chart: { type: 'donut', fontFamily: 'Plus Jakarta Sans, sans-serif' },
+        labels,
+        colors,
+        legend: { show: false },
+        dataLabels: { enabled: false },
+        stroke: { show: true, width: 2, colors: [isDark.value ? '#151922' : '#FFFFFF'] },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '72%',
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: totalLabel,
+                            color: chartMuted.value,
+                            fontSize: '10px',
+                            formatter: () => String(totalValue),
+                        },
+                        value: { color: isDark.value ? '#F5F2EA' : '#1A1611', fontSize: '22px', fontWeight: 800, offsetY: -4 },
+                    },
+                },
+            },
+        },
+        tooltip: { theme: chartTheme.value, y: valueFmt ? { formatter: valueFmt } : undefined },
+    };
+}
+
+// ── Revenue Overview — ApexCharts area (gold, primary metric) — year switcher ─
 const revenueYearOptions = computed(() => props.revenueOverview.years.map(y => y.year));
 const selectedRevenueYear = ref(revenueYearOptions.value[0]);
 const revenueYearData = computed(() => props.revenueOverview.years.find(y => y.year === selectedRevenueYear.value) ?? props.revenueOverview.years[0]);
 
-const revenueScaleY = (v) => 196 - (v / 500) * 176;
-const revenuePoints = computed(() => {
-    const months = revenueYearData.value.months;
-    const n = months.length || 1;
-    const step = n > 1 ? 382 / (n - 1) : 0;
-    return months.map((m, i) => ({ label: m.label, x: 52 + i * step, y: revenueScaleY(m.value) }));
-});
-const revenuePolyline = computed(() => revenuePoints.value.map(p => `${p.x},${p.y}`).join(' '));
-const revenueAreaPoints = computed(() => {
-    if (!revenuePoints.value.length) return '';
-    const last = revenuePoints.value[revenuePoints.value.length - 1];
-    const first = revenuePoints.value[0];
-    return `${revenuePolyline.value} ${last.x},196 ${first.x},196`;
-});
+const revenueChartSeries = computed(() => [{ name: 'Revenue', data: revenueYearData.value.months.map(m => m.value) }]);
+const revenueChartOptions = computed(() => ({
+    chart: { type: 'area', fontFamily: 'Plus Jakarta Sans, sans-serif', toolbar: { show: false }, zoom: { enabled: false } },
+    colors: ['#C6A15B'],
+    stroke: { curve: 'smooth', width: 3 },
+    fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.28, opacityTo: 0, stops: [0, 90, 100] } },
+    markers: { size: 0, hover: { size: 6 }, colors: ['#C6A15B'], strokeColors: isDark.value ? '#151922' : '#FFFFFF', strokeWidth: 3 },
+    dataLabels: { enabled: false },
+    grid: { borderColor: chartGrid.value, strokeDashArray: 0, yaxis: { lines: { show: true } }, xaxis: { lines: { show: false } }, padding: { left: 8, right: 8 } },
+    xaxis: {
+        categories: revenueYearData.value.months.map(m => m.label),
+        axisBorder: { show: false }, axisTicks: { show: false },
+        labels: { style: { colors: chartMuted.value, fontSize: '10px' } },
+    },
+    yaxis: { labels: { style: { colors: chartMuted.value, fontSize: '10px' }, formatter: (v) => `${v}M` } },
+    tooltip: { theme: chartTheme.value, y: { formatter: (v) => `BDT ${v}M` } },
+}));
 
 // ── Sales by Project donut (r=60) — year switcher ─────────────────────────────
 const salesYearOptions = computed(() => props.salesByProject.years.map(y => y.year));
 const selectedSalesYear = ref(salesYearOptions.value[0]);
 const salesYearData = computed(() => props.salesByProject.years.find(y => y.year === selectedSalesYear.value) ?? props.salesByProject.years[0]);
 
-// ── Sales by Project / Buyer Demographics donuts (r=60/54) ───────────────────
-function buildSegments(segments, r) {
-    const c = 2 * Math.PI * r;
-    let cursor = 0;
-    return segments.map((s) => {
-        const filled = (s.pct / 100) * c;
-        const seg = { ...s, dasharray: `${filled.toFixed(1)} ${(c - filled).toFixed(1)}`, dashoffset: -cursor };
-        cursor += filled;
-        return seg;
-    });
-}
-const salesSegments = computed(() => buildSegments(salesYearData.value.segments, 60));
+// ── Sales by Project — ApexCharts donut ───────────────────────────────────────
+const salesChartSeries = computed(() => salesYearData.value.segments.map(s => s.pct));
+const salesChartOptions = computed(() => donutChartOptions(
+    salesYearData.value.segments.map(s => s.name),
+    salesYearData.value.segments.map(s => s.color),
+    'Total Sales',
+    salesYearData.value.total,
+    (v, { seriesIndex }) => salesYearData.value.segments[seriesIndex]?.value ?? `${v}%`,
+));
 
-// ── Buyer Demographics donut (r=54) — year switcher ───────────────────────────
+// ── Buyer Demographics — ApexCharts donut — year switcher ────────────────────
 const buyerYearOptions = computed(() => props.buyerDemographics.years.map(y => y.year));
 const selectedBuyerYear = ref(buyerYearOptions.value[0]);
 const buyerYearData = computed(() => props.buyerDemographics.years.find(y => y.year === selectedBuyerYear.value) ?? props.buyerDemographics.years[0]);
-const buyerSegments = computed(() => buildSegments(buyerYearData.value.segments, 54));
+const buyerChartSeries = computed(() => buyerYearData.value.segments.map(s => s.pct));
+const buyerChartOptions = computed(() => donutChartOptions(
+    buyerYearData.value.segments.map(s => s.name),
+    buyerYearData.value.segments.map(s => s.color),
+    'Total Buyers',
+    buyerYearData.value.total,
+    (v, { seriesIndex }) => buyerYearData.value.segments[seriesIndex]?.value ?? `${v}%`,
+));
 
-// ── Sales Funnel Analysis — year switcher ─────────────────────────────────────
+// ── Sales Funnel Analysis — year switcher (kept as a custom SVG; ApexCharts
+// has no first-class funnel type that matches this trapezoid shape) ─────────
 const funnelYearOptions = computed(() => props.funnel.years.map(y => y.year));
 const selectedFunnelYear = ref(funnelYearOptions.value[0]);
 const funnelYearData = computed(() => props.funnel.years.find(y => y.year === selectedFunnelYear.value) ?? props.funnel.years[0]);
 
-// ── Profit & Margin Analysis (bars 0-200M, line 0-40%) — year switcher ───────
+// ── Profit & Margin Analysis — ApexCharts combo (bar + line) — year switcher ─
 const profitYearOptions = computed(() => props.profitMargin.years.map(y => y.year));
 const selectedProfitYear = ref(profitYearOptions.value[0]);
 const profitMonths = computed(() => props.profitMargin.years.find(y => y.year === selectedProfitYear.value)?.months ?? []);
 
-const profitBarScaleH = (v) => (v / 200) * 156;
-const marginScaleY = (v) => 195 - (v / 40) * 168;
-const profitBars = computed(() => {
-    const n = profitMonths.value.length || 1;
-    const step = n > 1 ? 374 / (n - 1) : 0;
-    return profitMonths.value.map((m, i) => {
-        const h = profitBarScaleH(m.profit);
-        return { label: m.label, x: 44 + i * step, h, y: 196 - h, marginY: marginScaleY(m.margin) };
-    });
-});
-const marginPolyline = computed(() => profitBars.value.map(p => `${p.x + 7},${p.marginY}`).join(' '));
+const profitChartSeries = computed(() => [
+    { name: 'Gross Profit (BDT)', type: 'column', data: profitMonths.value.map(m => m.profit) },
+    { name: 'Profit Margin (%)', type: 'line', data: profitMonths.value.map(m => m.margin) },
+]);
+const profitChartOptions = computed(() => ({
+    chart: { type: 'line', fontFamily: 'Plus Jakarta Sans, sans-serif', toolbar: { show: false }, zoom: { enabled: false } },
+    colors: ['#C6A15B', '#34D399'],
+    stroke: { width: [0, 3], curve: 'smooth' },
+    markers: { size: [0, 4], colors: ['#34D399'], strokeColors: isDark.value ? '#151922' : '#FFFFFF', strokeWidth: 2 },
+    plotOptions: { bar: { columnWidth: '45%', borderRadius: 3 } },
+    dataLabels: { enabled: false },
+    grid: { borderColor: chartGrid.value, xaxis: { lines: { show: false } } },
+    xaxis: {
+        categories: profitMonths.value.map(m => m.label),
+        axisBorder: { show: false }, axisTicks: { show: false },
+        labels: { style: { colors: chartMuted.value, fontSize: '9.5px' } },
+    },
+    yaxis: [
+        { seriesName: 'Gross Profit (BDT)', labels: { style: { colors: chartMuted.value, fontSize: '9.5px' }, formatter: (v) => `${v}M` } },
+        { seriesName: 'Profit Margin (%)', opposite: true, labels: { style: { colors: chartMuted.value, fontSize: '9.5px' }, formatter: (v) => `${v}%` } },
+    ],
+    legend: { show: false },
+    tooltip: { theme: chartTheme.value, shared: true },
+}));
 
-// ── Monthly Comparison dual bar chart — metric switcher ───────────────────────
+// ── Monthly Comparison — ApexCharts grouped bar — metric switcher ────────────
 const comparisonMetricOptions = computed(() => props.monthlyComparison.metrics.map(m => m.key));
 const selectedComparisonMetric = ref(comparisonMetricOptions.value[0]);
 const comparisonMetricData = computed(() =>
@@ -170,12 +228,12 @@ function openShortcut(shortcut) {
 
 // ── Create Report dialog — client-side only, nothing is sent to the server ───
 const reportTypeOptions = [
-    { value: 'Sales Performance',  color: '#5B3DF5', bg: '#F1ECFF' },
-    { value: 'Financial Summary',  color: '#F59E0B', bg: '#FFF3E0' },
-    { value: 'Project Progress',   color: '#EF4444', bg: '#FDE8E8' },
-    { value: 'Buyer Demographics', color: '#3B82F6', bg: '#E8F0FF' },
-    { value: 'Marketing Campaign', color: '#22C55E', bg: '#E6F7EE' },
-    { value: 'Inventory Status',   color: '#0D9488', bg: '#CCFBF1' },
+    { value: 'Sales Performance',  color: '#C6A15B', bg: 'rgba(198,161,91,0.12)' },
+    { value: 'Financial Summary',  color: '#FBBF24', bg: 'rgba(251,191,36,0.15)' },
+    { value: 'Project Progress',   color: '#F87171', bg: 'rgba(248,113,113,0.15)' },
+    { value: 'Buyer Demographics', color: '#60A5FA', bg: 'rgba(96,165,250,0.15)' },
+    { value: 'Marketing Campaign', color: '#34D399', bg: 'rgba(52,211,153,0.15)' },
+    { value: 'Inventory Status',   color: '#22D3EE', bg: 'rgba(34,211,238,0.15)' },
 ];
 const reportFormatOptions = ['PDF', 'Excel', 'CSV'];
 
@@ -228,7 +286,7 @@ function saveReportSettings() {
                 <p class="mt-0.5 text-sm text-muted-foreground">Comprehensive insights and data analysis to drive smarter business decisions.</p>
             </div>
             <div class="flex items-center gap-3">
-                <button @click="openCreateReport" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90">
+                <button @click="openCreateReport" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M12 11v6M9 14h6"/></svg>
                     Create Report
                 </button>
@@ -250,11 +308,11 @@ function saveReportSettings() {
                 </div>
                 <div class="text-xl font-extrabold leading-none tracking-tight text-foreground">{{ k.value }}</div>
                 <div class="mt-2.5 flex items-center gap-1 text-[11px]">
-                    <span class="flex items-center gap-0.5 font-bold text-green-500">
+                    <span class="flex items-center gap-0.5 font-bold text-success">
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                         {{ k.change }}{{ k.suffix }}
                     </span>
-                    <span class="text-slate-400">vs last year</span>
+                    <span class="text-muted-foreground">vs last year</span>
                 </div>
             </div>
         </div>
@@ -278,28 +336,14 @@ function saveReportSettings() {
                 <div class="text-[11.5px] text-muted-foreground">Total Revenue</div>
                 <div class="mt-0.5 flex items-center gap-2">
                     <div class="text-[22px] font-extrabold tracking-tight text-foreground">{{ revenueYearData.total }}</div>
-                    <span class="flex items-center gap-0.5 text-xs font-bold text-green-500">
+                    <span class="flex items-center gap-0.5 text-xs font-bold text-success">
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                         {{ revenueYearData.change }}%
                     </span>
                     <span class="text-[11.5px] text-muted-foreground">vs last year</span>
                 </div>
                 <div class="relative mt-3.5 min-h-[210px] flex-1">
-                    <svg viewBox="0 0 460 230" preserveAspectRatio="none" class="block h-full w-full">
-                        <defs><linearGradient id="anRevG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5B3DF5" stop-opacity="0.2"/><stop offset="100%" stop-color="#5B3DF5" stop-opacity="0"/></linearGradient></defs>
-                        <line x1="34" y1="20" x2="34" y2="196" stroke="#EEF1F6" stroke-width="1"/>
-                        <line x1="34" y1="196" x2="452" y2="196" stroke="#EEF1F6" stroke-width="1"/>
-                        <line v-for="y in [152, 108, 64]" :key="y" x1="34" :y1="y" x2="452" :y2="y" stroke="#F4F6FA" stroke-width="1"/>
-                        <text x="28" y="199" font-size="8.5" fill="#AEB6C4" text-anchor="end">100M</text>
-                        <text x="28" y="155" font-size="8.5" fill="#AEB6C4" text-anchor="end">200M</text>
-                        <text x="28" y="111" font-size="8.5" fill="#AEB6C4" text-anchor="end">300M</text>
-                        <text x="28" y="67" font-size="8.5" fill="#AEB6C4" text-anchor="end">400M</text>
-                        <text x="28" y="27" font-size="8.5" fill="#AEB6C4" text-anchor="end">500M</text>
-                        <polygon :points="revenueAreaPoints" fill="url(#anRevG)"/>
-                        <polyline :points="revenuePolyline" fill="none" stroke="#5B3DF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle v-for="p in revenuePoints" :key="p.label" :cx="p.x" :cy="p.y" r="3" fill="#5B3DF5"/>
-                        <text v-for="p in revenuePoints" :key="'l-'+p.label" :x="p.x" y="212" font-size="8.5" fill="#9AA3B4" text-anchor="middle">{{ p.label }}</text>
-                    </svg>
+                    <apexchart type="area" height="100%" :series="revenueChartSeries" :options="revenueChartOptions" />
                 </div>
                 <button type="button" @click="showRevenueReport = true" class="mt-2 flex cursor-pointer items-center justify-center gap-1.5 border-t border-border pt-3.5 text-xs font-semibold text-admin-accent">
                     View Detailed Report
@@ -321,15 +365,8 @@ function saveReportSettings() {
                     </Select>
                 </div>
                 <div class="flex flex-1 flex-wrap items-center justify-center gap-4">
-                    <div class="relative h-[160px] w-[160px] flex-none">
-                        <svg width="160" height="160" viewBox="0 0 160 160" style="transform:rotate(-90deg);">
-                            <circle cx="80" cy="80" r="60" fill="none" stroke="#F1F4F9" stroke-width="18"/>
-                            <circle v-for="seg in salesSegments" :key="seg.key" cx="80" cy="80" r="60" fill="none" :stroke="seg.color" stroke-width="18" :stroke-dasharray="seg.dasharray" :stroke-dashoffset="seg.dashoffset"/>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <div class="text-base font-extrabold tracking-tight text-foreground">{{ salesYearData.total }}</div>
-                            <div class="text-[10px] text-muted-foreground">Total Sales</div>
-                        </div>
+                    <div class="w-[160px] flex-none">
+                        <apexchart type="donut" height="160" :series="salesChartSeries" :options="salesChartOptions" />
                     </div>
                     <div class="flex min-w-[175px] flex-1 flex-col gap-2.5">
                         <div v-for="s in salesYearData.segments" :key="s.key" class="flex items-center justify-between gap-2 text-[11.5px]">
@@ -362,26 +399,10 @@ function saveReportSettings() {
                 </div>
                 <div class="mb-1.5 flex items-center gap-4 text-[11.5px]">
                     <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 rounded-[3px] bg-admin-accent"></span>Gross Profit (BDT)</span>
-                    <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 rounded-full" style="background:#22C55E;"></span>Profit Margin (%)</span>
+                    <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 rounded-full" style="background:#34D399;"></span>Profit Margin (%)</span>
                 </div>
                 <div class="relative mt-1 min-h-[210px] flex-1">
-                    <svg viewBox="0 0 460 230" preserveAspectRatio="none" class="block h-full w-full">
-                        <text x="30" y="27" font-size="8.5" fill="#AEB6C4" text-anchor="end">200M</text>
-                        <text x="30" y="83" font-size="8.5" fill="#AEB6C4" text-anchor="end">150M</text>
-                        <text x="30" y="139" font-size="8.5" fill="#AEB6C4" text-anchor="end">100M</text>
-                        <text x="30" y="195" font-size="8.5" fill="#AEB6C4" text-anchor="end">0</text>
-                        <text x="455" y="27" font-size="8.5" fill="#AEB6C4" text-anchor="start">40%</text>
-                        <text x="455" y="83" font-size="8.5" fill="#AEB6C4" text-anchor="start">30%</text>
-                        <text x="455" y="139" font-size="8.5" fill="#AEB6C4" text-anchor="start">20%</text>
-                        <text x="455" y="195" font-size="8.5" fill="#AEB6C4" text-anchor="start">0%</text>
-                        <line x1="36" y1="196" x2="446" y2="196" stroke="#EEF1F6" stroke-width="1"/>
-                        <g fill="#5B3DF5">
-                            <rect v-for="p in profitBars" :key="'b-'+p.label" :x="p.x" :y="p.y" width="14" :height="p.h" rx="3"/>
-                        </g>
-                        <polyline :points="marginPolyline" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle v-for="p in profitBars" :key="'m-'+p.label" :cx="p.x + 7" :cy="p.marginY" r="2.6" fill="#22C55E"/>
-                        <text v-for="p in profitBars" :key="'l-'+p.label" :x="p.x + 7" y="212" font-size="8" fill="#9AA3B4" text-anchor="middle">{{ p.label }}</text>
-                    </svg>
+                    <apexchart type="line" height="100%" :series="profitChartSeries" :options="profitChartOptions" />
                 </div>
                 <button type="button" @click="showProfitReport = true" class="mt-2 flex cursor-pointer items-center justify-center gap-1.5 border-t border-border pt-3.5 text-xs font-semibold text-admin-accent">
                     View Profit Report
@@ -404,7 +425,7 @@ function saveReportSettings() {
                             <button
                                 v-for="t in performance.tabs" :key="t" type="button" @click="activeTab = t"
                                 class="whitespace-nowrap border-b-[2.5px] pb-2.5 text-[13px] font-semibold transition-colors"
-                                :class="activeTab === t ? 'border-admin-accent text-admin-accent' : 'border-transparent text-[#8A93A6] hover:text-foreground'"
+                                :class="activeTab === t ? 'border-admin-accent text-admin-accent' : 'border-transparent text-muted-foreground hover:text-foreground'"
                             >
                                 {{ t }}
                             </button>
@@ -413,7 +434,7 @@ function saveReportSettings() {
                             <div v-for="m in activeMetrics" :key="m.key" class="min-w-0 rounded-[13px] border border-border p-3.5">
                                 <div class="flex items-center justify-between gap-1.5">
                                     <span class="text-[11px] text-muted-foreground">{{ m.label }}</span>
-                                    <span class="flex items-center gap-px text-[10.5px] font-bold" :class="m.dir === 'up' ? 'text-green-500' : 'text-red-500'">
+                                    <span class="flex items-center gap-px text-[10.5px] font-bold" :class="m.dir === 'up' ? 'text-success' : 'text-destructive'">
                                         <svg v-if="m.dir === 'up'" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                                         <svg v-else width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9l-6 6-6-6"/></svg>
                                         {{ m.change }}{{ m.suffix ?? '%' }}
@@ -443,7 +464,7 @@ function saveReportSettings() {
                             </div>
                             <div class="text-xs font-semibold text-foreground">{{ p.sales }}</div>
                             <div class="text-xs font-semibold text-foreground">{{ p.units }}</div>
-                            <div class="flex items-center gap-0.5 text-[11.5px] font-bold text-green-500">
+                            <div class="flex items-center gap-0.5 text-[11.5px] font-bold text-success">
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
                                 {{ p.growth }}%
                             </div>
@@ -470,10 +491,10 @@ function saveReportSettings() {
                         <div class="flex flex-1 items-center gap-3.5">
                             <svg width="150" height="180" viewBox="0 0 150 180" class="flex-none">
                                 <path d="M5 4 L145 4 L120 36 L30 36 Z" fill="#60A5FA"/>
-                                <path d="M31 40 L119 40 L101 72 L49 72 Z" fill="#3B82F6"/>
-                                <path d="M50 76 L100 76 L86 108 L64 108 Z" fill="#14B8A6"/>
-                                <path d="M65 112 L85 112 L79 144 L71 144 Z" fill="#22C55E"/>
-                                <path d="M71.5 148 L78.5 148 L76 176 L74 176 Z" fill="#16A34A"/>
+                                <path d="M31 40 L119 40 L101 72 L49 72 Z" fill="#60A5FA"/>
+                                <path d="M50 76 L100 76 L86 108 L64 108 Z" fill="#22D3EE"/>
+                                <path d="M65 112 L85 112 L79 144 L71 144 Z" fill="#34D399"/>
+                                <path d="M71.5 148 L78.5 148 L76 176 L74 176 Z" fill="#34D399"/>
                                 <text x="75" y="24" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">Leads</text>
                                 <text x="75" y="60" font-size="10" fill="#fff" font-weight="700" text-anchor="middle">Qualified</text>
                                 <text x="75" y="96" font-size="9" fill="#fff" font-weight="700" text-anchor="middle">Visits</text>
@@ -505,15 +526,8 @@ function saveReportSettings() {
                             </Select>
                         </div>
                         <div class="flex flex-1 flex-wrap items-center justify-center gap-3.5">
-                            <div class="relative h-[140px] w-[140px] flex-none">
-                                <svg width="140" height="140" viewBox="0 0 140 140" style="transform:rotate(-90deg);">
-                                    <circle cx="70" cy="70" r="54" fill="none" stroke="#F1F4F9" stroke-width="17"/>
-                                    <circle v-for="seg in buyerSegments" :key="seg.key" cx="70" cy="70" r="54" fill="none" :stroke="seg.color" stroke-width="17" :stroke-dasharray="seg.dasharray" :stroke-dashoffset="seg.dashoffset"/>
-                                </svg>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <div class="text-xl font-extrabold tracking-tight text-foreground">{{ buyerYearData.total }}</div>
-                                    <div class="text-[10px] text-muted-foreground">Total Buyers</div>
-                                </div>
+                            <div class="w-[140px] flex-none">
+                                <apexchart type="donut" height="140" :series="buyerChartSeries" :options="buyerChartOptions" />
                             </div>
                             <div class="flex min-w-[130px] flex-1 flex-col gap-2.5">
                                 <div v-for="b in buyerYearData.segments" :key="b.key" class="flex min-w-0 items-center justify-between gap-2 text-[11.5px]">
@@ -546,17 +560,17 @@ function saveReportSettings() {
                         </div>
                         <div class="mb-1.5 flex items-center gap-4 text-[11px]">
                             <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 rounded-[3px] bg-admin-accent"></span>This Year (2026)</span>
-                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 rounded-[3px]" style="background:#D8DCE6;"></span>Last Year (2025)</span>
+                            <span class="flex items-center gap-1.5 text-foreground/80"><span class="h-2.5 w-2.5 rounded-[3px]" style="background:rgba(138,135,128,0.3);"></span>Last Year (2025)</span>
                         </div>
                         <div class="relative mt-1 min-h-[190px] flex-1">
                             <svg viewBox="0 0 440 200" preserveAspectRatio="none" class="block h-full w-full">
-                                <text v-for="lbl in comparisonAxisLabels" :key="lbl.y" x="30" :y="lbl.y" font-size="8" fill="#AEB6C4" text-anchor="end">{{ lbl.text }}</text>
-                                <line x1="36" y1="172" x2="430" y2="172" stroke="#EEF1F6" stroke-width="1"/>
+                                <text v-for="lbl in comparisonAxisLabels" :key="lbl.y" x="30" :y="lbl.y" font-size="8" class="fill-muted-foreground" text-anchor="end">{{ lbl.text }}</text>
+                                <line x1="36" y1="172" x2="430" y2="172" class="stroke-chart-grid/[0.08]" stroke-width="1"/>
                                 <template v-for="c in comparisonBars" :key="c.label">
-                                    <rect :x="c.x" :y="c.lastY" width="9" :height="c.lastH" rx="2" fill="#D8DCE6"/>
-                                    <rect :x="c.x + 10" :y="c.thisY" width="9" :height="c.thisH" rx="2" fill="#5B3DF5"/>
+                                    <rect :x="c.x" :y="c.lastY" width="9" :height="c.lastH" rx="2" class="fill-muted"/>
+                                    <rect :x="c.x + 10" :y="c.thisY" width="9" :height="c.thisH" rx="2" fill="#C6A15B"/>
                                 </template>
-                                <text v-for="c in comparisonBars" :key="'l-'+c.label" :x="c.x + 9" y="186" font-size="7.5" fill="#9AA3B4" text-anchor="middle">{{ c.label }}</text>
+                                <text v-for="c in comparisonBars" :key="'l-'+c.label" :x="c.x + 9" y="186" font-size="7.5" class="fill-muted-foreground" text-anchor="middle">{{ c.label }}</text>
                             </svg>
                         </div>
                         <button type="button" @click="showComparisonReport = true" class="mt-2 flex cursor-pointer items-center justify-center gap-1.5 border-t border-border pt-3.5 text-xs font-semibold text-admin-accent">
@@ -584,7 +598,7 @@ function saveReportSettings() {
                                 </span>
                                 {{ s.name }}
                             </div>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C7CDDA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="flex-none"><path d="M9 18l6-6-6-6"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="flex-none stroke-muted-foreground"><path d="M9 18l6-6-6-6"/></svg>
                         </button>
                     </div>
                 </div>
@@ -651,7 +665,7 @@ function saveReportSettings() {
 
                     <DialogFooter class="!px-0 pt-2">
                         <Button type="button" variant="outline" @click="showCreateReport = false">Cancel</Button>
-                        <Button type="submit" class="bg-admin-accent text-white hover:bg-admin-accent/90">Create Report</Button>
+                        <Button type="submit" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90">Create Report</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -686,18 +700,18 @@ function saveReportSettings() {
                     </div>
 
                     <label class="flex cursor-pointer items-center gap-2.5 text-xs font-medium text-foreground">
-                        <input type="checkbox" v-model="reportSettings.autoGenerate" class="h-4 w-4 rounded border-border accent-[#5B3DF5]" />
+                        <input type="checkbox" v-model="reportSettings.autoGenerate" class="h-4 w-4 rounded border-border accent-[#C6A15B]" />
                         Auto-generate monthly reports
                     </label>
                     <label class="flex cursor-pointer items-center gap-2.5 text-xs font-medium text-foreground">
-                        <input type="checkbox" v-model="reportSettings.emailAdmins" class="h-4 w-4 rounded border-border accent-[#5B3DF5]" />
+                        <input type="checkbox" v-model="reportSettings.emailAdmins" class="h-4 w-4 rounded border-border accent-[#C6A15B]" />
                         Email reports to admins
                     </label>
                 </div>
 
                 <DialogFooter class="px-6 pb-4">
                     <Button type="button" variant="outline" @click="showReportSettings = false">Cancel</Button>
-                    <Button type="button" class="bg-admin-accent text-white hover:bg-admin-accent/90" @click="saveReportSettings">Save Settings</Button>
+                    <Button type="button" class="bg-admin-accent text-on-gold hover:bg-admin-accent/90" @click="saveReportSettings">Save Settings</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -766,7 +780,7 @@ function saveReportSettings() {
                         <span class="font-semibold text-foreground/80">{{ m.label }}</span>
                         <span class="flex items-center gap-3">
                             <span class="font-bold text-foreground">BDT {{ m.profit }}M</span>
-                            <span class="font-semibold text-green-600">{{ m.margin }}%</span>
+                            <span class="font-semibold text-success">{{ m.margin }}%</span>
                         </span>
                     </div>
                 </div>
@@ -852,7 +866,7 @@ function saveReportSettings() {
                                 </TableCell>
                                 <TableCell class="text-xs font-semibold">{{ p.sales }}</TableCell>
                                 <TableCell class="text-xs font-semibold">{{ p.units }}</TableCell>
-                                <TableCell class="text-xs font-bold text-green-500">+{{ p.growth }}%</TableCell>
+                                <TableCell class="text-xs font-bold text-success">+{{ p.growth }}%</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>

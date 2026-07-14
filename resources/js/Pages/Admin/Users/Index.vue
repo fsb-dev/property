@@ -2,6 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
+import { useTheme } from '@/composables/useTheme';
 import { Input } from '@/Components/ui/input';
 import { Badge } from '@/Components/ui/badge';
 import { Label } from '@/Components/ui/label';
@@ -155,20 +156,54 @@ function togglePermission(list, value) {
 // ── Helpers ────────────────────────────────────────────────────
 const avatarInitials = (name) => name?.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase() ?? '?';
 
-function donutSegments(items, radius) {
-    const circumference = 2 * Math.PI * radius;
-    const total = items.reduce((sum, i) => sum + i.val, 0) || 1;
-    let offset = 0;
-    return items.map((item) => {
-        const length = (item.val / total) * circumference;
-        const segment = { ...item, dasharray: `${length} ${circumference}`, dashoffset: -offset };
-        offset += length;
-        return segment;
-    });
+// ── Role Distribution / Access Summary — ApexCharts donuts ──────────────────
+const { isDark } = useTheme();
+
+function donutChartOptions(labels, colors, totalLabel, totalValue) {
+    return {
+        chart: { type: 'donut', fontFamily: 'Plus Jakarta Sans, sans-serif' },
+        labels,
+        colors,
+        legend: { show: false },
+        dataLabels: { enabled: false },
+        stroke: { show: true, width: 2, colors: [isDark.value ? '#151922' : '#FFFFFF'] },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '72%',
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: totalLabel,
+                            color: isDark.value ? '#A8A399' : '#6B6355',
+                            fontSize: '10px',
+                            formatter: () => String(totalValue),
+                        },
+                        value: { color: isDark.value ? '#F5F2EA' : '#1A1611', fontSize: '22px', fontWeight: 800, offsetY: -4 },
+                    },
+                },
+            },
+        },
+        tooltip: { theme: isDark.value ? 'dark' : 'light' },
+    };
 }
 
-const roleDonut   = computed(() => donutSegments(props.roleDistribution.map(r => ({ ...r, val: r.val })), 58));
-const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({ ...a, val: a.val })), 54));
+const roleChartSeries = computed(() => props.roleDistribution.map(r => r.val));
+const roleChartOptions = computed(() => donutChartOptions(
+    props.roleDistribution.map(r => r.name),
+    props.roleDistribution.map(r => r.color),
+    'Total Users',
+    props.stats.total,
+));
+
+const accessChartSeries = computed(() => props.accessSummary.map(a => a.val));
+const accessChartOptions = computed(() => donutChartOptions(
+    props.accessSummary.map(a => a.name),
+    props.accessSummary.map(a => a.color),
+    'Access',
+    props.accessSummary.reduce((sum, a) => sum + a.val, 0),
+));
 </script>
 
 <template>
@@ -184,7 +219,7 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
             </div>
             <Link
                 :href="route('admin.users.create')"
-                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90"
+                class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90"
             >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                 Add User
@@ -320,7 +355,7 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                                         </Link>
                                         <button
                                             @click="confirmDelete(user)"
-                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-400"
+                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                                             title="Delete"
                                         >
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
@@ -339,7 +374,7 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                         <div class="flex items-center gap-1">
                             <template v-for="link in users.links" :key="link.label">
                                 <span v-if="!link.url" class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs pointer-events-none text-muted-foreground/40"><span v-html="link.label" /></span>
-                                <Link v-else :href="link.url" :preserve-state="true" :class="['inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs transition-colors', link.active ? 'bg-admin-accent text-white' : 'text-muted-foreground hover:bg-muted']"><span v-html="link.label" /></Link>
+                                <Link v-else :href="link.url" :preserve-state="true" :class="['inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg px-2 text-xs transition-colors', link.active ? 'bg-admin-accent text-on-gold' : 'text-muted-foreground hover:bg-muted']"><span v-html="link.label" /></Link>
                             </template>
                         </div>
                     </div>
@@ -355,19 +390,8 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                         <div class="text-base font-bold text-foreground">Role Distribution</div>
                     </div>
                     <div v-if="roleDistribution.length" class="flex flex-wrap items-center justify-center gap-4">
-                        <div class="relative h-[150px] w-[150px] flex-shrink-0">
-                            <svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg)">
-                                <circle cx="75" cy="75" r="58" fill="none" stroke="currentColor" class="text-muted" stroke-width="16" />
-                                <circle
-                                    v-for="seg in roleDonut" :key="seg.name"
-                                    cx="75" cy="75" r="58" fill="none" :stroke="seg.color" stroke-width="16"
-                                    :stroke-dasharray="seg.dasharray" :stroke-dashoffset="seg.dashoffset"
-                                />
-                            </svg>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <div class="text-2xl font-extrabold text-foreground">{{ stats.total }}</div>
-                                <div class="text-[10px] text-muted-foreground">Total Users</div>
-                            </div>
+                        <div class="w-[150px] flex-shrink-0">
+                            <apexchart type="donut" height="150" :series="roleChartSeries" :options="roleChartOptions" />
                         </div>
                         <div class="flex min-w-[150px] flex-1 flex-col gap-2">
                             <div v-for="r in roleDistribution" :key="r.name" class="flex items-center justify-between gap-2 text-xs">
@@ -407,19 +431,8 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                 <div class="rounded-2xl border border-border bg-admin-surface-card p-5">
                     <div class="mb-3 text-base font-bold text-foreground">Access Summary</div>
                     <div class="flex flex-wrap items-center justify-center gap-4">
-                        <div class="relative h-[140px] w-[140px] flex-shrink-0">
-                            <svg width="140" height="140" viewBox="0 0 140 140" style="transform:rotate(-90deg)">
-                                <circle cx="70" cy="70" r="54" fill="none" stroke="currentColor" class="text-muted" stroke-width="16" />
-                                <circle
-                                    v-for="seg in accessDonut" :key="seg.name"
-                                    cx="70" cy="70" r="54" fill="none" :stroke="seg.color" stroke-width="16"
-                                    :stroke-dasharray="seg.dasharray" :stroke-dashoffset="seg.dashoffset"
-                                />
-                            </svg>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="text-admin-accent"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-                                <div class="mt-0.5 text-[9.5px] text-muted-foreground">Access<br>Overview</div>
-                            </div>
+                        <div class="w-[140px] flex-shrink-0">
+                            <apexchart type="donut" height="140" :series="accessChartSeries" :options="accessChartOptions" />
                         </div>
                         <div class="flex min-w-[140px] flex-1 flex-col gap-3">
                             <div v-for="a in accessSummary" :key="a.name" class="flex items-center justify-between gap-2 text-xs">
@@ -495,36 +508,36 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                     </div>
                     <span class="text-xs font-semibold text-foreground">Export Users</span>
                 </a>
-                <button type="button" @click="showCreateRole = true" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-500/10">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400">
+                <button type="button" @click="showCreateRole = true" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-gold/10">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 text-admin-accent">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M12 9v6M9 12h6"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-foreground">Create New Role</span>
                 </button>
 
-                <button type="button" @click="showAssignPermissions = true; userSearchTerm = ''; selectedUserForPermissions = null; assignPermissionsForm.permissions = []" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400">
+                <button type="button" @click="showAssignPermissions = true; userSearchTerm = ''; selectedUserForPermissions = null; assignPermissionsForm.permissions = []" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-info hover:bg-info/10">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-info/10 text-info">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L19 4M16 7l3-3M14 9l2 2"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-foreground">Assign Permissions</span>
                 </button>
 
-                <button type="button" @click="showBulkImport = true" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400">
+                <button type="button" @click="showBulkImport = true" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-warning hover:bg-warning/10">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-warning/10 text-warning">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5-5 5 5M12 5v10"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-foreground">Bulk User Import</span>
                 </button>
 
-                <button type="button" @click="showActivityLog = true" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-teal-500 hover:bg-teal-50 dark:hover:bg-teal-500/10">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-100 text-teal-600 dark:bg-teal-500/15 dark:text-teal-400">
+                <button type="button" @click="showActivityLog = true" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-chart-6 hover:bg-chart-6/10">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-chart-6/10 text-chart-6">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 13l2 2 4-4"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-foreground">User Activity Logs</span>
                 </button>
 
-                <a :href="route('admin.users.access-report')" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-500/10">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400">
+                <a :href="route('admin.users.access-report')" class="flex min-h-[70px] flex-col items-center justify-center gap-2 rounded-2xl border border-border p-3 text-center transition-all hover:-translate-y-0.5 hover:border-destructive hover:bg-destructive/10">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
                     </div>
                     <span class="text-xs font-semibold text-foreground">Access Reports</span>
@@ -545,8 +558,8 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                 <div v-if="confirmingDelete" class="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="cancelDelete" />
                     <div class="relative z-10 w-full max-w-sm rounded-2xl border border-border bg-admin-surface-card p-6 shadow-xl">
-                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/20">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-red-600 dark:text-red-400"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                        <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/15">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-destructive"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                         </div>
                         <h3 class="mb-1 font-semibold text-foreground">Remove User</h3>
                         <p class="mb-5 text-sm text-muted-foreground">
@@ -554,7 +567,7 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                         </p>
                         <div class="flex justify-end gap-3">
                             <button @click="cancelDelete" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
-                            <button @click="submitDelete" :disabled="deleteForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-60">
+                            <button @click="submitDelete" :disabled="deleteForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:opacity-60">
                                 <svg v-if="deleteForm.processing" class="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                                 Remove
                             </button>
@@ -598,7 +611,7 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                     </div>
                     <DialogFooter class="shrink-0 border-t border-border px-6 py-4">
                         <button type="button" @click="showCreateRole = false" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
-                        <button type="submit" :disabled="createRoleForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60">Create Role</button>
+                        <button type="submit" :disabled="createRoleForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60">Create Role</button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -650,7 +663,7 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                         <button
                             type="submit"
                             :disabled="!selectedRoleForPermissions || selectedRoleForPermissions.value === 'super_admin' || rolePermissionsForm.processing"
-                            class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
+                            class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
                         >Save Permissions</button>
                     </DialogFooter>
                 </form>
@@ -705,7 +718,7 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                         <button
                             type="submit"
                             :disabled="!selectedUserForPermissions || assignPermissionsForm.processing"
-                            class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
+                            class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60"
                         >Save Permissions</button>
                     </DialogFooter>
                 </form>
@@ -725,13 +738,13 @@ const accessDonut = computed(() => donutSegments(props.accessSummary.map(a => ({
                     </p>
                     <input
                         type="file" accept=".csv,text/csv" @change="onImportFileChange"
-                        class="block w-full cursor-pointer rounded-lg border border-border bg-slate-50 text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-admin-accent file:px-3 file:py-2 file:text-xs file:font-medium file:text-white dark:bg-white/[0.04]"
+                        class="block w-full cursor-pointer rounded-lg border border-border bg-slate-50 dark:bg-white/[0.04] text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-admin-accent file:px-3 file:py-2 file:text-xs file:font-medium file:text-on-gold"
                     />
                     <p v-if="importForm.errors.file" class="mt-2 text-xs text-destructive">{{ importForm.errors.file }}</p>
 
                     <DialogFooter class="mt-5">
                         <button type="button" @click="showBulkImport = false" class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted">Cancel</button>
-                        <button type="submit" :disabled="!importForm.file || importForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
+                        <button type="submit" :disabled="!importForm.file || importForm.processing" class="inline-flex items-center gap-2 rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-admin-accent/90 disabled:opacity-60">
                             Import Users
                         </button>
                     </DialogFooter>

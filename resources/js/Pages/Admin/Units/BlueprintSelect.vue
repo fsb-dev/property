@@ -64,7 +64,7 @@ function statusClass(status) {
             <p class="font-medium text-foreground">No projects found</p>
             <p class="mt-1 text-sm text-muted-foreground">Try a different search or create a project first.</p>
             <Link :href="route('admin.projects.create')"
-                class="mt-4 inline-flex rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-white hover:bg-admin-accent/90 transition-colors">
+                class="mt-4 inline-flex rounded-lg bg-admin-accent px-4 py-2 text-sm font-medium text-on-gold hover:bg-admin-accent/90 transition-colors">
                 Create Project
             </Link>
         </div>
